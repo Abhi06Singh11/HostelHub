@@ -1,6 +1,6 @@
 
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { 
@@ -30,7 +30,7 @@ import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 
-export default function ContractorSettingsPage() {
+function SettingsContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('profile');
 
@@ -40,59 +40,67 @@ export default function ContractorSettingsPage() {
   }, [searchParams]);
 
   return (
-    <DashboardLayout role="contractor">
-      <div className="max-w-5xl mx-auto space-y-8">
-        <div>
-          <h2 className="text-3xl font-black tracking-tighter uppercase text-foreground">Operational Configuration</h2>
-          <p className="text-[15px] text-muted-foreground font-medium">Manage your professional service profile, notifications, and technical preferences.</p>
-        </div>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 h-auto bg-muted/30 p-1.5 rounded-2xl border-2 mb-8 overflow-x-auto">
-            <SettingsTabTrigger value="profile" icon={User} label="Profile" />
-            <SettingsTabTrigger value="appearance" icon={Palette} label="Theme" />
-            <SettingsTabTrigger value="notifications" icon={Bell} label="Alerts" />
-            <SettingsTabTrigger value="security" icon={Shield} label="Security" />
-            <SettingsTabTrigger value="regional" icon={Globe} label="Regional" />
-            <SettingsTabTrigger value="accessibility" icon={Accessibility} label="A11y" />
-            <SettingsTabTrigger value="account" icon={SettingsIcon} label="Account" />
-          </TabsList>
-
-          <TabsContent value="profile" className="space-y-6 animate-in fade-in duration-500">
-            <ProfileTab />
-          </TabsContent>
-
-          <TabsContent value="appearance" className="space-y-8 animate-in fade-in duration-500">
-            <div className="enterprise-card border bg-card p-10 space-y-10">
-              <h3 className="text-xl font-black uppercase tracking-tight">Ops Terminal Theme</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <ThemeOption label="Technical" icon={Layout} value="light" />
-                <ThemeOption label="Night Ops" icon={Monitor} value="dark" active />
-                <ThemeOption label="Default Sync" icon={SettingsIcon} value="system" />
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="notifications" className="space-y-8 animate-in fade-in duration-500">
-            <div className="enterprise-card border bg-card p-10 space-y-6">
-              <ToggleRow title="New Inquiry Alerts" description="Instant notifications for new property lease proposals." defaultChecked />
-              <Separator className="border-dashed" />
-              <ToggleRow title="Maintenance Sync" description="Status updates on active work orders and tickets." defaultChecked />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="security" className="space-y-8 animate-in fade-in duration-500">
-            <div className="enterprise-card border bg-card p-10 space-y-6">
-              <ToggleRow title="Two-Factor Authentication" description="Secure your operational keys with 2FA protocols." defaultChecked />
-              <Separator className="border-dashed" />
-              <div className="flex justify-between items-center">
-                <p className="text-sm font-black uppercase text-foreground">API Access Keys</p>
-                <Button variant="outline" className="h-9 text-[10px] font-black uppercase border-2">Manage Keys</Button>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+    <div className="max-w-5xl mx-auto space-y-8">
+      <div>
+        <h2 className="text-3xl font-black tracking-tighter uppercase text-foreground">Operational Configuration</h2>
+        <p className="text-[15px] text-muted-foreground font-medium">Manage your professional service profile, notifications, and technical preferences.</p>
       </div>
+
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 h-auto bg-muted/30 p-1.5 rounded-2xl border-2 mb-8 overflow-x-auto">
+          <SettingsTabTrigger value="profile" icon={User} label="Profile" />
+          <SettingsTabTrigger value="appearance" icon={Palette} label="Theme" />
+          <SettingsTabTrigger value="notifications" icon={Bell} label="Alerts" />
+          <SettingsTabTrigger value="security" icon={Shield} label="Security" />
+          <SettingsTabTrigger value="regional" icon={Globe} label="Regional" />
+          <SettingsTabTrigger value="accessibility" icon={Accessibility} label="A11y" />
+          <SettingsTabTrigger value="account" icon={SettingsIcon} label="Account" />
+        </TabsList>
+
+        <TabsContent value="profile" className="space-y-6 animate-in fade-in duration-500">
+          <ProfileTab />
+        </TabsContent>
+
+        <TabsContent value="appearance" className="space-y-8 animate-in fade-in duration-500">
+          <div className="enterprise-card border bg-card p-10 space-y-10">
+            <h3 className="text-xl font-black uppercase tracking-tight">Ops Terminal Theme</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <ThemeOption label="Technical" icon={Layout} value="light" />
+              <ThemeOption label="Night Ops" icon={Monitor} value="dark" active />
+              <ThemeOption label="Default Sync" icon={SettingsIcon} value="system" />
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="notifications" className="space-y-8 animate-in fade-in duration-500">
+          <div className="enterprise-card border bg-card p-10 space-y-6">
+            <ToggleRow title="New Inquiry Alerts" description="Instant notifications for new property lease proposals." defaultChecked />
+            <Separator className="border-dashed" />
+            <ToggleRow title="Maintenance Sync" description="Status updates on active work orders and tickets." defaultChecked />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="security" className="space-y-8 animate-in fade-in duration-500">
+          <div className="enterprise-card border bg-card p-10 space-y-6">
+            <ToggleRow title="Two-Factor Authentication" description="Secure your operational keys with 2FA protocols." defaultChecked />
+            <Separator className="border-dashed" />
+            <div className="flex justify-between items-center">
+              <p className="text-sm font-black uppercase text-foreground">API Access Keys</p>
+              <Button variant="outline" className="h-9 text-[10px] font-black uppercase border-2">Manage Keys</Button>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+export default function ContractorSettingsPage() {
+  return (
+    <DashboardLayout role="contractor">
+      <Suspense fallback={<div>Loading...</div>}>
+        <SettingsContent />
+      </Suspense>
     </DashboardLayout>
   );
 }
