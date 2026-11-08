@@ -14,7 +14,11 @@ import {
   InvitationLink,
   FinancialTransaction,
   PlatformAnnouncement,
-  SubscriptionPlan
+  SubscriptionPlan,
+  MarketingLead,
+  MarketingCampaign,
+  MarketingAcquisition,
+  MarketingTask
 } from './types';
 
 export const mockUser: User = {
@@ -38,8 +42,6 @@ export const mockUsers: User[] = [
   { id: 'u5', name: 'Vikram Reddy', email: 'vikram.reddy@realestate.in', roles: ['owner'], activeRole: 'owner', status: 'verified', joinedAt: '2023-01-10' },
   { id: 'u6', name: 'Amit Sharma', email: 'amit.sharma@edu.in', roles: ['student'], activeRole: 'student', status: 'verified', joinedAt: '2024-03-01' },
   { id: 'u7', name: 'Priya Agent', email: 'priya.ref@global.com', roles: ['agent'], activeRole: 'agent', status: 'active', joinedAt: '2024-01-20' },
-  { id: 'u8', name: 'Suspicious Sam', email: 'sam@spam.com', roles: ['student'], activeRole: 'student', status: 'suspended', joinedAt: '2024-05-25' },
-  { id: 'u9', name: 'Newbie Nick', email: 'nick@fresh.com', roles: ['owner'], activeRole: 'owner', status: 'pending', joinedAt: '2024-06-01' },
 ];
 
 export const mockOrganizations: Organization[] = [
@@ -57,7 +59,6 @@ export const mockFinancials: FinancialTransaction[] = [
   { id: 'tx1', type: 'subscription', amount: 45000, date: '2024-06-01', description: 'Enterprise Monthly Plan - org1', status: 'completed', payerName: 'StaySync Premium' },
   { id: 'tx2', type: 'subscription', amount: 12000, date: '2024-06-02', description: 'Pro Monthly Plan - org2', status: 'completed', payerName: 'Elite Living' },
   { id: 'tx3', type: 'refund', amount: 2500, date: '2024-05-28', description: 'Partial Refund - Incorrect Tier', status: 'completed', payerName: 'Urban Shelter' },
-  { id: 'tx4', type: 'subscription', amount: 5000, date: '2024-06-03', description: 'Basic Plan - Renewal', status: 'pending', payerName: 'Garden PGs' },
 ];
 
 export const mockPlans: SubscriptionPlan[] = [
@@ -69,7 +70,6 @@ export const mockPlans: SubscriptionPlan[] = [
 export const mockAuditLogs: AuditLog[] = [
   { id: 'log1', actor: 'Global SuperAdmin', actorId: 'u1', action: 'Suspend User', target: 'Suspicious Sam (u8)', timestamp: '2024-06-01 14:30', category: 'security', details: 'Multiple failed login attempts detected.', ip: '192.168.1.1' },
   { id: 'log2', actor: 'Dev Lead Sarah', actorId: 'u2', action: 'Config Update', target: 'Auth Engine', timestamp: '2024-06-01 12:15', category: 'settings', details: 'Updated JWT expiry to 24 hours.' },
-  { id: 'log3', actor: 'Global SuperAdmin', actorId: 'u1', action: 'Approve Client', target: 'Fresh Stay PGs', timestamp: '2024-05-31 09:00', category: 'user_management', details: 'Verified trade license and PAN.' },
 ];
 
 export const mockTickets: Ticket[] = [
@@ -91,15 +91,12 @@ export const mockTickets: Ticket[] = [
 ];
 
 export const mockAnnouncements: PlatformAnnouncement[] = [
-  { id: 'ann1', title: 'Scheduled Maintenance', content: 'Platform will be down for 2 hours on Sunday for database optimization.', targetRoles: ['owner', 'contractor', 'agent'], publishedAt: '2024-06-01', status: 'published' },
-  { id: 'ann2', title: 'New Commission Rates', content: 'Agent commissions for premium hostels increased by 5%.', targetRoles: ['agent'], publishedAt: '2024-05-25', status: 'published' },
+  { id: 'ann1', title: 'Scheduled Maintenance', content: 'Platform will be down for 2 hours on Sunday.', targetRoles: ['owner', 'contractor'], publishedAt: '2024-06-01', status: 'published' },
 ];
 
 export const mockHealth: SystemHealth[] = [
   { service: 'Cloud Firestore', status: 'healthy', latency: '45ms', lastChecked: '1 min ago' },
   { service: 'Auth Engine', status: 'healthy', latency: '12ms', lastChecked: '2 mins ago' },
-  { service: 'Payment Gateway', status: 'healthy', latency: '180ms', lastChecked: '30 secs ago' },
-  { service: 'Notification API', status: 'degraded', latency: '2.4s', lastChecked: '1 min ago' },
 ];
 
 export const mockStudentInquiries: StudentInquiry[] = [
@@ -110,18 +107,16 @@ export const mockInvitationLinks: InvitationLink[] = [
   { id: 'inv1', hostelName: 'StaySync Tech Wing', roomType: 'Single Sharing', link: 'https://staysync.in/join/xK92Lp0', status: 'sent', createdAt: '2024-05-12', expiresAt: '2024-05-26' }
 ];
 
-export const mockLeads: Lead[] = [
-  { id: 'l1', studentName: 'Rohan Gupta', source: 'Instagram Ad', status: 'interested', followUpDate: '2024-05-20' },
+export const mockLeads: MarketingLead[] = [
+  { id: 'lead-1', name: 'Rohan Gupta', email: 'rohan.g@gmail.com', phone: '+91 98877 11223', source: 'Meta', status: 'interested', score: 85, followUpDate: '2024-06-10', createdAt: '2024-06-01' },
 ];
 
-export const mockCampaigns: Campaign[] = [
-  { id: 'c1', name: 'Bengaluru Student Drive', channel: 'Meta', startDate: '2024-05-01', endDate: '2024-05-31', status: 'active', leadsGenerated: 450 },
+export const mockCampaigns: MarketingCampaign[] = [
+  { id: 'camp-1', name: 'Bengaluru Summer Drive', channel: 'Meta Ads', budget: 50000, spent: 32000, leads: 420, conversions: 12, status: 'active', startDate: '2024-05-01', endDate: '2024-06-30' },
 ];
 
 export const mockExpenses: Expense[] = [
   { id: 'exp1', category: 'cook', amount: 5000, date: '2024-06-01', description: 'Monthly Cook Salary', status: 'approved', propertyId: 'p1', propertyName: 'StaySync Premium Boys Hostel' },
-  { id: 'exp2', category: 'plumbing', amount: 1200, date: '2024-06-02', description: 'Tap repair room 204', status: 'pending', propertyId: 'p1', propertyName: 'StaySync Premium Boys Hostel' },
-  { id: 'exp3', category: 'wifi', amount: 3500, date: '2024-06-03', description: 'Annual ISP Maintenance', status: 'pending', propertyId: 'p1', propertyName: 'StaySync Premium Boys Hostel' },
 ];
 
 export const mockProjects: Project[] = [
@@ -145,20 +140,5 @@ export const mockProjects: Project[] = [
     monthlyRent: 350000,
     contractStart: '2024-01-01',
     contractEnd: '2026-12-31'
-  },
-  { 
-    id: 'proj2', 
-    title: 'Elite Student Manor', 
-    address: '12 Garden Road, HSR Layout, Bengaluru', 
-    propertyId: 'p2', 
-    propertyName: 'Elite Student Manor', 
-    status: 'planning', 
-    budget: 4500000, 
-    deadline: '2025-06-30', 
-    priority: 'medium', 
-    ownershipType: 'owned', 
-    totalRooms: 20, 
-    totalBeds: 40, 
-    occupiedBeds: 0
   },
 ];
