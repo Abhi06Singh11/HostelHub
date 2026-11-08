@@ -117,3 +117,48 @@ export const mockLeads: Lead[] = [
 export const mockCampaigns: Campaign[] = [
   { id: 'c1', name: 'Bengaluru Student Drive', channel: 'Meta', startDate: '2024-05-01', endDate: '2024-05-31', status: 'active', leadsGenerated: 450 },
 ];
+
+export const mockExpenses: Expense[] = [
+  { id: 'exp1', category: 'cook', amount: 5000, date: '2024-06-01', description: 'Monthly Cook Salary', status: 'approved', propertyId: 'p1', propertyName: 'StaySync Premium Boys Hostel' },
+  { id: 'exp2', category: 'plumbing', amount: 1200, date: '2024-06-02', description: 'Tap repair room 204', status: 'pending', propertyId: 'p1', propertyName: 'StaySync Premium Boys Hostel' },
+  { id: 'exp3', category: 'wifi', amount: 3500, date: '2024-06-03', description: 'Annual ISP Maintenance', status: 'pending', propertyId: 'p1', propertyName: 'StaySync Premium Boys Hostel' },
+];
+
+export const mockProjects: Project[] = [
+  { 
+    id: 'proj1', 
+    title: 'StaySync Tech Wing', 
+    address: 'Plot 42, Electronic City, Bengaluru', 
+    propertyId: 'p1', 
+    propertyName: 'StaySync Tech Wing', 
+    status: 'active', 
+    budget: 8500000, 
+    deadline: '2025-12-31', 
+    priority: 'high', 
+    ownershipType: 'rented', 
+    totalRooms: 40, 
+    totalBeds: 80, 
+    occupiedBeds: 72,
+    ownerName: 'Vikram Reddy',
+    ownerPhone: '+91 98860 12345',
+    ownerEmail: 'estates@vikram.in',
+    monthlyRent: 350000,
+    contractStart: '2024-01-01',
+    contractEnd: '2026-12-31'
+  },
+  { 
+    id: 'proj2', 
+    title: 'Elite Student Manor', 
+    address: '12 Garden Road, HSR Layout, Bengaluru', 
+    propertyId: 'p2', 
+    propertyName: 'Elite Student Manor', 
+    status: 'planning', 
+    budget: 4500000, 
+    deadline: '2025-06-30', 
+    priority: 'medium', 
+    ownershipType: 'owned', 
+    totalRooms: 20, 
+    totalBeds: 40, 
+    occupiedBeds: 0
+  },
+];
