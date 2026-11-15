@@ -37,136 +37,161 @@ export interface User {
   upcomingTasks?: DeveloperTask[];
 }
 
-export interface MarketingLead {
+export interface StudentDocument {
+  id: string;
+  name: string;
+  type: 'id_proof' | 'address_proof' | 'photo' | 'police_ack' | 'guardian_id' | 'other';
+  url: string;
+  uploadDate: string;
+  status: VerificationLevel;
+}
+
+export interface StayRecord {
+  id: string;
+  propertyId: string;
+  propertyName: string;
+  roomNumber: string;
+  bedNumber: string;
+  checkInDate: string;
+  checkOutDate?: string;
+  status: 'completed' | 'ongoing' | 'cancelled';
+}
+
+export interface VerificationAuditLog {
+  id: string;
+  type: 'government_id' | 'police';
+  oldStatus: VerificationLevel;
+  newStatus: VerificationLevel;
+  changedBy: string;
+  timestamp: string;
+  reason?: string;
+}
+
+export type StayStatus = 'active' | 'left' | 'upcoming';
+export type VerificationLevel = 'none' | 'pending' | 'verified' | 'rejected';
+export type CompletionStatus = 'complete' | 'partially_complete' | 'incomplete' | 'awaiting_review';
+
+export interface StudentDetail extends User {
+  studentId: string;
+  dob: string;
+  gender: 'Male' | 'Female' | 'Other';
+  nationality: string;
+  alternatePhone?: string;
+  permanentAddress: string;
+  currentAddress: string;
+  state: string;
+  district: string;
+  city: string;
+  pincode: string;
+  
+  fatherName: string;
+  motherName: string;
+  guardianName?: string;
+  guardianPhone: string;
+  emergencyName: string;
+  emergencyPhone: string;
+  emergencyRelation: string;
+
+  assignedHostelId: string;
+  assignedHostelName: string;
+  roomNumber: string;
+  bedNumber: string;
+  stayStatus: StayStatus;
+  checkInDate: string;
+  checkOutDate?: string;
+  registrationDate: string;
+  lastUpdated?: string;
+
+  govIdType: 'Aadhaar' | 'Passport' | 'Voter ID' | 'Driving Licence' | 'Other';
+  govIdNumber: string;
+  govIdVerified: boolean;
+  govIdVerifiedAt?: string;
+  govIdVerifiedBy?: string;
+  
+  policeVerified: boolean;
+  policeVerifiedAt?: string;
+  policeVerifiedBy?: string;
+  policeRefNumber?: string;
+  policeStation?: string;
+
+  documents: StudentDocument[];
+  stayHistory: StayRecord[];
+  verificationLogs: VerificationAuditLog[];
+}
+
+export interface StudentProfile {
   id: string;
   name: string;
   email: string;
   phone: string;
-  source: 'Meta' | 'Google' | 'Instagram' | 'Referral' | 'Direct';
-  status: 'new' | 'contacted' | 'interested' | 'converted' | 'lost';
-  score: number;
-  followUpDate: string;
-  assignedTo?: string;
-  createdAt: string;
+  photo?: string;
+  gender: 'Male' | 'Female' | 'Other';
+  dob: string;
+  nationality?: string;
+  permanentAddress?: string;
+  currentAddress?: string;
+  state?: string;
+  district?: string;
+  city?: string;
+  pincode?: string;
+  fatherName?: string;
+  motherName?: string;
+  guardianName?: string;
+  emergencyContact: {
+    name: string;
+    relationship: string;
+    phone: string;
+  };
+  govIdType?: string;
+  govIdNumber?: string;
+  verificationStatus: 'pending' | 'review' | 'verified' | 'rejected';
+  idDocsUploaded: boolean;
+  completionPercentage: number;
+  assignedHostelId: string;
+  assignedHostelName: string;
+  roomNumber: string;
+  bedNumber: string;
+  moveInDate: string;
 }
 
-export interface MarketingCampaign {
+export interface StudentNotification {
   id: string;
-  name: string;
-  channel: string;
-  budget: number;
-  spent: number;
-  leads: number;
-  conversions: number;
-  status: 'active' | 'scheduled' | 'paused' | 'completed';
-  startDate: string;
-  endDate: string;
+  title: string;
+  message: string;
+  category: 'rent' | 'complaint' | 'announcement' | 'system' | 'profile' | 'information_request';
+  timestamp: string;
+  isRead: boolean;
+  whatsappStatus?: 'sent' | 'delivered' | 'failed';
+  requestedFields?: string[];
+  status?: 'unread' | 'read' | 'in_progress' | 'completed' | 'closed';
 }
 
-export interface MarketingAcquisition {
+export interface MonthlyInvoice {
   id: string;
   month: string;
-  source: string;
-  count: number;
-  cpa: number;
+  year: number;
+  baseRent: number;
+  electricity: number;
+  wifi: number;
+  food: number;
+  maintenance: number;
+  other: number;
+  discounts: number;
+  total: number;
+  dueDate: string;
+  generatedDate: string;
+  status: 'pending' | 'paid' | 'overdue';
 }
 
-export interface MarketingTask {
+export interface PaymentRecord {
   id: string;
-  title: string;
-  assignee: string;
-  deadline: string;
-  status: 'pending' | 'in-progress' | 'completed';
-  priority: 'low' | 'medium' | 'high';
-}
-
-export interface Deployment {
-  id: string;
-  version: string;
-  environment: 'production' | 'staging' | 'development';
-  status: 'success' | 'failed' | 'in-progress' | 'cancelled';
-  deployedBy: string;
-  timestamp: string;
-  healthScore: number;
-}
-
-export interface Bug {
-  id: string;
-  title: string;
-  severity: 'critical' | 'high' | 'medium' | 'low';
-  status: 'new' | 'open' | 'fixing' | 'verified' | 'closed';
-  component: string;
-  reportedBy: string;
-  assignedTo?: string;
-  createdAt: string;
-}
-
-export interface FeatureFlag {
-  id: string;
-  name: string;
-  key: string;
-  status: 'active' | 'inactive' | 'beta';
-  rolloutPercentage: number;
-  description: string;
-}
-
-export interface AppModule {
-  id: string;
-  name: string;
-  version: string;
-  status: 'enabled' | 'disabled' | 'maintenance';
-  health: 'healthy' | 'warning' | 'critical';
-  dependencies: string[];
-  lastUpdate: string;
-  loadFactor: number;
-}
-
-export interface SystemHealth {
-  service: string;
-  status: 'healthy' | 'degraded' | 'down';
-  latency: string;
-  lastChecked: string;
-}
-
-export interface TechnicalProject {
-  id: string;
-  name: string;
-  status: 'active' | 'completed' | 'on-hold' | 'planning';
-  priority: 'p0' | 'p1' | 'p2';
-  progress: number;
-  lead: string;
-  deadline: string;
-  repo: string;
-}
-
-export interface ApiEndpoint {
-  id: string;
-  path: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  status: 'active' | 'deprecated' | 'beta';
-  latency: number;
-  requests24h: number;
-  errorRate: number;
-}
-
-export interface DbInstance {
-  id: string;
-  name: string;
-  type: 'PostgreSQL' | 'Redis' | 'ElasticSearch';
-  status: 'primary' | 'replica' | 'standby';
-  health: 'healthy' | 'warning' | 'critical';
-  storageUsed: number;
-  storageTotal: number;
-  activeConnections: number;
-}
-
-export interface TechnicalDoc {
-  id: string;
-  title: string;
-  category: 'API' | 'Infrastructure' | 'Security' | 'Guide';
-  lastModified: string;
-  author: string;
-  content: string;
+  invoiceId: string;
+  month: string;
+  amount: number;
+  date: string;
+  method: 'UPI' | 'Card' | 'Cash';
+  reference: string;
+  status: 'completed' | 'failed' | 'pending';
 }
 
 export interface Organization {
@@ -269,18 +294,6 @@ export interface FinancialTransaction {
   payerName?: string;
   paymentMethod?: string;
   reference?: string;
-}
-
-export interface Booking {
-  id: string;
-  studentName: string;
-  propertyName: string;
-  roomNumber: string;
-  bedLabel: string;
-  checkIn: string;
-  checkOut: string;
-  status: 'pending' | 'confirmed' | 'cancelled' | 'checked_in' | 'checked_out';
-  amount: number;
 }
 
 export interface Project {
@@ -421,157 +434,47 @@ export interface InvitationLink {
   startDate?: string;
 }
 
-// Resident/Student Management Types
-export type StayStatus = 'active' | 'left' | 'upcoming';
-export type VerificationLevel = 'none' | 'pending' | 'verified' | 'rejected';
-export type CompletionStatus = 'complete' | 'partially_complete' | 'incomplete' | 'awaiting_review';
-
-export interface StudentDocument {
-  id: string;
-  name: string;
-  type: 'id_proof' | 'address_proof' | 'photo' | 'police_ack' | 'guardian_id' | 'other';
-  url: string;
-  uploadDate: string;
-  status: VerificationLevel;
-}
-
-export interface StayRecord {
-  id: string;
-  propertyId: string;
-  propertyName: string;
-  roomNumber: string;
-  bedNumber: string;
-  checkInDate: string;
-  checkOutDate?: string;
-  status: 'completed' | 'ongoing' | 'cancelled';
-}
-
-export interface VerificationAuditLog {
-  id: string;
-  type: 'government_id' | 'police';
-  oldStatus: VerificationLevel;
-  newStatus: VerificationLevel;
-  changedBy: string;
-  timestamp: string;
-  reason?: string;
-}
-
-export interface StudentDetail extends User {
-  studentId: string;
-  dob: string;
-  gender: 'Male' | 'Female' | 'Other';
-  nationality: string;
-  alternatePhone?: string;
-  permanentAddress: string;
-  currentAddress: string;
-  state: string;
-  district: string;
-  city: string;
-  pincode: string;
-  
-  fatherName: string;
-  motherName: string;
-  guardianPhone: string;
-  emergencyName: string;
-  emergencyPhone: string;
-  emergencyRelation: string;
-
-  assignedHostelId: string;
-  assignedHostelName: string;
-  roomNumber: string;
-  bedNumber: string;
-  stayStatus: StayStatus;
-  checkInDate: string;
-  checkOutDate?: string;
-  registrationDate: string;
-  lastUpdated?: string;
-
-  govIdType: 'Aadhaar' | 'Passport' | 'Voter ID' | 'Driving Licence' | 'Other';
-  govIdNumber: string; // Masked in UI
-  govIdVerified: boolean;
-  govIdVerifiedAt?: string;
-  govIdVerifiedBy?: string;
-  
-  policeVerified: boolean;
-  policeVerifiedAt?: string;
-  policeVerifiedBy?: string;
-  policeRefNumber?: string;
-  policeStation?: string;
-
-  documents: StudentDocument[];
-  stayHistory: StayRecord[];
-  verificationLogs: VerificationAuditLog[];
-}
-
-export interface StudentProfile {
+export interface MarketingLead {
   id: string;
   name: string;
   email: string;
   phone: string;
-  photo?: string;
-  gender: 'Male' | 'Female' | 'Other';
-  dob: string;
-  emergencyContact: {
-    name: string;
-    relationship: string;
-    phone: string;
-  };
-  verificationStatus: 'pending' | 'review' | 'verified' | 'rejected';
-  idDocsUploaded: boolean;
-  completionPercentage: number;
-  assignedHostelId: string;
-  assignedHostelName: string;
-  roomNumber: string;
-  bedNumber: string;
-  moveInDate: string;
+  source: 'Meta' | 'Google' | 'Instagram' | 'Referral' | 'Direct';
+  status: 'new' | 'contacted' | 'interested' | 'converted' | 'lost';
+  score: number;
+  followUpDate: string;
+  assignedTo?: string;
+  createdAt: string;
 }
 
-export interface MonthlyInvoice {
-  id: string;
-  month: string;
-  year: number;
-  baseRent: number;
-  electricity: number;
-  wifi: number;
-  food: number;
-  maintenance: number;
-  other: number;
-  discounts: number;
-  total: number;
-  dueDate: string;
-  generatedDate: string;
-  status: 'pending' | 'paid' | 'overdue';
-}
-
-export interface StudentNotification {
-  id: string;
-  title: string;
-  message: string;
-  category: 'rent' | 'complaint' | 'announcement' | 'system' | 'profile' | 'information_request';
-  timestamp: string;
-  isRead: boolean;
-  whatsappStatus?: 'sent' | 'delivered' | 'failed';
-  requestedFields?: string[];
-}
-
-export interface PaymentRecord {
-  id: string;
-  invoiceId: string;
-  month: string;
-  amount: number;
-  date: string;
-  method: 'UPI' | 'Card' | 'Cash';
-  reference: string;
-  status: 'completed' | 'failed' | 'pending';
-}
-
-export interface SubscriptionPlan {
+export interface MarketingCampaign {
   id: string;
   name: string;
-  price: number;
-  billingCycle: 'monthly' | 'annually';
-  features: string[];
-  activeUsers: number;
+  channel: string;
+  budget: number;
+  spent: number;
+  leads: number;
+  conversions: number;
+  status: 'active' | 'scheduled' | 'paused' | 'completed';
+  startDate: string;
+  endDate: string;
+}
+
+export interface MarketingAcquisition {
+  id: string;
+  month: string;
+  source: string;
+  count: number;
+  cpa: number;
+}
+
+export interface MarketingTask {
+  id: string;
+  title: string;
+  assignee: string;
+  deadline: string;
+  status: 'pending' | 'in-progress' | 'completed';
+  priority: 'low' | 'medium' | 'high';
 }
 
 export interface PlatformAnnouncement {
@@ -592,4 +495,25 @@ export interface PlatformRole {
     module: string;
     actions: ('view' | 'create' | 'edit' | 'delete' | 'approve' | 'export')[];
   }[];
+}
+
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  price: number;
+  billingCycle: 'monthly' | 'annually';
+  features: string[];
+  activeUsers: number;
+}
+
+export interface AuditLog {
+  id: string;
+  actor: string;
+  actorId: string;
+  action: string;
+  target: string;
+  timestamp: string;
+  category: 'security' | 'user_management' | 'finance' | 'settings' | 'content';
+  details?: string;
+  ip?: string;
 }

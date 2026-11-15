@@ -13,11 +13,23 @@ const MOCK_PROFILE: StudentProfile = {
   phone: '+91 98765 43210',
   gender: 'Male',
   dob: '2002-08-15',
+  nationality: 'Indian',
+  permanentAddress: 'H-42, Civil Lines, Jaipur, Rajasthan',
+  currentAddress: 'H-42, Civil Lines, Jaipur, Rajasthan',
+  state: 'Rajasthan',
+  district: 'Jaipur',
+  city: 'Jaipur',
+  pincode: '302001',
+  fatherName: 'Rajesh Sharma',
+  motherName: 'Sunita Sharma',
+  guardianName: 'Rajesh Sharma',
   emergencyContact: {
     name: 'Rajesh Sharma',
     relationship: 'Father',
     phone: '+91 99887 76655'
   },
+  govIdType: 'Aadhaar',
+  govIdNumber: 'XXXX-XXXX-4829',
   verificationStatus: 'verified',
   idDocsUploaded: true,
   completionPercentage: 85,
@@ -71,6 +83,7 @@ const MOCK_NOTIFICATIONS: StudentNotification[] = [
     category: 'rent',
     timestamp: '2024-06-01 09:00',
     isRead: false,
+    status: 'unread',
     whatsappStatus: 'delivered'
   },
   {
@@ -80,6 +93,7 @@ const MOCK_NOTIFICATIONS: StudentNotification[] = [
     category: 'complaint',
     timestamp: '2024-05-28 14:30',
     isRead: true,
+    status: 'read',
     whatsappStatus: 'delivered'
   }
 ];
@@ -110,6 +124,18 @@ export const getStudentProfile = (): StudentProfile => {
 export const updateStudentProfile = (updates: Partial<StudentProfile>) => {
   const current = getStudentProfile();
   const updated = { ...current, ...updates };
+  
+  // Recalculate completion
+  const requiredFields = [
+    updated.name, updated.email, updated.phone, updated.gender, updated.dob,
+    updated.permanentAddress, updated.currentAddress, updated.state, updated.city, updated.pincode,
+    updated.fatherName, updated.motherName, updated.guardianName,
+    updated.emergencyContact.name, updated.emergencyContact.phone,
+    updated.govIdType, updated.govIdNumber
+  ];
+  const filled = requiredFields.filter(f => !!f && f !== '').length;
+  updated.completionPercentage = Math.round((filled / requiredFields.length) * 100);
+
   localStorage.setItem(PROFILE_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('storage'));
 };
@@ -143,7 +169,7 @@ export const getStudentNotifications = (): StudentNotification[] => {
 
 export const markNotificationRead = (id: string) => {
   const data = getStudentNotifications();
-  const updated = data.map(n => n.id === id ? { ...n, isRead: true } : n);
+  const updated = data.map(n => n.id === id ? { ...n, isRead: true, status: 'read' as const } : n);
   localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('storage'));
 };

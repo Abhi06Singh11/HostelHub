@@ -8,17 +8,13 @@ import {
   Search, 
   Filter, 
   MoreVertical, 
-  UserCircle, 
   ShieldCheck, 
   CheckCircle2, 
   Clock, 
-  History, 
   Eye, 
   Download,
   Building2,
   Phone,
-  Mail,
-  Calendar,
   ChevronRight,
   AlertCircle,
   FileText
@@ -48,10 +44,13 @@ export default function AllStudentsPage() {
   const router = useRouter();
   const [students, setStudents] = useState<StudentDetail[]>([]);
   const [search, setSearch] = useState('');
+  const [stayFilter, setStayFilter] = useState<'all' | 'active' | 'left'>('all');
 
   useEffect(() => {
-    setStudents(getStoredStudents());
-  }, []);
+    const data = getStoredStudents();
+    if (stayFilter === 'all') setStudents(data);
+    else setStudents(data.filter(s => s.stayStatus === stayFilter));
+  }, [stayFilter]);
 
   const filtered = students.filter(s => 
     s.name.toLowerCase().includes(search.toLowerCase()) || 
@@ -72,8 +71,8 @@ export default function AllStudentsPage() {
           }}
         />
 
-        <div className="enterprise-card border bg-card p-4 flex flex-col md:flex-row items-center gap-4">
-           <div className="relative flex-1 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 enterprise-card border bg-card p-4">
+           <div className="relative flex-1 w-full md:col-span-2">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
                 placeholder="Search by name, ID or mobile..." 
@@ -82,20 +81,33 @@ export default function AllStudentsPage() {
                 className="pl-12 h-11 border-2 focus-visible:ring-primary rounded-xl font-medium"
               />
            </div>
-           <Button variant="outline" className="h-11 border-2 font-bold uppercase text-[10px] tracking-widest px-6">
-              <Filter className="h-3.5 w-3.5 mr-2" /> Advanced Filters
-           </Button>
+           <div className="flex gap-2 w-full md:col-span-2">
+              {['all', 'active', 'left'].map(f => (
+                <button
+                  key={f}
+                  onClick={() => setStayFilter(f as any)}
+                  className={cn(
+                    "flex-1 px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest border transition-all",
+                    stayFilter === f ? "bg-primary text-white border-primary shadow-md" : "bg-card text-muted-foreground hover:bg-muted border-border"
+                  )}
+                >
+                  {f}
+                </button>
+              ))}
+              <Button variant="outline" className="h-11 border-2 font-bold uppercase text-[10px] tracking-widest px-6 shrink-0">
+                 <Filter className="h-3.5 w-3.5" />
+              </Button>
+           </div>
         </div>
 
         <DataTable>
            <thead>
               <tr className="bg-muted/10 border-b">
                  <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Student / ID</th>
-                 <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Completion</th>
-                 <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Docs</th>
+                 <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Profile Completion</th>
                  <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Gov ID</th>
-                 <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Police</th>
-                 <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Status</th>
+                 <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Police Verification</th>
+                 <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Stay Status</th>
                  <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest text-right">Actions</th>
               </tr>
            </thead>
@@ -123,32 +135,28 @@ export default function AllStudentsPage() {
                         </div>
                     </td>
                     <td className="py-4 px-6">
-                        <div className="flex flex-col gap-1.5 w-32">
-                          <div className="flex justify-between items-center text-[9px] font-bold uppercase">
-                              <span className="text-muted-foreground">{status.replace('_', ' ')}</span>
-                              <span className="text-primary">{completion}%</span>
-                          </div>
-                          <Progress value={completion} className="h-1" />
-                        </div>
-                    </td>
-                    <td className="py-4 px-6">
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <div className="flex items-center gap-1.5">
-                                <FileText className={cn("h-4 w-4", missing.length === 0 ? "text-emerald-600" : "text-amber-500")} />
-                                <span className="text-[10px] font-bold uppercase">
-                                  {student.documents.length} Files
-                                </span>
-                                {missing.length > 0 && <AlertCircle className="h-3 w-3 text-red-500" />}
+                              <div className="flex flex-col gap-1.5 w-32 cursor-help">
+                                <div className="flex justify-between items-center text-[9px] font-bold uppercase">
+                                    <span className={cn(completion === 100 ? "text-emerald-600" : "text-muted-foreground")}>{status.replace('_', ' ')}</span>
+                                    <span className="text-primary">{completion}%</span>
+                                </div>
+                                <Progress value={completion} className={cn("h-1", completion === 100 ? "bg-emerald-100" : "bg-muted")} />
                               </div>
                             </TooltipTrigger>
-                            <TooltipContent className="p-3 max-w-[200px]">
-                              <p className="text-[10px] font-bold uppercase mb-1">Missing Elements:</p>
-                              <ul className="text-[10px] list-disc pl-3">
-                                {missing.map(m => <li key={m}>{m}</li>)}
-                                {missing.length === 0 && <li>All required nodes present</li>}
-                              </ul>
+                            <TooltipContent className="p-4 max-w-[240px] rounded-2xl border-2">
+                              {missing.length > 0 ? (
+                                <div className="space-y-2">
+                                  <p className="text-[10px] font-bold uppercase text-amber-600 flex items-center gap-1.5"><AlertCircle className="h-3 w-3" /> Missing Elements:</p>
+                                  <ul className="text-[10px] font-medium uppercase list-disc pl-3 text-muted-foreground leading-relaxed">
+                                    {missing.map(m => <li key={m}>{m}</li>)}
+                                  </ul>
+                                </div>
+                              ) : (
+                                <p className="text-[10px] font-bold uppercase text-emerald-600 flex items-center gap-1.5"><CheckCircle2 className="h-3 w-3" /> Profile Dossier 100% Complete</p>
+                              )}
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -170,15 +178,12 @@ export default function AllStudentsPage() {
                         </Badge>
                     </td>
                     <td className="py-4 px-6">
-                        <div className="space-y-1">
-                          <Badge variant="outline" className={cn(
-                              "text-[8px] font-bold uppercase px-3 py-0.5",
-                              student.stayStatus === 'active' ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-muted text-muted-foreground border-border"
-                          )}>
-                              {student.stayStatus}
-                          </Badge>
-                          <p className="text-[8px] text-muted-foreground uppercase font-bold text-center">Sync: {student.lastUpdated?.split(' ')[0]}</p>
-                        </div>
+                        <Badge variant="outline" className={cn(
+                            "text-[8px] font-bold uppercase px-3 py-0.5 border-primary/20",
+                            student.stayStatus === 'active' ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-muted text-muted-foreground border-border"
+                        )}>
+                            {student.stayStatus}
+                        </Badge>
                     </td>
                     <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-3">
@@ -188,10 +193,9 @@ export default function AllStudentsPage() {
                                 <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg"><MoreVertical className="h-4 w-4" /></Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl border shadow-2xl">
-                                <DropdownMenuLabel className="text-[9px] font-black uppercase text-muted-foreground px-3 py-2 tracking-widest">Management</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => router.push(`/contractor/students/${student.id}`)} className="text-xs font-bold uppercase py-2.5 cursor-pointer rounded-lg"><Eye className="mr-3 h-4 w-4 text-primary" /> View Intelligence</DropdownMenuItem>
+                                <DropdownMenuItem className="text-xs font-bold uppercase py-2.5 cursor-pointer rounded-lg"><FileText className="mr-3 h-4 w-4 text-primary" /> Review Docs</DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={() => router.push(`/contractor/students/${student.id}`)} className="text-xs font-bold uppercase py-2.5 cursor-pointer rounded-lg"><Eye className="mr-3 h-4 w-4 text-primary" /> View Profile</DropdownMenuItem>
-                                <DropdownMenuItem className="text-xs font-bold uppercase py-2.5 cursor-pointer rounded-lg"><FileText className="mr-3 h-4 w-4 text-primary" /> Audit Vault</DropdownMenuItem>
                                 <DropdownMenuItem className="text-xs font-bold uppercase py-2.5 cursor-pointer rounded-lg"><Download className="mr-3 h-4 w-4 text-primary" /> Export Dossier</DropdownMenuItem>
                               </DropdownMenuContent>
                           </DropdownMenu>
@@ -200,6 +204,16 @@ export default function AllStudentsPage() {
                   </tr>
                 )
               })}
+              {filtered.length === 0 && (
+                <tr>
+                   <td colSpan={6} className="py-24 text-center">
+                      <div className="w-16 h-16 bg-muted/20 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-border">
+                         <Search className="h-8 w-8 text-muted-foreground/30" />
+                      </div>
+                      <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">No matching residents found</p>
+                   </td>
+                </tr>
+              )}
            </tbody>
         </DataTable>
       </div>

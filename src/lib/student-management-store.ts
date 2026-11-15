@@ -179,7 +179,6 @@ export const updateStudentProfile = (id: string, updates: Partial<StudentDetail>
   saveStudents(updated);
 };
 
-// Completion Tracking Helpers
 export const calculateCompletion = (student: StudentDetail): number => {
   const fields = [
     student.name, student.email, student.phone, student.dob, student.gender,
@@ -224,7 +223,6 @@ export const getMissingFields = (student: StudentDetail): string[] => {
   return missing;
 };
 
-// Notification Action
 export const sendInformationRequest = (studentId: string, requestedFields: string[], customMessage: string) => {
   if (typeof window === 'undefined') return;
   
@@ -238,6 +236,7 @@ export const sendInformationRequest = (studentId: string, requestedFields: strin
     category: 'information_request',
     timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16),
     isRead: false,
+    status: 'unread',
     requestedFields: requestedFields
   };
   

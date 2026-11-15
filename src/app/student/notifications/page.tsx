@@ -15,21 +15,26 @@ import {
   Search,
   Filter,
   Megaphone,
-  Smartphone
+  Smartphone,
+  ArrowRight,
+  FileText
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
 
 const catIcons: any = {
   rent: { icon: Wallet, color: 'text-emerald-600', bg: 'bg-emerald-50' },
   complaint: { icon: AlertTriangle, color: 'text-amber-600', bg: 'bg-amber-50' },
   announcement: { icon: Megaphone, color: 'text-primary', bg: 'bg-primary/5' },
   system: { icon: ShieldCheck, color: 'text-blue-600', bg: 'bg-blue-50' },
-  profile: { icon: CheckCircle2, color: 'text-indigo-600', bg: 'bg-indigo-50' }
+  profile: { icon: CheckCircle2, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+  information_request: { icon: FileText, color: 'text-amber-600', bg: 'bg-amber-50' }
 };
 
 export default function StudentNotificationsPage() {
+  const router = useRouter();
   const [notifications, setNotifications] = useState<StudentNotification[]>([]);
   const [search, setSearch] = useState('');
 
@@ -100,13 +105,20 @@ export default function StudentNotificationsPage() {
                      </div>
                      <p className={cn("text-sm font-medium leading-relaxed", n.isRead ? "text-muted-foreground/60" : "text-foreground/80")}>{n.message}</p>
                      
-                     <div className="flex items-center gap-6 pt-3">
-                        <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em]">{n.category}</span>
-                        {n.whatsappStatus && (
-                          <div className="flex items-center gap-1.5">
-                             <Smartphone className="h-3 w-3 text-emerald-600" />
-                             <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest">WhatsApp: {n.whatsappStatus}</span>
-                          </div>
+                     <div className="flex items-center justify-between pt-3">
+                        <div className="flex items-center gap-6">
+                           <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-[0.2em]">{n.category.replace('_', ' ')}</span>
+                           {n.whatsappStatus && (
+                             <div className="flex items-center gap-1.5">
+                                <Smartphone className="h-3 w-3 text-emerald-600" />
+                                <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest">WhatsApp: {n.whatsappStatus}</span>
+                             </div>
+                           )}
+                        </div>
+                        {n.category === 'information_request' && (
+                           <Button onClick={() => router.push('/student/profile')} size="sm" className="h-8 px-5 font-bold uppercase text-[9px] tracking-widest shadow-md">
+                              Complete Now <ArrowRight className="ml-1.5 h-3 w-3" />
+                           </Button>
                         )}
                      </div>
                   </div>

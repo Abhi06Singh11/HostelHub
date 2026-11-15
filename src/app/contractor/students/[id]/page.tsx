@@ -19,8 +19,6 @@ import {
   Clock,
   Download,
   Upload,
-  UserCircle,
-  MoreVertical,
   Activity,
   Zap,
   Info,
@@ -28,7 +26,8 @@ import {
   Home,
   MessageSquare,
   Send,
-  Plus
+  Plus,
+  ArrowRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -76,7 +75,6 @@ export default function StudentProfileDetailPage() {
     { id: 'gov_id', label: 'Upload Government ID' },
     { id: 'addr_proof', label: 'Upload Address Proof' },
     { id: 'photo', label: 'Upload Student Photograph' },
-    { id: 'other', label: 'Submit Other Required Documents' },
   ];
 
   useEffect(() => {
@@ -128,7 +126,7 @@ export default function StudentProfileDetailPage() {
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <Button variant="ghost" onClick={() => router.back()} className="font-semibold uppercase text-[11px] tracking-widest h-10 px-4">
-            <ArrowLeft className="h-4 w-4 mr-2" /> All Students
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Directory
           </Button>
           <div className="flex gap-3">
              <Dialog open={isRequestOpen} onOpenChange={setIsRequestOpen}>
@@ -177,10 +175,7 @@ export default function StudentProfileDetailPage() {
                 </DialogContent>
              </Dialog>
              <Button variant="outline" className="h-10 font-semibold uppercase text-[11px] tracking-widest border-2">
-                <Download className="h-4 w-4 mr-2" /> Download Dossier
-             </Button>
-             <Button className="h-10 font-semibold uppercase text-[11px] tracking-widest shadow-md">
-                Edit Identification
+                <Download className="h-4 w-4 mr-2" /> Download Record
              </Button>
           </div>
         </div>
@@ -199,11 +194,11 @@ export default function StudentProfileDetailPage() {
                              <h1 className="text-3xl font-bold tracking-tighter uppercase text-foreground">{student.name}</h1>
                              <div className="flex items-center gap-3 mt-2">
                                 <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 font-bold uppercase text-[10px] tracking-widest py-1.5 px-4 rounded-xl">RESIDENT</Badge>
-                                <span className="text-[11px] text-muted-foreground font-bold uppercase tracking-widest">ID: {student.studentId}</span>
+                                <span className="text-[11px] text-muted-foreground font-bold uppercase tracking-widest">ST-ID: {student.studentId}</span>
                              </div>
                           </div>
                           <div className="text-right">
-                             <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-[0.2em]">Overall Trust Node</p>
+                             <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-[0.2em]">Overall Trust State</p>
                              <Badge className={cn(
                                "mt-1 font-bold uppercase text-[11px] py-1.5 px-6 rounded-xl shadow-sm",
                                overallStatus === 'Fully Verified' ? "bg-emerald-600 text-white" : "bg-primary text-white"
@@ -220,7 +215,7 @@ export default function StudentProfileDetailPage() {
                           <div className="space-y-3">
                              <ProfileRow icon={Building2} label="Hostel Asset" value={student.assignedHostelName} />
                              <ProfileRow icon={Home} label="Unit Allocation" value={`Room ${student.roomNumber} (Bed ${student.bedNumber})`} />
-                             <ProfileRow icon={Clock} label="Resident Since" value={student.checkInDate} />
+                             <ProfileRow icon={Clock} label="Check-in Date" value={student.checkInDate} />
                           </div>
                        </div>
                     </div>
@@ -230,29 +225,28 @@ export default function StudentProfileDetailPage() {
 
               {/* Completion Logic Summary */}
               {missing.length > 0 && (
-                <Card className="enterprise-card border-amber-500/20 bg-amber-500/5 p-8 animate-in fade-in duration-500">
+                <Card className="enterprise-card border-amber-200 bg-amber-50/50 p-8 animate-in fade-in duration-500">
                   <div className="flex flex-col md:flex-row justify-between gap-8">
                     <div className="space-y-4 flex-1">
                       <div className="flex items-center gap-2">
                         <AlertCircle className="h-5 w-5 text-amber-600" />
-                        <h3 className="text-lg font-bold uppercase tracking-tight text-amber-700">Dossier Incomplete</h3>
+                        <h3 className="text-lg font-bold uppercase tracking-tight text-amber-800">Incomplete Profile Dossier</h3>
                       </div>
-                      <p className="text-xs font-medium text-amber-700/70 leading-relaxed uppercase">
+                      <p className="text-xs font-medium text-amber-800/70 leading-relaxed uppercase">
                         This resident is missing {missing.length} critical information nodes required for the commercial stay ledger.
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        {missing.slice(0, 5).map(m => (
-                          <Badge key={m} variant="outline" className="text-[8px] font-bold uppercase border-amber-500/30 text-amber-700 bg-amber-500/10">{m}</Badge>
+                        {missing.map(m => (
+                          <Badge key={m} variant="outline" className="text-[8px] font-bold uppercase border-amber-300 text-amber-800 bg-amber-100">{m}</Badge>
                         ))}
-                        {missing.length > 5 && <span className="text-[9px] font-bold text-amber-600">+{missing.length - 5} more</span>}
                       </div>
                     </div>
-                    <div className="w-full md:w-48 space-y-3">
-                       <div className="flex justify-between text-[11px] font-bold uppercase text-amber-700">
-                          <span>Profile Health</span>
+                    <div className="w-full md:w-48 space-y-3 text-center">
+                       <div className="flex justify-between text-[11px] font-bold uppercase text-amber-800">
+                          <span>Health</span>
                           <span>{completion}%</span>
                        </div>
-                       <Progress value={completion} className="h-2 bg-amber-200" />
+                       <Progress value={completion} className="h-1.5 bg-amber-200" />
                        <Button 
                         size="sm" 
                         onClick={() => setIsRequestOpen(true)}
@@ -268,10 +262,10 @@ export default function StudentProfileDetailPage() {
               {/* Main Content Tabs */}
               <Tabs defaultValue="identity" className="w-full">
                  <TabsList className="grid w-full grid-cols-4 bg-muted/30 p-1.5 rounded-2xl border-2 mb-8 h-auto">
-                    <TabsTrigger value="identity" className="rounded-xl py-3 font-semibold text-[10px] uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Identity Hub</TabsTrigger>
-                    <TabsTrigger value="history" className="rounded-xl py-3 font-semibold text-[10px] uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Stay Ledger</TabsTrigger>
-                    <TabsTrigger value="documents" className="rounded-xl py-3 font-semibold text-[10px] uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Doc Vault</TabsTrigger>
-                    <TabsTrigger value="guardian" className="rounded-xl py-3 font-semibold text-[10px] uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">Contacts</TabsTrigger>
+                    <TabsTrigger value="identity" className="rounded-xl py-3 font-semibold text-[10px] uppercase tracking-widest">Identification</TabsTrigger>
+                    <TabsTrigger value="history" className="rounded-xl py-3 font-semibold text-[10px] uppercase tracking-widest">Stay History</TabsTrigger>
+                    <TabsTrigger value="documents" className="rounded-xl py-3 font-semibold text-[10px] uppercase tracking-widest">Document Vault</TabsTrigger>
+                    <TabsTrigger value="guardian" className="rounded-xl py-3 font-semibold text-[10px] uppercase tracking-widest">Emergency</TabsTrigger>
                  </TabsList>
 
                  <TabsContent value="identity" className="space-y-8 animate-in fade-in duration-500">
@@ -282,7 +276,7 @@ export default function StudentProfileDetailPage() {
                              <DetailField label="Government ID Type" value={student.govIdType} />
                              <DetailField label="ID Reference Number" value={student.govIdNumber} />
                              <DetailField label="Nationality" value={student.nationality} />
-                             <DetailField label="Address Origin" value={student.permanentAddress} />
+                             <DetailField label="Permanent Origin" value={student.permanentAddress} />
                           </div>
                        </Card>
 
@@ -301,7 +295,7 @@ export default function StudentProfileDetailPage() {
                  <TabsContent value="history" className="animate-in fade-in duration-500">
                     <Card className="enterprise-card overflow-hidden">
                        <div className="p-4 border-b bg-muted/20">
-                          <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Historical Stay Nodes</span>
+                          <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Historical Stay Ledger</span>
                        </div>
                        <div className="divide-y">
                           {student.stayHistory.map(stay => (
@@ -316,7 +310,7 @@ export default function StudentProfileDetailPage() {
                                   </div>
                                </div>
                                <div className="text-right">
-                                  <Badge className={cn("text-[8px] uppercase", stay.status === 'ongoing' ? "bg-emerald-600" : "bg-muted text-muted-foreground")}>{stay.status}</Badge>
+                                  <Badge className={cn("text-[8px] uppercase", stay.status === 'ongoing' ? "bg-emerald-600 text-white" : "bg-muted text-muted-foreground")}>{stay.status}</Badge>
                                   <p className="text-[10px] text-muted-foreground font-semibold uppercase mt-1">Check-in: {stay.checkInDate}</p>
                                </div>
                             </div>
@@ -332,22 +326,22 @@ export default function StudentProfileDetailPage() {
                             <div className="flex justify-between items-start">
                                <div className="p-3 rounded-xl bg-muted group-hover:bg-primary/5 transition-colors">
                                   <FileText className="h-6 w-6 text-muted-foreground group-hover:text-primary" />
-                               </div>
-                               <Badge className="text-[7px] uppercase tracking-widest">{doc.status}</Badge>
+                                </div>
+                               <Badge className="text-[8px] font-bold uppercase tracking-widest border">{doc.status}</Badge>
                             </div>
                             <div>
                                <p className="text-xs font-semibold text-foreground uppercase truncate">{doc.name}</p>
                                <p className="text-[9px] text-muted-foreground font-semibold uppercase mt-1">{doc.type.replace('_', ' ')} • {doc.uploadDate}</p>
                             </div>
                             <div className="flex gap-2 mt-auto">
-                               <Button variant="ghost" size="sm" className="flex-1 h-8 text-[9px] font-semibold uppercase tracking-widest border border-border">Preview</Button>
-                               <Button variant="ghost" size="sm" className="flex-1 h-8 text-[9px] font-semibold uppercase tracking-widest border border-border">Swap</Button>
+                               <Button variant="outline" size="sm" className="flex-1 h-8 text-[9px] font-semibold uppercase tracking-widest border-2">Preview</Button>
+                               <Button variant="outline" size="sm" className="flex-1 h-8 text-[9px] font-semibold uppercase tracking-widest border-2">Replace</Button>
                             </div>
                          </Card>
                        ))}
                        <button className="aspect-square rounded-2xl border-2 border-dashed border-primary/20 bg-primary/5 flex flex-col items-center justify-center gap-3 text-primary hover:bg-primary/10 transition-all">
                           <Upload className="h-8 w-8" />
-                          <span className="text-[10px] font-semibold uppercase tracking-widest">Transmit Document</span>
+                          <span className="text-[10px] font-semibold uppercase tracking-widest">Upload New</span>
                        </button>
                     </div>
                  </TabsContent>
@@ -356,11 +350,11 @@ export default function StudentProfileDetailPage() {
                     <Card className="enterprise-card p-10 space-y-10">
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                           <div className="space-y-6">
-                             <h4 className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted-foreground border-b pb-2">Parent / Kin Logic</h4>
+                             <h4 className="text-[12px] font-semibold uppercase tracking-[0.2em] text-muted-foreground border-b pb-2">Guardian Node</h4>
                              <div className="space-y-4">
-                                <DetailField label="Father Identity" value={student.fatherName} />
-                                <DetailField label="Mother Identity" value={student.motherName} />
-                                <DetailField label="Guardian Node" value={student.guardianPhone} />
+                                <DetailField label="Father's Identity" value={student.fatherName} />
+                                <DetailField label="Mother's Identity" value={student.motherName} />
+                                <DetailField label="Guardian Phone" value={student.guardianPhone} />
                              </div>
                           </div>
                           <div className="space-y-6">
@@ -368,7 +362,7 @@ export default function StudentProfileDetailPage() {
                              <div className="space-y-4">
                                 <DetailField label="Contact Alias" value={student.emergencyName} />
                                 <DetailField label="Emergency Phone" value={student.emergencyPhone} />
-                                <DetailField label="Kin Relationship" value={student.emergencyRelation} />
+                                <DetailField label="Relationship" value={student.emergencyRelation} />
                              </div>
                           </div>
                        </div>
@@ -378,38 +372,14 @@ export default function StudentProfileDetailPage() {
            </div>
 
            <div className="space-y-8">
-              {/* Profile Completion Pulse */}
-              <Card className="enterprise-card p-8 space-y-6">
-                 <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">Compliance Heartbeat</h4>
-                 <div className="space-y-8">
-                    <div className="p-5 rounded-2xl bg-muted/20 border border-border space-y-4">
-                       <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Dossier Integrity</p>
-                       <div className="flex items-center justify-between">
-                          <p className="text-3xl font-bold text-foreground">{completion}%</p>
-                          <Badge className={cn("font-bold text-[9px]", completion === 100 ? "bg-emerald-600 text-white" : "bg-amber-500 text-white")}>
-                            {completion === 100 ? 'COMPLETE' : 'INCOMPLETE'}
-                          </Badge>
-                       </div>
-                       <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                          <div className={cn("h-full", completion === 100 ? "bg-emerald-500" : "bg-primary")} style={{ width: `${completion}%` }} />
-                       </div>
-                    </div>
-                    <div className="space-y-4">
-                       <DetailRow label="KYC Document" value={student.govIdVerified ? 'Verified' : 'Pending'} icon={FileText} color={student.govIdVerified ? "text-emerald-600" : "text-amber-600"} />
-                       <DetailRow label="Stay Registry" value="ACTIVE" icon={CheckCircle2} color="text-emerald-600" />
-                       <DetailRow label="Audit History" value="STABLE" icon={History} color="text-primary" />
-                    </div>
-                 </div>
-              </Card>
-
-              {/* CRITICAL: INDEPENDENT VERIFICATION TOGGLES */}
+              {/* Verification Matrix */}
               <Card className="enterprise-card p-8 space-y-8">
                  <div className="space-y-1">
                     <h3 className="text-sm font-semibold uppercase tracking-widest text-foreground">Verification Gateway</h3>
                     <p className="text-[11px] text-muted-foreground font-medium">Independent compliance synchronization.</p>
                  </div>
 
-                 <div className="space-y-10">
+                 <div className="space-y-8">
                     {/* Toggle 1: Government ID */}
                     <div className="flex items-center justify-between gap-6 p-4 bg-muted/20 border-2 border-dashed rounded-2xl">
                        <div className="space-y-1 flex-1">
@@ -417,7 +387,7 @@ export default function StudentProfileDetailPage() {
                              <ShieldCheck className={cn("h-4 w-4", student.govIdVerified ? "text-emerald-600" : "text-muted-foreground")} />
                              Government ID Verified
                           </Label>
-                          <p className="text-[9px] text-muted-foreground font-medium uppercase leading-tight">Identity document sync state.</p>
+                          <p className="text-[9px] text-muted-foreground font-medium uppercase leading-tight">Identity document checked.</p>
                        </div>
                        <Switch 
                          checked={student.govIdVerified} 
@@ -433,7 +403,7 @@ export default function StudentProfileDetailPage() {
                              <Zap className={cn("h-4 w-4", student.policeVerified ? "text-emerald-600" : "text-muted-foreground")} />
                              Police Verification Done
                           </Label>
-                          <p className="text-[9px] text-muted-foreground font-medium uppercase leading-tight">Legal law-enforcement ledger state.</p>
+                          <p className="text-[9px] text-muted-foreground font-medium uppercase leading-tight">Authority confirmation logged.</p>
                        </div>
                        <Switch 
                          checked={student.policeVerified} 
@@ -443,22 +413,12 @@ export default function StudentProfileDetailPage() {
                     </div>
                  </div>
 
-                 {/* Audit Brief */}
                  <div className="space-y-4 pt-6 border-t border-dashed">
                     <h4 className="text-[10px] font-semibold uppercase text-muted-foreground tracking-widest">Metadata Ledger</h4>
-                    <div className="space-y-2">
-                       {student.govIdVerified && (
-                         <div className="flex justify-between items-center text-[10px] font-semibold uppercase">
-                            <span className="text-muted-foreground/60">ID Verified By</span>
-                            <span className="text-foreground">{student.govIdVerifiedBy}</span>
-                         </div>
-                       )}
-                       {student.policeVerified && (
-                         <div className="flex justify-between items-center text-[10px] font-semibold uppercase">
-                            <span className="text-muted-foreground/60">Pol Verified By</span>
-                            <span className="text-foreground">{student.policeVerifiedBy}</span>
-                         </div>
-                       )}
+                    <div className="space-y-3">
+                       <AuditMeta label="Completion" value={`${completion}%`} />
+                       <AuditMeta label="ID Verified By" value={student.govIdVerifiedBy || 'Pending'} />
+                       <AuditMeta label="Sync Date" value={student.lastUpdated?.split(' ')[0] || 'N/A'} />
                     </div>
                  </div>
               </Card>
@@ -469,8 +429,8 @@ export default function StudentProfileDetailPage() {
                     <AlertCircle className="h-5 w-5 opacity-80" />
                     <h4 className="text-[10px] font-bold uppercase tracking-widest">Admin Tip</h4>
                  </div>
-                 <p className="text-[11px] opacity-90 leading-relaxed font-medium">
-                    "Students with verified Government IDs and 100% complete profiles are 3x more likely to clear police verification without secondary audits."
+                 <p className="text-[11px] opacity-90 leading-relaxed font-medium uppercase tracking-tight">
+                    Residents with 100% complete dossiers clear police verification 3x faster than partially complete profiles.
                  </p>
               </div>
            </div>
@@ -543,13 +503,11 @@ function DetailField({ label, value }: any) {
   );
 }
 
-function DetailRow({ label, value, icon: Icon, color }: any) {
+function AuditMeta({ label, value }: any) {
   return (
-    <div className="flex justify-between items-center text-[10px] font-semibold uppercase tracking-widest">
-       <span className="text-muted-foreground flex items-center gap-2">
-          <Icon className="h-3.5 w-3.5" /> {label}
-       </span>
-       <span className={cn("font-semibold uppercase", color)}>{value}</span>
+    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+       <span className="text-muted-foreground">{label}</span>
+       <span className="text-foreground">{value}</span>
     </div>
   );
 }

@@ -11,27 +11,34 @@ import {
   Home,
   UserCheck,
   Calendar,
-  PhoneCall
+  PhoneCall,
+  UserCircle,
+  FileText,
+  ShieldCheck,
+  Info
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { getStudentProfile, getStudentInvoices } from '@/lib/student-store';
+import { getStudentProfile, getStudentInvoices, getStudentNotifications } from '@/lib/student-store';
 import { getStoredTickets } from '@/lib/ticket-store';
-import { StudentProfile, MonthlyInvoice, Ticket } from '@/lib/types';
+import { StudentProfile, MonthlyInvoice, Ticket, StudentNotification } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function StudentDashboard() {
   const router = useRouter();
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [invoices, setInvoices] = useState<MonthlyInvoice[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [notifications, setNotifications] = useState<StudentNotification[]>([]);
 
   useEffect(() => {
     const load = () => {
       setProfile(getStudentProfile());
       setInvoices(getStudentInvoices());
       setTickets(getStoredTickets());
+      setNotifications(getStudentNotifications());
     };
     load();
     window.addEventListener('storage', load);
@@ -42,17 +49,18 @@ export default function StudentDashboard() {
 
   const currentInvoice = invoices.find(inv => inv.status !== 'paid');
   const activeTickets = tickets.filter(t => t.status !== 'closed');
+  const infoRequests = notifications.filter(n => n.category === 'information_request' && n.status !== 'closed');
   
   return (
     <DashboardLayout role="student">
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-1">Resident Portal</p>
+            <p className="text-xs font-semibold text-primary uppercase tracking-[0.2em] mb-1">Resident Portal</p>
             <h2 className="text-3xl font-bold text-foreground tracking-tighter uppercase">Welcome Home, {profile.name.split(' ')[0]}</h2>
           </div>
           <div className="flex gap-3">
-             <Button onClick={() => router.push('/student/pay')} className="h-11 px-8 font-bold text-[12px] uppercase tracking-widest shadow-md">
+             <Button onClick={() => router.push('/student/pay')} className="h-11 px-8 font-semibold text-[13px] uppercase tracking-widest shadow-lg">
                 <Wallet className="h-4 w-4 mr-2" /> Pay Rent
              </Button>
           </div>
@@ -65,37 +73,70 @@ export default function StudentDashboard() {
           <StatCard title="Profile State" value={profile.verificationStatus} details={`${profile.completionPercentage}% Complete`} icon={UserCheck} color="text-blue-600" />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
           <div className="lg:col-span-2 space-y-8">
-             {/* Current Stay & Quick Actions */}
-             <div className="enterprise-card border bg-card p-8">
-                <div className="flex justify-between items-start mb-8">
-                   <div className="space-y-1">
-                      <h3 className="text-xl font-bold text-foreground uppercase tracking-tight">Accommodation Details</h3>
-                      <p className="text-sm text-muted-foreground font-medium flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> StaySync Tech Wing, Plot 42, Bengaluru</p>
+             {/* Profile Completion Widget */}
+             <Card className={cn(
+               "enterprise-card border overflow-hidden",
+               profile.completionPercentage < 100 ? "border-amber-200 bg-amber-50/30" : "bg-card"
+             )}>
+                <div className="p-8 space-y-8">
+                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                      <div className="space-y-2">
+                         <h3 className="text-2xl font-bold text-foreground uppercase tracking-tight">Complete Your Resident Profile</h3>
+                         <p className="text-sm text-muted-foreground font-medium">Your profile is {profile.completionPercentage < 100 ? 'incomplete' : 'complete'}. Ensure all details are accurate for verification.</p>
+                      </div>
+                      <div className="text-center w-full md:w-32">
+                         <p className="text-3xl font-bold text-primary">{profile.completionPercentage}%</p>
+                         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Dossier Health</p>
+                         <Progress value={profile.completionPercentage} className="h-1.5 mt-3" />
+                      </div>
                    </div>
-                   <span className="px-3 py-1 rounded-lg bg-emerald-600 text-white font-bold text-[10px] uppercase">Active Resident</span>
-                </div>
-                
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6 border-y border-dashed">
-                   <InfoBit label="Check In" value={profile.moveInDate} />
-                   <InfoBit label="Room Type" value="Double Sharing" />
-                   <InfoBit label="Floor" value="3rd Floor" />
-                   <InfoBit label="Bed Category" value="Premium Single" />
-                </div>
 
-                <div className="flex flex-wrap gap-4 mt-8">
-                   <Button variant="outline" onClick={() => router.push('/student/room')} className="flex-1 min-w-[150px] h-11 font-bold text-[11px] uppercase tracking-widest border-2">
-                      View My Room
-                   </Button>
-                   <Button variant="outline" onClick={() => router.push('/student/complaints')} className="flex-1 min-w-[150px] h-11 font-bold text-[11px] uppercase tracking-widest border-2">
-                      Report Issue
-                   </Button>
-                   <Button variant="outline" className="flex-1 min-w-[150px] h-11 font-bold text-[11px] uppercase tracking-widest border-2">
-                      <PhoneCall className="h-4 w-4 mr-2" /> Contact Admin
-                   </Button>
+                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-6 border-t border-dashed">
+                      <CompletionItem label="Personal Info" done={!!profile.dob && !!profile.gender} />
+                      <CompletionItem label="Contact Info" done={!!profile.phone && !!profile.email} />
+                      <CompletionItem label="Guardian Node" done={!!profile.fatherName && !!profile.guardianName} />
+                      <CompletionItem label="ID Document" done={profile.idDocsUploaded} />
+                   </div>
+
+                   <div className="flex justify-end gap-3 pt-4">
+                      <Button variant="outline" onClick={() => router.push('/student/profile')} className="h-11 px-8 font-semibold text-[12px] uppercase tracking-widest border-2">
+                        View Dossier
+                      </Button>
+                      {profile.completionPercentage < 100 && (
+                        <Button onClick={() => router.push('/student/profile')} className="h-11 px-10 font-semibold text-[12px] uppercase tracking-widest shadow-md">
+                          Complete Now
+                        </Button>
+                      )}
+                   </div>
                 </div>
-             </div>
+             </Card>
+
+             {/* Information Requests */}
+             {infoRequests.length > 0 && (
+               <div className="space-y-4">
+                  <h4 className="text-[11px] font-bold uppercase text-muted-foreground tracking-widest flex items-center gap-2">
+                    <Info className="h-4 w-4 text-amber-600" /> Pending Contractor Requests
+                  </h4>
+                  {infoRequests.map(req => (
+                    <Card key={req.id} className="enterprise-card border-amber-200 bg-amber-50/50 p-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                       <div className="flex gap-4">
+                          <div className="p-3 bg-amber-100 rounded-xl text-amber-700 shrink-0 h-fit">
+                             <FileText className="h-6 w-6" />
+                          </div>
+                          <div>
+                             <h4 className="text-base font-bold text-foreground uppercase tracking-tight">{req.title}</h4>
+                             <p className="text-sm text-muted-foreground font-medium mt-1">Please provide: <span className="text-amber-700 font-bold">{req.requestedFields?.join(', ')}</span></p>
+                          </div>
+                       </div>
+                       <Button onClick={() => router.push('/student/profile')} className="bg-amber-600 hover:bg-amber-700 text-white font-bold uppercase text-[11px] tracking-widest h-10 px-8 shrink-0">
+                          Fix Now
+                       </Button>
+                    </Card>
+                  ))}
+               </div>
+             )}
 
              {/* Recent Activity */}
              <div className="enterprise-card border bg-card overflow-hidden">
@@ -158,25 +199,29 @@ export default function StudentDashboard() {
                 <Wallet className="absolute -right-6 -bottom-6 h-32 w-32 text-white/5" />
              </div>
 
-             {/* Profile Progress */}
-             <div className="enterprise-card border bg-card p-6 space-y-5">
-                <h4 className="text-[11px] font-bold uppercase text-muted-foreground tracking-widest">Profile Integrity</h4>
-                <div className="space-y-3">
-                   <div className="flex justify-between text-[11px] font-bold uppercase">
-                      <span>Verification</span>
-                      <span className="text-primary">{profile.completionPercentage}%</span>
-                   </div>
-                   <Progress value={profile.completionPercentage} className="h-1.5" />
-                </div>
-                <div className="p-3 bg-muted/20 border border-dashed rounded-lg">
-                   <p className="text-[10px] text-muted-foreground font-medium leading-relaxed italic">
-                     "Your identity documents are under review. Full verification allows for faster service requests."
-                   </p>
-                </div>
-                <Button variant="ghost" onClick={() => router.push('/student/profile')} className="w-full h-9 text-[10px] font-bold uppercase tracking-widest border border-border hover:bg-muted">
-                   Complete Profile <ArrowRight className="h-3 w-3 ml-2" />
-                </Button>
-             </div>
+             {/* Profile Pulse */}
+             <Card className="enterprise-card border bg-card p-8 space-y-6">
+                 <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">Compliance Pulse</h4>
+                 <div className="space-y-8">
+                    <div className="p-5 rounded-2xl bg-muted/20 border border-border space-y-4">
+                       <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Verification Node</p>
+                       <div className="flex items-center justify-between">
+                          <p className="text-3xl font-bold text-foreground">9.2</p>
+                          <Badge className={cn("font-bold text-[9px]", profile.verificationStatus === 'verified' ? "bg-emerald-600 text-white" : "bg-amber-500 text-white")}>
+                            {profile.verificationStatus.toUpperCase()}
+                          </Badge>
+                       </div>
+                       <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                          <div className={cn("h-full bg-primary")} style={{ width: '92%' }} />
+                       </div>
+                    </div>
+                    <div className="space-y-4">
+                       <DetailRow label="KYC Document" value={profile.idDocsUploaded ? 'Verified' : 'Pending'} icon={FileText} color={profile.idDocsUploaded ? "text-emerald-600" : "text-amber-600"} />
+                       <DetailRow label="Stay Registry" value="ACTIVE" icon={CheckCircle2} color="text-emerald-600" />
+                       <DetailRow label="Police Status" value={profile.verificationStatus === 'verified' ? 'STABLE' : 'PENDING'} icon={ShieldCheck} color="text-primary" />
+                    </div>
+                 </div>
+              </Card>
           </div>
         </div>
       </div>
@@ -202,11 +247,27 @@ function StatCard({ title, value, details, icon: Icon, color }: any) {
   );
 }
 
-function InfoBit({ label, value }: any) {
+function CompletionItem({ label, done }: { label: string, done: boolean }) {
   return (
-    <div className="space-y-1">
-       <p className="text-[9px] font-bold uppercase text-muted-foreground tracking-widest">{label}</p>
-       <p className="text-xs font-bold text-foreground uppercase">{value}</p>
+    <div className="flex items-center gap-3">
+       <div className={cn(
+         "w-5 h-5 rounded-full flex items-center justify-center border",
+         done ? "bg-emerald-100 border-emerald-300 text-emerald-700" : "bg-muted border-border text-muted-foreground"
+       )}>
+          {done ? <CheckCircle2 className="h-3 w-3" /> : <div className="h-1 w-1 bg-current rounded-full" />}
+       </div>
+       <span className={cn("text-[11px] font-bold uppercase tracking-tight", done ? "text-foreground" : "text-muted-foreground")}>{label}</span>
+    </div>
+  );
+}
+
+function DetailRow({ label, value, icon: Icon, color }: any) {
+  return (
+    <div className="flex justify-between items-center text-[10px] font-semibold uppercase tracking-widest">
+       <span className="text-muted-foreground flex items-center gap-2">
+          <Icon className="h-3.5 w-3.5" /> {label}
+       </span>
+       <span className={cn("font-semibold uppercase", color)}>{value}</span>
     </div>
   );
 }
