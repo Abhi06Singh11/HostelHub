@@ -128,3 +128,19 @@ export const updateCommissionStatus = (id: string, commissionStatus: CommissionS
   });
   saveReferrals(updated);
 };
+
+export const updateReferralPayment = (id: string, status: 'paid' | 'eligible') => {
+  const referrals = getStoredReferrals();
+  const updated = referrals.map(r => {
+    if (r.id === id) {
+      return { 
+        ...r, 
+        paymentStatus: status as any,
+        commissionStatus: status === 'paid' ? 'paid' : r.commissionStatus,
+        paymentDate: status === 'paid' ? new Date().toISOString().split('T')[0] : r.paymentDate
+      };
+    }
+    return r;
+  });
+  saveReferrals(updated);
+};

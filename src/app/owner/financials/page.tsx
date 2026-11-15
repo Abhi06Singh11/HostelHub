@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 
-export default function AgentFinancialsPage() {
+export default function OwnerFinancialsPage() {
   const [referrals, setReferrals] = useState<Referral[]>([]);
 
   useEffect(() => {
@@ -47,15 +47,15 @@ export default function AgentFinancialsPage() {
   };
 
   return (
-    <DashboardLayout role="agent">
+    <DashboardLayout role="owner">
       <div className="space-y-8">
         <div className="flex justify-between items-end">
           <div>
-            <h2 className="text-3xl font-bold tracking-tighter uppercase text-foreground">Commission & Earnings</h2>
-            <p className="text-[15px] text-muted-foreground font-medium">Track your referral income and verify admission-based payouts.</p>
+            <h2 className="text-3xl font-bold tracking-tighter uppercase text-foreground">Remittance Hub</h2>
+            <p className="text-[15px] text-muted-foreground font-medium">Monitor rental income nodes and verify contractor settlements.</p>
           </div>
-          <Button variant="outline" className="h-10 px-6 font-bold text-[11px] uppercase tracking-widest border-2">
-            <Download className="h-3.5 w-3.5 mr-2" /> Download Statement
+          <Button variant="outline" className="h-11 px-6 font-semibold text-[11px] uppercase tracking-widest border-2">
+            <Download className="h-4 w-4 mr-2" /> Download Statement
           </Button>
         </div>
 
@@ -67,7 +67,7 @@ export default function AgentFinancialsPage() {
 
         <div className="enterprise-card border bg-card overflow-hidden">
           <div className="p-4 border-b bg-muted/20 flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase text-muted-foreground tracking-widest">Earnings Breakdown</span>
+            <span className="text-[11px] font-bold uppercase text-muted-foreground tracking-widest">Remittance Breakdown</span>
             <Button variant="ghost" size="sm" className="h-8 text-[10px] font-bold uppercase">
               <Filter className="h-3 w-3 mr-2" /> Filter List
             </Button>
@@ -76,10 +76,10 @@ export default function AgentFinancialsPage() {
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
                 <tr className="bg-muted/10 border-b">
-                  <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Student / Admission Date</th>
-                  <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Property Details</th>
-                  <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Commission</th>
-                  <th className="text-[10px] font-black text-muted-foreground py-4 px-6 uppercase tracking-widest text-right">Payment Status</th>
+                  <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Source / Date</th>
+                  <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Asset Details</th>
+                  <th className="text-[10px] font-bold text-muted-foreground py-4 px-6 uppercase tracking-widest">Value</th>
+                  <th className="text-[10px] font-semibold text-muted-foreground py-4 px-6 uppercase tracking-widest text-right">Ledger State</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -87,7 +87,7 @@ export default function AgentFinancialsPage() {
                   <tr key={ref.id} className="hover:bg-muted/20 transition-colors">
                     <td className="py-4 px-6">
                       <p className="text-sm font-bold text-foreground">{ref.studentName}</p>
-                      <p className="text-[10px] text-muted-foreground font-medium uppercase">Admitted: {ref.admissionDate}</p>
+                      <p className="text-[10px] text-muted-foreground font-medium uppercase">Cycle: {ref.admissionDate}</p>
                     </td>
                     <td className="py-4 px-6">
                       <p className="text-xs font-bold text-foreground">{ref.hostelName}</p>
@@ -125,8 +125,8 @@ export default function AgentFinancialsPage() {
                   <tr>
                     <td colSpan={4} className="py-24 text-center">
                       <DollarSign className="h-10 w-10 text-muted-foreground/20 mx-auto mb-4" />
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">No eligible commissions found yet.</p>
-                      <p className="text-[10px] text-muted-foreground mt-1 uppercase font-medium">Earnings unlock after contractor confirms student admission.</p>
+                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">No eligible settlements found yet.</p>
+                      <p className="text-[10px] text-muted-foreground mt-1 uppercase font-medium">Income records appear after contractor verification.</p>
                     </td>
                   </tr>
                 )}
