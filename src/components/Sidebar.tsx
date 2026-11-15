@@ -180,7 +180,11 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
             </SidebarGroupLabel>
             <SidebarMenu>
               {group.items.map((item) => {
-                const isActive = pathname === item.href || (item.href !== '/contractor' && pathname.startsWith(item.href));
+                // Ensure base dashboard routes don't overlap with their child pages in active state detection
+                const baseRoutes = ['/sa', '/sd', '/sm', '/owner', '/contractor', '/student', '/agents'];
+                const isBaseRoute = baseRoutes.includes(item.href);
+                const isActive = pathname === item.href || (!isBaseRoute && pathname.startsWith(item.href + '/'));
+
                 return (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton 
