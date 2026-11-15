@@ -111,16 +111,16 @@ export default function StudentProfileDetailPage() {
                     <div className="space-y-5 flex-1">
                        <div className="flex justify-between items-start">
                           <div>
-                             <h1 className="text-4xl font-black tracking-tighter uppercase text-foreground">{student.name}</h1>
+                             <h1 className="text-4xl font-bold tracking-tighter uppercase text-foreground">{student.name}</h1>
                              <div className="flex items-center gap-3 mt-2">
-                                <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 font-black uppercase text-[10px] tracking-widest py-1.5 px-4 rounded-xl">RESIDENT</Badge>
+                                <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 font-bold uppercase text-[10px] tracking-widest py-1.5 px-4 rounded-xl">RESIDENT</Badge>
                                 <span className="text-[11px] text-muted-foreground font-bold uppercase tracking-widest">ID: {student.studentId}</span>
                              </div>
                           </div>
                           <div className="text-right">
-                             <p className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em]">Overall Trust Node</p>
+                             <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-[0.2em]">Overall Trust Node</p>
                              <Badge className={cn(
-                               "mt-1 font-black uppercase text-[11px] py-1.5 px-6 rounded-xl shadow-sm",
+                               "mt-1 font-bold uppercase text-[11px] py-1.5 px-6 rounded-xl shadow-sm",
                                overallStatus === 'Fully Verified' ? "bg-emerald-600 text-white" : "bg-primary text-white"
                              )}>{overallStatus}</Badge>
                           </div>
@@ -320,20 +320,25 @@ export default function StudentProfileDetailPage() {
               {/* Interaction Insight */}
               <div className="enterprise-card border bg-slate-900 text-white p-8 relative overflow-hidden">
                  <div className="relative z-10 space-y-6">
-                    <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary">Compliance Heartbeat</h4>
+                    <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-blue-400">Compliance Heartbeat</h4>
                     <div className="space-y-4">
                        <div className="p-4 bg-white/5 border border-white/10 rounded-xl space-y-2">
-                          <p className="text-[9px] font-bold text-slate-500 uppercase">Verification Audit Log</p>
+                          <p className="text-[9px] font-bold text-white/50 uppercase">Verification Audit Log</p>
                           {student.verificationLogs.slice(0, 3).map(log => (
                             <div key={log.id} className="flex justify-between items-center border-b border-white/5 py-1.5 last:border-0">
-                               <span className="text-[10px] font-bold uppercase">{log.type.replace('_', ' ')}</span>
+                               <span className="text-[10px] font-bold uppercase text-white">{log.type.replace('_', ' ')}</span>
                                <span className="text-[10px] font-bold text-emerald-400 uppercase">{log.newStatus}</span>
                             </div>
                           ))}
                           {student.verificationLogs.length === 0 && (
-                            <p className="text-[10px] text-slate-600 italic">No sync logs found.</p>
+                            <p className="text-[10px] text-white/30 italic uppercase">No sync logs found.</p>
                           )}
                        </div>
+                    </div>
+                    <div className="space-y-4">
+                       <DetailRowInSlate label="KYC Document" value="Verified" icon={FileText} color="text-emerald-400" />
+                       <DetailRowInSlate label="Rent History" value="STABLE" icon={CheckCircle2} color="text-emerald-400" />
+                       <DetailRowInSlate label="Rule Adherence" value="A+" icon={ShieldCheck} color="text-blue-400" />
                     </div>
                  </div>
                  <ShieldCheck className="absolute -right-6 -bottom-6 h-32 w-32 text-white/5" />
@@ -404,6 +409,17 @@ function DetailField({ label, value }: any) {
     <div className="space-y-1">
        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">{label}</p>
        <p className="text-sm font-bold text-foreground uppercase">{value}</p>
+    </div>
+  );
+}
+
+function DetailRowInSlate({ label, value, icon: Icon, color }: any) {
+  return (
+    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+       <span className="text-white/60 flex items-center gap-2">
+          <Icon className="h-3.5 w-3.5" /> {label}
+       </span>
+       <span className={cn("font-bold uppercase", color)}>{value}</span>
     </div>
   );
 }
