@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -21,7 +20,9 @@ import {
   User,
   Layout,
   Settings as SettingsIcon,
-  CheckCircle2
+  CheckCircle2,
+  FileText,
+  Activity
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -29,6 +30,8 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 function SettingsContent() {
   const searchParams = useSearchParams();
@@ -42,7 +45,7 @@ function SettingsContent() {
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       <div>
-        <h2 className="text-3xl font-black tracking-tighter uppercase text-foreground">Operational Configuration</h2>
+        <h2 className="text-3xl font-bold tracking-tighter uppercase text-foreground">Operational Configuration</h2>
         <p className="text-[15px] text-muted-foreground font-medium">Manage your professional service profile, notifications, and technical preferences.</p>
       </div>
 
@@ -58,35 +61,66 @@ function SettingsContent() {
         </TabsList>
 
         <TabsContent value="profile" className="space-y-6 animate-in fade-in duration-500">
-          <ProfileTab />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+             <div className="lg:col-span-2 space-y-6">
+                <div className="enterprise-card border bg-card">
+                  <div className="p-4 border-b bg-muted/20">
+                    <span className="text-[12px] font-bold uppercase text-muted-foreground tracking-widest">Business Information</span>
+                  </div>
+                  <div className="p-8 space-y-8">
+                    <div className="flex items-center gap-6">
+                      <div className="w-20 h-20 bg-muted border-2 rounded-2xl flex items-center justify-center">
+                        <UserCircle className="h-10 w-10 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-foreground">John Contractor</h3>
+                        <p className="text-[12px] font-bold text-primary tracking-widest uppercase">Master Service Provider</p>
+                        <Button size="sm" variant="outline" className="mt-2 text-[11px] font-bold uppercase h-8 border-2">Update Logo</Button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                      <ProfileField icon={Briefcase} label="Company Name" value="StaySync Operations Ltd." />
+                      <ProfileField icon={Mail} label="Business Email" value="ops@staysync.com" />
+                      <ProfileField icon={Phone} label="Primary Contact" value="+91 98765 43210" />
+                      <ProfileField icon={MapPin} label="Service Area" value="Bengaluru South & Central" />
+                    </div>
+                  </div>
+                </div>
+             </div>
+
+             <div className="space-y-6">
+                <Card className="enterprise-card p-8 space-y-6">
+                   <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">Compliance Pulse</h4>
+                   <div className="space-y-6">
+                      <div className="p-5 rounded-2xl bg-muted/20 border border-border space-y-4">
+                         <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Trust Index</p>
+                         <div className="flex items-center justify-between">
+                            <p className="text-3xl font-bold text-foreground">9.6</p>
+                            <Badge className="bg-emerald-600 text-white font-bold text-[9px]">EXCELLENT</Badge>
+                         </div>
+                         <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                            <div className="h-full bg-primary" style={{ width: '96%' }} />
+                         </div>
+                      </div>
+                      <div className="space-y-4">
+                         <DetailItem label="Identity Sync" value="Verified" icon={ShieldCheck} color="text-emerald-600" />
+                         <DetailItem label="GST Compliance" value="Stable" icon={CheckCircle2} color="text-emerald-600" />
+                         <DetailItem label="License Node" value="Active" icon={FileText} color="text-primary" />
+                      </div>
+                   </div>
+                </Card>
+             </div>
+          </div>
         </TabsContent>
 
         <TabsContent value="appearance" className="space-y-8 animate-in fade-in duration-500">
           <div className="enterprise-card border bg-card p-10 space-y-10">
-            <h3 className="text-xl font-black uppercase tracking-tight">Ops Terminal Theme</h3>
+            <h3 className="text-xl font-bold uppercase tracking-tight">Ops Terminal Theme</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <ThemeOption label="Technical" icon={Layout} value="light" />
+              <ThemeOption label="Daylight" icon={Layout} value="light" />
               <ThemeOption label="Night Ops" icon={Monitor} value="dark" active />
-              <ThemeOption label="Default Sync" icon={SettingsIcon} value="system" />
-            </div>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="notifications" className="space-y-8 animate-in fade-in duration-500">
-          <div className="enterprise-card border bg-card p-10 space-y-6">
-            <ToggleRow title="New Inquiry Alerts" description="Instant notifications for new property lease proposals." defaultChecked />
-            <Separator className="border-dashed" />
-            <ToggleRow title="Maintenance Sync" description="Status updates on active work orders and tickets." defaultChecked />
-          </div>
-        </TabsContent>
-
-        <TabsContent value="security" className="space-y-8 animate-in fade-in duration-500">
-          <div className="enterprise-card border bg-card p-10 space-y-6">
-            <ToggleRow title="Two-Factor Authentication" description="Secure your operational keys with 2FA protocols." defaultChecked />
-            <Separator className="border-dashed" />
-            <div className="flex justify-between items-center">
-              <p className="text-sm font-black uppercase text-foreground">API Access Keys</p>
-              <Button variant="outline" className="h-9 text-[10px] font-black uppercase border-2">Manage Keys</Button>
+              <ThemeOption label="System Sync" icon={SettingsIcon} value="system" />
             </div>
           </div>
         </TabsContent>
@@ -114,67 +148,23 @@ function SettingsTabTrigger({ value, icon: Icon, label }: any) {
   );
 }
 
-function ProfileTab() {
-  return (
-    <div className="space-y-6">
-      <div className="enterprise-card border bg-card">
-        <div className="p-4 border-b bg-muted/20">
-          <span className="text-[12px] font-black uppercase text-muted-foreground tracking-widest">Business Information</span>
-        </div>
-        <div className="p-8 space-y-8">
-          <div className="flex items-center gap-6">
-            <div className="w-20 h-20 bg-muted border-2 rounded-2xl flex items-center justify-center">
-              <UserCircle className="h-10 w-10 text-muted-foreground" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-foreground">John Contractor</h3>
-              <p className="text-[12px] font-black uppercase text-primary tracking-widest">Master Service Provider</p>
-              <Button size="sm" variant="outline" className="mt-2 text-[11px] font-black uppercase h-8 border-2">Update Photo</Button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <ProfileField icon={Briefcase} label="Company Name" value="StaySync Operations Ltd." />
-            <ProfileField icon={Mail} label="Business Email" value="ops@staysync.com" />
-            <ProfileField icon={Phone} label="Primary Contact" value="+91 98765 43210" />
-            <ProfileField icon={MapPin} label="Service Area" value="Bengaluru South & Central" />
-          </div>
-        </div>
-      </div>
-
-      <div className="enterprise-card border bg-card p-6">
-        <div className="flex items-center gap-4 p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
-          <ShieldCheck className="h-6 w-6 text-emerald-600" />
-          <div>
-            <p className="text-[12px] font-black text-emerald-700 uppercase">Verified Provider</p>
-            <p className="text-[11px] text-emerald-600 font-bold uppercase">ID: HOST-CON-482</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function ProfileField({ icon: Icon, label, value }: any) {
   return (
     <div className="space-y-1.5">
       <div className="flex items-center gap-2">
         <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-        <p className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">{label}</p>
+        <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">{label}</p>
       </div>
       <p className="text-sm font-bold text-foreground">{value}</p>
     </div>
   );
 }
 
-function ToggleRow({ title, description, defaultChecked = false }: any) {
+function DetailItem({ label, value, icon: Icon, color }: any) {
   return (
-    <div className="flex items-center justify-between gap-10">
-      <div className="space-y-1">
-        <p className="text-sm font-black text-foreground uppercase tracking-tight">{title}</p>
-        <p className="text-[11px] text-muted-foreground font-medium uppercase tracking-tight">{description}</p>
-      </div>
-      <Switch defaultChecked={defaultChecked} />
+    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+       <span className="text-muted-foreground flex items-center gap-2"><Icon className="h-3.5 w-3.5" /> {label}</span>
+       <span className={cn("font-bold uppercase", color)}>{value}</span>
     </div>
   );
 }
@@ -191,7 +181,7 @@ function ThemeOption({ label, value, icon: Icon, active = false }: any) {
       )}>
         <Icon className="h-6 w-6" />
       </div>
-      <span className="text-[11px] font-black uppercase tracking-widest">{label}</span>
+      <span className="text-[11px] font-bold uppercase tracking-widest">{label}</span>
     </button>
   );
 }

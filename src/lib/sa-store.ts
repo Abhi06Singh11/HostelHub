@@ -16,10 +16,16 @@ const MOCK_TASKS: DeveloperTask[] = [
 ];
 
 const MOCK_USERS_EXTENDED: User[] = baseMockUsers.map(u => {
+  const base = {
+    ...u,
+    identityVerified: u.status === 'verified',
+    complianceVerified: u.status === 'verified',
+  };
+
   if (u.id === 'u2') { // Sarah - SuperDev
     return {
-      ...u,
-      bio: "Senior Infrastructure Engineer with 8+ years of experience in distributed systems. Specialist in Go, Kubernetes, and high-performance API gateways. Leading the core platform migration and security hardening efforts.",
+      ...base,
+      bio: "Senior Infrastructure Engineer with 8+ years of experience in distributed systems. Specialist in Go, Kubernetes, and high-performance API gateways.",
       skills: ["Go", "Kubernetes", "PostgreSQL", "Next.js", "Redis", "Terraform", "Security Audit"],
       assignedModules: ["Auth Engine", "API Gateway", "Database Sharding"],
       workload: 82,
@@ -27,18 +33,7 @@ const MOCK_USERS_EXTENDED: User[] = baseMockUsers.map(u => {
       upcomingTasks: MOCK_TASKS
     };
   }
-  if (u.roles.includes('superdev')) {
-    return {
-      ...u,
-      bio: "Full-stack developer focused on operational tools and frontend performance. Expertise in React and optimized rendering cycles.",
-      skills: ["React", "TypeScript", "Node.js", "Tailwind CSS"],
-      assignedModules: ["Resident Portal", "Analytics Dash"],
-      workload: 45,
-      progress: 90,
-      upcomingTasks: [MOCK_TASKS[1]]
-    };
-  }
-  return u;
+  return base;
 });
 
 const MOCK_ROLES: PlatformRole[] = [
@@ -84,6 +79,23 @@ export const getSARoles = () => getStored(ROLES_KEY, MOCK_ROLES);
 export const updateSAUserStatus = (id: string, status: AccountStatus) => {
   const users = getSAUsers();
   const updated = users.map(u => u.id === id ? { ...u, status } : u);
+  localStorage.setItem(USERS_KEY, JSON.stringify(updated));
+  window.dispatchEvent(new Event('storage'));
+};
+
+export const updateSAVerification = (id: string, type: 'identity' | 'compliance', state: boolean, verifier: string) => {
+  const users = getSAUsers();
+  const updated = users.map(u => {
+    if (u.id === id) {
+      const now = new Date().toISOString().replace('T', ' ').substring(0, 16);
+      if (type === 'identity') {
+        return { ...u, identityVerified: state, identityVerifiedAt: state ? now : undefined, identityVerifiedBy: state ? verifier : undefined };
+      } else {
+        return { ...u, complianceVerified: state, complianceVerifiedAt: state ? now : undefined, complianceVerifiedBy: state ? verifier : undefined };
+      }
+    }
+    return u;
+  });
   localStorage.setItem(USERS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('storage'));
 };

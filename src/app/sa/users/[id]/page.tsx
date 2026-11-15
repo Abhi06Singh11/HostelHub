@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { useParams, useRouter } from 'next/navigation';
-import { getSAUsers, updateSAUserStatus, logSAAction } from '@/lib/sa-store';
+import { getSAUsers, updateSAUserStatus, logSAAction, updateSAVerification } from '@/lib/sa-store';
 import { User } from '@/lib/types';
 import { 
   ArrowLeft, 
@@ -23,7 +23,10 @@ import {
   History,
   Target,
   GraduationCap,
-  FileText
+  FileText,
+  Zap,
+  Info,
+  Send
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -31,12 +34,26 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Textarea } from '@/components/ui/textarea';
 
 export default function SAUserDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [confirmType, setConfirmType] = useState<'identity' | 'compliance'>('identity');
+  const [confirmState, setConfirmState] = useState(true);
 
   useEffect(() => {
     const load = () => {
@@ -57,6 +74,19 @@ export default function SAUserDetailPage() {
     toast({ title: "Ledger Updated", description: `${user.name} is now ${status}.` });
   };
 
+  const handleToggle = (type: 'identity' | 'compliance', currentState: boolean) => {
+    setConfirmType(type);
+    setConfirmState(!currentState);
+    setIsConfirmOpen(true);
+  };
+
+  const commitVerification = () => {
+    updateSAVerification(user.id, confirmType, confirmState, 'Global Admin');
+    logSAAction('Verification Update', `${user.name} - ${confirmType} set to ${confirmState}`, 'security');
+    setIsConfirmOpen(false);
+    toast({ title: "Verification Synced", description: "The compliance ledger has been updated." });
+  };
+
   const getRoleIcon = (role: string) => {
     switch (role) {
       case 'student': return GraduationCap;
@@ -67,7 +97,13 @@ export default function SAUserDetailPage() {
     }
   };
 
-  const RoleIcon = getRoleIcon(user.roles[0]);
+  const role = user.roles[0];
+  const RoleIcon = getRoleIcon(role);
+  const overallVerified = user.identityVerified && user.complianceVerified;
+
+  const complianceLabel = role === 'contractor' ? 'Business License Verified' : 
+                         role === 'owner' ? 'Asset Ownership Verified' :
+                         role === 'student' ? 'Police Verification Done' : 'Certification Verified';
 
   return (
     <DashboardLayout role="superadmin">
@@ -77,11 +113,6 @@ export default function SAUserDetailPage() {
             <ArrowLeft className="h-4 w-4 mr-2" /> All Users
           </Button>
           <div className="flex gap-3">
-             {user.status === 'pending' && (
-               <Button onClick={() => handleStatusChange('verified')} className="h-10 font-bold uppercase text-[11px] tracking-widest bg-emerald-600 hover:bg-emerald-700">
-                  <CheckCircle2 className="h-4 w-4 mr-2" /> Verify Account
-               </Button>
-             )}
              <Button variant="outline" className="h-10 font-bold uppercase text-[11px] tracking-widest border-2">
                 <Lock className="h-4 w-4 mr-2" /> Reset Access
              </Button>
@@ -90,7 +121,7 @@ export default function SAUserDetailPage() {
                onClick={() => handleStatusChange('suspended')}
                className="h-10 font-bold uppercase text-[11px] tracking-widest shadow-md"
              >
-                <ShieldAlert className="h-4 w-4 mr-2" /> Suspend
+                <ShieldAlert className="h-4 w-4 mr-2" /> Suspend Account
              </Button>
           </div>
         </div>
@@ -100,13 +131,13 @@ export default function SAUserDetailPage() {
             {/* Identity Card */}
             <div className="enterprise-card border bg-card p-10 relative overflow-hidden">
                <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start">
-                  <div className="w-28 h-28 rounded-[2rem] bg-primary/10 border-4 border-primary/5 flex items-center justify-center text-primary font-bold text-5xl shadow-xl shrink-0">
+                  <div className="w-28 h-28 rounded-[2rem] bg-primary/10 border-4 border-primary/5 flex items-center justify-center text-primary font-bold text-5xl shadow-xl shrink-0 uppercase">
                      {user.avatar || user.name.charAt(0)}
                   </div>
                   <div className="space-y-4 flex-1">
-                     <div className="flex items-center justify-between">
+                     <div className="flex justify-between items-start">
                         <div>
-                           <h1 className="text-4xl font-bold tracking-tighter uppercase text-foreground">{user.name}</h1>
+                           <h1 className="text-3xl font-bold tracking-tighter uppercase text-foreground">{user.name}</h1>
                            <div className="flex items-center gap-3 mt-1.5">
                               <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 font-bold uppercase text-[10px] tracking-widest py-1 px-3">
                                  <RoleIcon className="h-3 w-3 mr-1.5" /> {user.roles[0]}
@@ -116,154 +147,156 @@ export default function SAUserDetailPage() {
                         </div>
                         <Badge className={cn(
                           "font-bold uppercase text-[10px] py-1.5 px-4 rounded-xl",
-                          user.status === 'verified' || user.status === 'active' ? "bg-emerald-600 text-white" :
-                          user.status === 'pending' ? "bg-primary text-white" : "bg-red-600 text-white"
-                        )}>{user.status}</Badge>
+                          overallVerified ? "bg-emerald-600 text-white" : "bg-amber-500 text-white"
+                        )}>{overallVerified ? 'Fully Verified' : 'Partially Verified'}</Badge>
                      </div>
-                     <p className="text-muted-foreground font-medium leading-relaxed italic border-l-4 border-primary/20 pl-6">
-                        "{user.bio || `Platform ${user.roles[0]} active since ${user.joinedAt}. Account currently in ${user.status} state.`}"
-                     </p>
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-dashed">
                         <div className="flex items-center gap-3 text-[11px] font-bold text-foreground uppercase tracking-widest">
                            <Mail className="h-4 w-4 text-primary" /> {user.email}
                         </div>
                         <div className="flex items-center gap-3 text-[11px] font-bold text-foreground uppercase tracking-widest">
-                           <Smartphone className="h-4 w-4 text-primary" /> +91 98XXX XXXXX
+                           <Smartphone className="h-4 w-4 text-primary" /> {user.phone || 'NO CONTACT'}
                         </div>
                      </div>
                   </div>
                </div>
             </div>
 
-            {/* Engagement Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <div className="enterprise-card border bg-card p-8 space-y-6">
-                  <h3 className="text-[12px] font-bold uppercase text-muted-foreground tracking-[0.2em] border-b border-dashed pb-4 flex items-center gap-2">
-                     <Activity className="h-4 w-4 text-primary" /> Operational Sync
+               <Card className="enterprise-card p-8 space-y-6">
+                  <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                     <History className="h-4 w-4 text-primary" /> Session Intelligence
                   </h3>
-                  <div className="space-y-6">
-                     <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold uppercase text-muted-foreground">Joining Date</span>
-                        <span className="text-xs font-bold text-foreground">{user.joinedAt}</span>
-                     </div>
-                     <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold uppercase text-muted-foreground">Last Portal Access</span>
-                        <span className="text-xs font-bold text-foreground">{user.lastLogin || 'N/A'}</span>
-                     </div>
-                     <div className="flex justify-between items-center">
-                        <span className="text-[10px] font-bold uppercase text-muted-foreground">Account Verified</span>
-                        <Badge variant="outline" className="text-[9px] font-bold uppercase border-emerald-200 bg-emerald-50 text-emerald-700">{user.status === 'verified' ? 'COMPLETED' : 'IN PROGRESS'}</Badge>
-                     </div>
+                  <div className="space-y-4">
+                     <DetailRow label="Joining Date" value={user.joinedAt} />
+                     <DetailRow label="Last Port Access" value={user.lastLogin || 'N/A'} />
+                     <DetailRow label="Account State" value={user.status} />
                   </div>
-               </div>
+               </Card>
 
-               <div className="enterprise-card border bg-card p-8 space-y-6">
-                  <h3 className="text-[12px] font-bold uppercase text-muted-foreground tracking-[0.2em] border-b border-dashed pb-4 flex items-center gap-2">
-                     <History className="h-4 w-4 text-primary" /> Workload Intelligence
+               <Card className="enterprise-card p-8 space-y-6">
+                  <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                     <ShieldCheck className="h-4 w-4 text-primary" /> Security Matrix
                   </h3>
-                  <div className="space-y-8">
-                     <div className="space-y-3">
-                        <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
-                           <span className="text-muted-foreground">Focus Score</span>
-                           <span className="text-primary">{user.workload || 0}%</span>
-                        </div>
-                        <Progress value={user.workload || 0} className="h-1.5" />
-                     </div>
-                     <div className="p-4 rounded-xl bg-muted/20 border-2 border-dashed">
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase leading-tight italic">
-                           User is currently managing {user.assignedModules?.length || 0} active platform dependencies.
-                        </p>
-                     </div>
+                  <div className="space-y-4">
+                     <DetailRow label="2FA Enabled" value="Yes" />
+                     <DetailRow label="Auth Method" value="OAuth / LDAP" />
+                     <DetailRow label="Clearance" value="Level 3" />
                   </div>
-               </div>
-            </div>
-
-            {/* Timeline */}
-            <div className="enterprise-card border bg-card overflow-hidden">
-               <div className="p-6 border-b bg-muted/20 flex justify-between items-center">
-                  <h3 className="text-[12px] font-bold uppercase text-muted-foreground tracking-widest flex items-center gap-2">
-                     <History className="h-4 w-4 text-primary" /> Platform Interactions
-                  </h3>
-                  <Button variant="ghost" size="sm" className="h-7 text-[9px] font-bold uppercase tracking-widest">View Full Log</Button>
-               </div>
-               <div className="divide-y">
-                  <ActivityRow action="Account Login" status="Success" time="2h ago" ip="45.112.x.x" />
-                  <ActivityRow action="Profile Update" status="Success" time="1d ago" ip="45.112.x.x" />
-                  <ActivityRow action="Document Upload" status="Verified" time="4d ago" ip="45.112.x.x" />
-               </div>
+               </Card>
             </div>
           </div>
 
-          {/* Sidebar Intelligence */}
           <div className="space-y-8">
-             {/* Theme-Optimized Pulse Card */}
-             <Card className="enterprise-card p-8 space-y-6">
-                <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">Compliance Pulse</h4>
-                <div className="space-y-6">
-                   <div className="p-5 rounded-2xl bg-muted/20 border border-border space-y-4">
-                      <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Trust Integrity Score</p>
-                      <div className="flex items-center justify-between">
-                         <p className="text-3xl font-bold text-foreground">9.4</p>
-                         <Badge className="bg-emerald-600 text-white font-bold text-[9px]">HEALTHY</Badge>
+             {/* Verification Gateway */}
+             <Card className="enterprise-card p-8 space-y-8">
+                <div className="space-y-1">
+                   <h3 className="text-sm font-semibold uppercase tracking-widest text-foreground">Verification Gateway</h3>
+                   <p className="text-[11px] text-muted-foreground font-medium">Independent compliance synchronization.</p>
+                </div>
+
+                <div className="space-y-8">
+                   <div className="flex items-center justify-between gap-6 p-4 bg-muted/20 border-2 border-dashed rounded-2xl">
+                      <div className="space-y-1 flex-1">
+                         <Label className="text-xs font-semibold uppercase tracking-tight flex items-center gap-2 text-foreground">
+                            <ShieldCheck className={cn("h-4 w-4", user.identityVerified ? "text-emerald-600" : "text-muted-foreground")} />
+                            Identity Verified
+                         </Label>
+                         <p className="text-[9px] text-muted-foreground font-medium uppercase">Personal documents checked.</p>
                       </div>
-                      <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                         <div className="h-full bg-primary" style={{ width: '94%' }} />
-                      </div>
+                      <Switch 
+                        checked={user.identityVerified} 
+                        onCheckedChange={() => handleToggle('identity', user.identityVerified)}
+                        className="data-[state=checked]:bg-emerald-600"
+                      />
                    </div>
-                   <div className="space-y-4">
-                      <DetailRow label="KYC Documents" value="Verified" icon={ShieldCheck} color="text-emerald-600" />
-                      <DetailRow label="Bank Details" value="Pending" icon={AlertTriangle} color="text-amber-600" />
-                      <DetailRow label="T&C Consent" value="Agreed" icon={CheckCircle2} color="text-emerald-600" />
+
+                   <div className="flex items-center justify-between gap-6 p-4 bg-muted/20 border-2 border-dashed rounded-2xl">
+                      <div className="space-y-1 flex-1">
+                         <Label className="text-xs font-semibold uppercase tracking-tight flex items-center gap-2 text-foreground">
+                            <Zap className={cn("h-4 w-4", user.complianceVerified ? "text-emerald-600" : "text-muted-foreground")} />
+                            {complianceLabel}
+                         </Label>
+                         <p className="text-[9px] text-muted-foreground font-medium uppercase">Industry compliance logged.</p>
+                      </div>
+                      <Switch 
+                        checked={user.complianceVerified} 
+                        onCheckedChange={() => handleToggle('compliance', user.complianceVerified)}
+                        className="data-[state=checked]:bg-emerald-600"
+                      />
+                   </div>
+                </div>
+
+                <div className="space-y-4 pt-6 border-t border-dashed">
+                   <h4 className="text-[10px] font-semibold uppercase text-muted-foreground tracking-widest">Metadata Ledger</h4>
+                   <div className="space-y-3">
+                      <AuditMeta label="Identity Status" value={user.identityVerified ? 'Verified' : 'Pending'} />
+                      <AuditMeta label="Compliance Status" value={user.complianceVerified ? 'Verified' : 'Pending'} />
+                      <AuditMeta label="Audit Cycle" value="Weekly" />
                    </div>
                 </div>
              </Card>
 
-             <div className="enterprise-card border bg-card p-8 space-y-6">
-                <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Admin Protocol</h4>
-                <p className="text-xs font-medium leading-relaxed text-muted-foreground opacity-90">
-                   Changing this user's status will trigger an immediate system notification. All status modifications are recorded in the permanent audit ledger.
-                </p>
-                <Separator className="border-dashed" />
-                <div className="flex flex-col gap-3">
-                   <Button variant="outline" className="w-full justify-start font-bold uppercase text-[10px] tracking-widest border-2">
-                      <History className="h-3.5 w-3.5 mr-3 text-primary" /> View Session Audit
-                   </Button>
-                   <Button variant="outline" className="w-full justify-start font-bold uppercase text-[10px] tracking-widest border-2">
-                      <Lock className="h-3.5 w-3.5 mr-3 text-primary" /> Security Hardening
-                   </Button>
+             <div className="enterprise-card border bg-primary text-primary-foreground p-8 space-y-4 shadow-xl">
+                <div className="flex items-center gap-2">
+                   <Info className="h-5 w-5 opacity-80" />
+                   <h4 className="text-[10px] font-bold uppercase tracking-widest">Governance Tip</h4>
                 </div>
+                <p className="text-[11px] opacity-90 leading-relaxed font-medium uppercase tracking-tight">
+                   Ensure all legal documents are manually inspected before committing verified status to the root node.
+                </p>
              </div>
           </div>
         </div>
       </div>
+
+      {/* Verification Confirmation Dialog */}
+      <Dialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+        <DialogContent className="max-w-md rounded-3xl border-2">
+           <DialogHeader>
+              <DialogTitle className="text-xl font-bold uppercase tracking-tight">
+                 {confirmState ? 'Authorize Verification' : 'Rollback Verification'}
+              </DialogTitle>
+           </DialogHeader>
+           <div className="space-y-6 py-6 text-center">
+              <p className="text-sm font-semibold text-foreground leading-relaxed uppercase">
+                 {confirmState 
+                   ? `Confirm ${confirmType} status for ${user.name}. This will be logged in the governance audit trail.`
+                   : `Confirm reversal of ${confirmType} status. A justification will be required for the audit.`
+                 }
+              </p>
+              {!confirmState && (
+                <Textarea placeholder="Reason for reversal..." className="min-h-[100px] border-2 font-medium" />
+              )}
+           </div>
+           <DialogFooter>
+              <Button variant="ghost" onClick={() => setIsConfirmOpen(false)} className="font-semibold uppercase text-[11px] tracking-widest">Cancel</Button>
+              <Button onClick={commitVerification} className={cn("h-11 px-8 font-semibold uppercase text-[11px] tracking-widest", confirmState ? "bg-emerald-600 hover:bg-emerald-700" : "bg-red-600 hover:bg-red-700")}>
+                 {confirmState ? 'Commit' : 'Decommission'}
+              </Button>
+           </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }
 
-function ActivityRow({ action, status, time, ip }: any) {
+function DetailRow({ label, value, icon?: any, color }: any) {
   return (
-    <div className="p-5 flex items-center justify-between hover:bg-muted/10 transition-colors">
-       <div className="flex items-center gap-4">
-          <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(36,91,74,0.5)]" />
-          <div>
-             <p className="text-sm font-bold text-foreground uppercase tracking-tight">{action}</p>
-             <p className="text-[10px] text-muted-foreground font-bold uppercase mt-0.5">IP: {ip} • {time}</p>
-          </div>
-       </div>
-       <Badge variant="outline" className="text-[8px] font-bold uppercase py-0 border-primary/20 bg-primary/5 text-primary">
-          {status}
-       </Badge>
+    <div className="flex justify-between items-center">
+       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+          {label}
+       </span>
+       <span className={cn("text-[10px] font-bold uppercase", color || "text-foreground")}>{value}</span>
     </div>
   );
 }
 
-function DetailRow({ label, value, icon: Icon, color }: any) {
+function AuditMeta({ label, value }: any) {
   return (
-    <div className="flex justify-between items-center">
-       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-          <Icon className="h-3.5 w-3.5" /> {label}
-       </span>
-       <span className={cn("text-[10px] font-bold uppercase", color)}>{value}</span>
+    <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+       <span className="text-muted-foreground">{label}</span>
+       <span className="text-foreground">{value}</span>
     </div>
   );
 }

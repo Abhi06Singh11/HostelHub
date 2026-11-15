@@ -35,12 +35,19 @@ export interface User {
   workload?: number;
   progress?: number;
   upcomingTasks?: DeveloperTask[];
+  // Unified Verification Fields
+  identityVerified: boolean;
+  identityVerifiedAt?: string;
+  identityVerifiedBy?: string;
+  complianceVerified: boolean; // Police for students, GST/License for contractors, Deed for owners
+  complianceVerifiedAt?: string;
+  complianceVerifiedBy?: string;
 }
 
 export interface StudentDocument {
   id: string;
   name: string;
-  type: 'id_proof' | 'address_proof' | 'photo' | 'police_ack' | 'guardian_id' | 'other';
+  type: 'id_proof' | 'address_proof' | 'photo' | 'police_ack' | 'guardian_id' | 'other' | 'business_license' | 'property_deed';
   url: string;
   uploadDate: string;
   status: VerificationLevel;
@@ -59,7 +66,7 @@ export interface StayRecord {
 
 export interface VerificationAuditLog {
   id: string;
-  type: 'government_id' | 'police';
+  type: 'identity' | 'compliance';
   oldStatus: VerificationLevel;
   newStatus: VerificationLevel;
   changedBy: string;
@@ -104,11 +111,8 @@ export interface StudentDetail extends User {
 
   govIdType: 'Aadhaar' | 'Passport' | 'Voter ID' | 'Driving Licence' | 'Other';
   govIdNumber: string;
-  govIdVerified: boolean;
-  govIdVerifiedAt?: string;
-  govIdVerifiedBy?: string;
   
-  policeVerified: boolean;
+  policeVerified: boolean; // mapped to complianceVerified
   policeVerifiedAt?: string;
   policeVerifiedBy?: string;
   policeRefNumber?: string;
