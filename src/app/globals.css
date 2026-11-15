@@ -4,11 +4,11 @@
 
 @layer base {
   :root {
-    /* Light Mode Palette: Midnight Navy + Emerald Green */
-    --background: 214 38% 97%; /* #F4F7FB - Soft Grey-White */
-    --foreground: 217 33% 17%; /* #1E293B - Dark Slate */
+    /* Day theme: Forest Porcelain - Specified HEX Palette */
+    --background: 214 38% 97%; /* #F4F7FB */
+    --foreground: 217 33% 17%; /* #1E293B */
     
-    --card: 0 0% 100%; /* #FFFFFF - Pure White */
+    --card: 0 0% 100%; /* #FFFFFF */
     --card-foreground: 217 33% 17%;
     
     --popover: 0 0% 100%;
@@ -26,19 +26,19 @@
     --accent: 161 94% 30%;
     --accent-foreground: 210 40% 98%;
     
-    --destructive: 0 84% 60%; /* #EF4444 - Soft Red */
+    --destructive: 0 84% 60%; /* #EF4444 */
     --destructive-foreground: 210 40% 98%;
     
-    --border: 214 32% 91%; /* #E2E8F0 - Light Grey */
+    --border: 214 32% 91%; /* #E2E8F0 */
     --input: 214 32% 91%;
     --ring: 218 54% 20%;
     --radius: 0.75rem;
 
-    /* Sidebar Tokens - Light */
-    --sidebar-background: 0 0% 100%;
+    /* Sidebar Tokens - Day Mode */
+    --sidebar-background: 0 0% 100%; /* #FFFFFF */
     --sidebar-foreground: 217 33% 17%;
     --sidebar-primary: 218 54% 20%;
-    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 214 38% 95%;
     --sidebar-accent-foreground: 218 54% 20%;
     --sidebar-border: 214 32% 91%;
@@ -46,7 +46,7 @@
   }
 
   .dark {
-    /* Dark Mode Palette: Deep Navy + Electric Blue */
+    /* Night theme: Forest Obsidian - Specified HEX Palette */
     --background: 219 52% 11%; /* #0D1729 - Deep Navy */
     --foreground: 210 40% 96%; /* #F1F5F9 - Off-White */
     
@@ -57,7 +57,7 @@
     --popover-foreground: 210 40% 96%;
     
     --primary: 221 92% 60%; /* #3B82F6 - Blue */
-    --primary-foreground: 210 40% 98%;
+    --primary-foreground: 0 0% 100%;
     
     --secondary: 158 64% 52%; /* #34D399 - Emerald */
     --secondary-foreground: 219 52% 11%;
@@ -68,18 +68,18 @@
     --accent: 158 64% 52%;
     --accent-foreground: 219 52% 11%;
     
-    --destructive: 0 91% 71%; /* #F87171 - Soft Red */
+    --destructive: 0 91% 71%; /* #F87171 */
     --destructive-foreground: 219 52% 11%;
     
     --border: 214 32% 22%; /* #26364B - Dark Slate */
     --input: 214 32% 22%;
     --ring: 221 92% 60%;
 
-    /* Sidebar Tokens - Dark */
+    /* Sidebar Tokens - Night Mode */
     --sidebar-background: 218 47% 13%; /* #111D30 - Dark Navy */
     --sidebar-foreground: 210 40% 96%;
     --sidebar-primary: 221 92% 60%;
-    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 215 44% 18%;
     --sidebar-accent-foreground: 221 92% 60%;
     --sidebar-border: 214 32% 22%;
@@ -88,39 +88,30 @@
 }
 
 @layer base {
-  html {
-    font-size: 18px;
-  }
   * {
     @apply border-border transition-colors duration-200;
   }
   body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-background text-foreground antialiased font-sans selection:bg-primary/20;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
-}
-
-.data-table-compact td {
-  @apply py-4 px-6 align-middle;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight text-foreground;
+  }
 }
 
 .enterprise-card {
   @apply rounded-xl border bg-card shadow-sm hover:shadow-md transition-all duration-300;
 }
 
-.sidebar-link-active {
-  @apply bg-primary/10 text-primary border-l-4 border-primary font-black;
-}
-
-/* Glassmorphism */
 .glass-header {
   @apply backdrop-blur-lg bg-background/80 border-b sticky top-0 z-50;
 }
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -128,5 +119,5 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/30 transition-colors;
+  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40 transition-colors;
 }

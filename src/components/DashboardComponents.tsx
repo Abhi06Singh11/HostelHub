@@ -1,6 +1,6 @@
 'use client';
 /**
- * @fileOverview Shared UI patterns for all roles to ensure visual and functional consistency.
+ * @fileOverview Shared UI patterns for all roles following standardized enterprise typography.
  */
 import React from 'react';
 import { cn } from '@/lib/utils';
@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button';
 import { LucideIcon, ArrowUpRight } from 'lucide-react';
 
 interface StatCardProps {
-  title: string;
+  label: string;
+  title?: string;
   value: string | number;
   sub?: string;
   icon: LucideIcon;
@@ -23,6 +24,7 @@ interface StatCardProps {
 }
 
 export function StatCard({ 
+  label,
   title, 
   value, 
   sub, 
@@ -41,13 +43,13 @@ export function StatCard({
       onClick={onClick}
     >
       <CardContent className="p-6">
-        <div className="flex justify-between items-start mb-6">
-          <div className={cn("p-3 rounded-xl border transition-all duration-300", bg, "border-transparent group-hover:border-primary/20")}>
-            <Icon className={cn("h-6 w-6", color)} />
+        <div className="flex justify-between items-start mb-5">
+          <div className={cn("p-2.5 rounded-xl border border-transparent group-hover:border-primary/20", bg)}>
+            <Icon className={cn("h-5 w-5", color)} />
           </div>
           {trend ? (
             <div className={cn(
-              "flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full border shadow-sm",
+              "flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full border shadow-sm",
               trend.isUp ? "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-950/30 dark:border-emerald-500/20" : "bg-red-50 text-red-600 border-red-100 dark:bg-red-950/30 dark:border-red-500/20"
             )}>
               {trend.value}
@@ -57,9 +59,9 @@ export function StatCard({
           )}
         </div>
         <div className="space-y-1">
-          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{title}</p>
-          <p className={cn("text-3xl font-black tracking-tighter tabular-nums", color)}>{value}</p>
-          {sub && <p className="text-[11px] font-bold text-muted-foreground/80 mt-2 uppercase tracking-tight">{sub}</p>}
+          <p className="text-[12px] font-semibold text-muted-foreground uppercase tracking-widest">{label || title}</p>
+          <p className={cn("text-2xl font-bold tracking-tight tabular-nums", color)}>{value}</p>
+          {sub && <p className="text-[13px] font-medium text-muted-foreground/80 mt-1.5">{sub}</p>}
         </div>
       </CardContent>
     </Card>
@@ -80,15 +82,15 @@ interface SectionHeaderProps {
 export function SectionHeader({ title, subtitle, action }: SectionHeaderProps) {
   return (
     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-      <div className="space-y-1">
-        {subtitle && <p className="text-xs font-black text-primary uppercase tracking-[0.3em]">{subtitle}</p>}
-        <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tighter uppercase leading-none">{title}</h2>
+      <div className="space-y-1.5">
+        {subtitle && <p className="text-[13px] font-semibold text-primary uppercase tracking-[0.2em]">{subtitle}</p>}
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-tight">{title}</h2>
       </div>
       {action && (
         <Button 
           onClick={action.onClick} 
           variant={action.variant || "default"}
-          className="h-12 px-8 font-black text-[11px] uppercase tracking-[0.2em] shadow-xl rounded-xl"
+          className="h-11 px-6 font-semibold text-[13px] uppercase tracking-wider shadow-lg rounded-xl"
         >
           {action.icon && <action.icon className="h-4 w-4 mr-2" />}
           {action.label}

@@ -22,17 +22,12 @@ import {
   BookText,
   Terminal,
   ShieldAlert,
-  BarChart,
   Target,
   Share2,
   Sparkles,
   Mail,
   Zap,
   ClipboardList,
-  Wrench,
-  CreditCard,
-  Search,
-  LayoutDashboard,
   MessageSquare,
   Wallet,
   Home,
@@ -45,7 +40,9 @@ import {
   Settings,
   LogOut,
   ChevronRight,
-  Zap as ZapIcon
+  Zap as ZapIcon,
+  CreditCard,
+  Search
 } from 'lucide-react';
 import {
   Sidebar as SidebarBase,
@@ -162,11 +159,11 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
       <SidebarHeader className="h-20 flex items-center px-6 border-b border-sidebar-border bg-sidebar">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-            <ZapIcon className="h-6 w-6 text-primary-foreground fill-current" />
+            <ZapIcon className="h-5 w-5 text-primary-foreground fill-current" />
           </div>
           <div className="flex flex-col">
-            <span className="text-[14px] font-black tracking-tighter uppercase leading-none text-sidebar-foreground">StaySync</span>
-            <span className="text-[9px] font-bold text-primary uppercase tracking-[0.2em] mt-1">Enterprise Hub</span>
+            <span className="text-[15px] font-bold tracking-tight uppercase leading-none text-sidebar-foreground">StaySync</span>
+            <span className="text-[10px] font-semibold text-primary uppercase tracking-[0.2em] mt-1">Enterprise Hub</span>
           </div>
         </div>
       </SidebarHeader>
@@ -174,7 +171,7 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
       <SidebarContent className="p-4 gap-6">
         {filteredGroups.map((group) => (
           <SidebarGroup key={group.label}>
-            <SidebarGroupLabel className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em] mb-3 px-2">
+            <SidebarGroupLabel className="text-[11px] font-bold uppercase text-muted-foreground tracking-widest mb-3 px-2">
               {group.label}
             </SidebarGroupLabel>
             <SidebarMenu>
@@ -186,15 +183,15 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
                       asChild 
                       isActive={isActive}
                       className={cn(
-                        "h-11 px-4 rounded-xl transition-all duration-200",
+                        "h-10 px-4 rounded-xl transition-all duration-200",
                         isActive 
                           ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90" 
-                          : "text-muted-foreground hover:bg-primary/5 hover:text-primary"
+                          : "text-muted-foreground hover:bg-primary/5 hover:text-primary font-medium"
                       )}
                     >
                       <Link href={item.href} className="flex items-center gap-3">
                         <item.icon className={cn("h-4.5 w-4.5", isActive ? "text-primary-foreground" : "text-inherit")} />
-                        <span className="text-[13px] font-bold tracking-tight">{item.name}</span>
+                        <span className="text-[14px] font-semibold tracking-tight">{item.name}</span>
                         {isActive && <ChevronRight className="ml-auto h-3.5 w-3.5 opacity-50" />}
                       </Link>
                     </SidebarMenuButton>
@@ -212,26 +209,26 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
             <SidebarMenuButton 
               asChild 
               className={cn(
-                "h-11 px-4 rounded-xl transition-all duration-200",
+                "h-10 px-4 rounded-xl transition-all duration-200",
                 pathname.includes('/settings') 
                   ? "bg-primary text-primary-foreground shadow-md" 
-                  : "text-muted-foreground hover:bg-primary/5 hover:text-primary"
+                  : "text-muted-foreground hover:bg-primary/5 hover:text-primary font-medium"
               )}
             >
               <Link href={`/${activeRole === 'agent' ? 'agents' : activeRole}/settings`} className="flex items-center gap-3">
                 <Settings className="h-4.5 w-4.5" />
-                <span className="text-[13px] font-bold tracking-tight">Settings</span>
+                <span className="text-[14px] font-semibold tracking-tight">Settings</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton 
               asChild
-              className="h-11 px-4 rounded-xl text-destructive hover:bg-destructive/5 hover:text-destructive transition-all"
+              className="h-10 px-4 rounded-xl text-destructive hover:bg-destructive/5 hover:text-destructive transition-all font-medium"
             >
               <Link href="/" className="flex items-center gap-3">
                 <LogOut className="h-4.5 w-4.5" />
-                <span className="text-[13px] font-bold tracking-tight">Exit Node</span>
+                <span className="text-[14px] font-semibold tracking-tight">Exit Node</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

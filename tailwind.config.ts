@@ -1,4 +1,3 @@
-
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -11,9 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Space Grotesk', 'sans-serif'],
-        code: ['monospace'],
+        sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['monospace'],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -81,27 +79,10 @@ export default {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
-        'coffee-pulse': {
-          '0%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(245, 158, 11, 0.6)' },
-          '70%': { transform: 'scale(1.05)', boxShadow: '0 0 0 35px rgba(245, 158, 11, 0)' },
-          '100%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(245, 158, 11, 0)' },
-        },
-        'active-pulse': {
-          '0%': { boxShadow: '0 0 0 0 hsl(var(--primary) / 0.2)' },
-          '70%': { boxShadow: '0 0 0 30px hsl(var(--primary) / 0)' },
-          '100%': { boxShadow: '0 0 0 0 hsl(var(--primary) / 0)' },
-        },
-        'spin-slow': {
-          'from': { transform: 'rotate(0deg)' },
-          'to': { transform: 'rotate(360deg)' }
-        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'coffee-pulse': 'coffee-pulse 2.5s ease-in-out infinite',
-        'active-pulse': 'active-pulse 3s ease-in-out infinite',
-        'spin-slow': 'spin-slow 10s linear infinite',
       },
     },
   },
