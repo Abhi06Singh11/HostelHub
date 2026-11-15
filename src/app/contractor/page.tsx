@@ -149,7 +149,7 @@ export default function ContractorDashboard() {
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
                   <div>
-                    <p className="text-2xl font-bold">{mockStudentInquiries.length}</p>
+                    <p className="text-2xl font-bold text-white">{mockStudentInquiries.length}</p>
                     <p className="text-[9px] font-bold uppercase text-white/60">Total Pipeline Leads</p>
                   </div>
                   <Button size="sm" variant="outline" onClick={() => router.push('/contractor/inquiries')} className="h-7 text-[9px] font-bold uppercase text-white border-white/40 hover:bg-white/10 px-4">Manage Hub</Button>
@@ -207,7 +207,7 @@ function StatCard({ title, value, icon: Icon, details, onClick, progress, trend 
           <p className="text-3xl font-bold text-foreground tracking-tight">{value}</p>
         </div>
         <div className="mt-4 pt-4 border-t border-dashed border-border">
-          <p className="text-[10px] font-bold text-muted-foreground">{details}</p>
+          <p className="text-[10px] font-bold text-muted-foreground uppercase">{details}</p>
           {progress !== undefined && (
             <div className="w-full h-1 bg-muted rounded-full mt-2 overflow-hidden">
               <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
