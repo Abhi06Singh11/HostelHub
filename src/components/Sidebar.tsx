@@ -1,406 +1,130 @@
-'use client';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Role } from '@/lib/types';
-import { 
-  LayoutDashboard, 
-  Building2, 
-  Settings, 
-  ShieldCheck,
-  Code2,
-  Megaphone,
-  Activity,
-  CreditCard,
-  Briefcase,
-  GraduationCap,
-  MessageSquare,
-  Users,
-  Target,
-  Sparkles,
-  Home,
-  Wallet,
-  Bell,
-  History,
-  AlertTriangle,
-  Lock,
-  PieChart,
-  ShieldAlert,
-  Server,
-  Zap,
-  HelpCircle,
-  FileBarChart,
-  BarChart,
-  Cpu,
-  Webhook,
-  Bug,
-  Flag,
-  Rocket,
-  BookText,
-  Layers,
-  Database,
-  TrendingUp,
-  UserCheck,
-  Calendar,
-  Layout,
-  Monitor,
-  ChevronRight,
-  Globe,
-  ClipboardList,
-  Search,
-  Share2
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
-import { getStoredTickets } from '@/lib/ticket-store';
-import { getStudentNotifications } from '@/lib/student-store';
-import { getSAUsers } from '@/lib/sa-store';
-import { getSDBugs } from '@/lib/sd-store';
-import { getSMLeads } from '@/lib/sm-store';
-import {
-  Sidebar as SidebarUI,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  useSidebar,
-} from '@/components/ui/sidebar';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-interface NavItem {
-  name: string;
-  href: string;
-  icon: any;
-  badge?: number;
-}
+@layer base {
+  :root {
+    /* Day theme: Forest Porcelain - Optimized for WCAG Contrast */
+    --background: 150 5% 96.5%; /* #F5F7F6 */
+    --foreground: 154 20% 11.2%; /* #17231E - Main Text */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 154 20% 11.2%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 154 20% 11.2%;
+    --primary: 161 43.4% 25.1%; /* #245B4A */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
+    --secondary: 150 10% 92%;
+    --secondary-foreground: 154 20% 11.2%;
+    --muted: 150 10% 90%;
+    --muted-foreground: 150 10% 25%; 
+    --accent: 153.5 44.4% 81.2%; /* #B9E4D0 - Soft Accent */
+    --accent-foreground: 154 20% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 150 10.4% 80%; /* Sharper border for better definition */
+    --input: 150 10.4% 80%;
+    --ring: 161 43.4% 25.1%;
+    --radius: 0.75rem;
 
-interface NavGroup {
-  label: string;
-  items: NavItem[];
-  roles?: Role[];
-}
-
-const ALL_GROUPS: NavGroup[] = [
-  // Super Admin Groups
-  {
-    label: 'Intelligence',
-    roles: ['superadmin'],
-    items: [
-      { name: 'Intelligence', href: '/sa', icon: LayoutDashboard },
-      { name: 'Finance Analytics', href: '/sa/finance', icon: FileBarChart },
-      { name: 'Activity Monitor', href: '/sa/activity', icon: Activity },
-    ]
-  },
-  {
-    label: 'Administration',
-    roles: ['superadmin'],
-    items: [
-      { name: 'Users Control', href: '/sa/users', icon: Users },
-      { name: 'Developers', href: '/sa/devs', icon: Code2 },
-      { name: 'Marketers', href: '/sa/marketers', icon: Megaphone },
-      { name: 'Clients (Orgs)', href: '/sa/clients', icon: Briefcase },
-      { name: 'Contractors', href: '/sa/contractors', icon: ShieldCheck },
-      { name: 'Building Owners', href: '/sa/owners', icon: Building2 },
-      { name: 'Students', href: '/sa/students', icon: GraduationCap },
-      { name: 'Agents', href: '/sa/agents', icon: Target },
-    ]
-  },
-  {
-    label: 'Operations',
-    roles: ['superadmin'],
-    items: [
-      { name: 'Approvals Queue', href: '/sa/approvals', icon: Zap },
-      { name: 'Subscriptions', href: '/sa/subscriptions', icon: PieChart },
-      { name: 'Transactions', href: '/sa/payments', icon: CreditCard },
-      { name: 'Announcements', href: '/sa/notifications', icon: Bell },
-      { name: 'Support Desk', href: '/sa/support', icon: HelpCircle },
-    ]
-  },
-  // Super Dev Groups
-  {
-    label: 'Technical',
-    roles: ['superdev'],
-    items: [
-      { name: 'Ops Dashboard', href: '/sd', icon: LayoutDashboard },
-      { name: 'Infrastructure', href: '/sd/infra', icon: Server },
-      { name: 'Tech Ops', href: '/sd/ops', icon: Cpu },
-    ]
-  },
-  {
-    label: 'Engineering',
-    roles: ['superdev'],
-    items: [
-      { name: 'App Modules', href: '/sd/modules', icon: Layers },
-      { name: 'Projects', href: '/sd/projects', icon: Rocket },
-      { name: 'Dev Team', href: '/sd/team', icon: Users },
-    ]
-  },
-  {
-    label: 'Surveillance',
-    roles: ['superdev'],
-    items: [
-      { name: 'API Monitor', href: '/sd/api', icon: Webhook },
-      { name: 'Database Health', href: '/sd/database', icon: Database },
-      { name: 'Bug Tracking', href: '/sd/bugs', icon: Bug },
-      { name: 'System Logs', href: '/sd/logs', icon: Activity },
-    ]
-  },
-  // Super Marketer Groups
-  {
-    label: 'Performance',
-    roles: ['supermarketer'],
-    items: [
-      { name: 'Marketing Hub', href: '/sm', icon: LayoutDashboard },
-      { name: 'Analytics', href: '/sm/analytics', icon: Activity },
-      { name: 'Conversion Matrix', href: '/sm/conversions', icon: Zap },
-    ]
-  },
-  {
-    label: 'Growth',
-    roles: ['supermarketer'],
-    items: [
-      { name: 'Campaigns', href: '/sm/campaigns', icon: BarChart },
-      { name: 'Leads Pipeline', href: '/sm/leads', icon: Target },
-      { name: 'Acquisition', href: '/sm/acquisition', icon: TrendingUp },
-    ]
-  },
-  {
-    label: 'Channels',
-    roles: ['supermarketer'],
-    items: [
-      { name: 'Advertisement', href: '/sm/ads', icon: Share2 },
-      { name: 'Promotions', href: '/sm/banners', icon: Sparkles },
-      { name: 'Email Ops', href: '/sm/email', icon: Bell },
-      { name: 'Referrals', href: '/sm/referrals', icon: Users },
-    ]
-  },
-  // Owner Groups
-  {
-    label: 'Assets',
-    roles: ['owner'],
-    items: [
-      { name: 'Dashboard', href: '/owner', icon: LayoutDashboard },
-      { name: 'My Properties', href: '/owner/properties', icon: Building2 },
-    ]
-  },
-  {
-    label: 'Operations',
-    roles: ['owner'],
-    items: [
-      { name: 'Lease Inquiries', href: '/owner/inquiries', icon: Search },
-      { name: 'Financial Ledger', href: '/owner/financials', icon: CreditCard },
-    ]
-  },
-  // Contractor Groups
-  {
-    label: 'Ops Hub',
-    roles: ['contractor'],
-    items: [
-      { name: 'Work Dashboard', href: '/contractor', icon: ClipboardList },
-      { name: 'My Hostels', href: '/contractor/projects', icon: Building2 },
-    ]
-  },
-  {
-    label: 'Facility Care',
-    roles: ['contractor'],
-    items: [
-      { name: 'Support Tickets', href: '/contractor/tickets', icon: MessageSquare },
-      { name: 'New Inquiries', href: '/contractor/inquiries', icon: Search },
-      { name: 'Expense Claims', href: '/contractor/expenses', icon: CreditCard },
-    ]
-  },
-  // Student Groups
-  {
-    label: 'Stay',
-    roles: ['student'],
-    items: [
-      { name: 'Dashboard', href: '/student', icon: LayoutDashboard },
-      { name: 'My Unit', href: '/student/room', icon: Home },
-    ]
-  },
-  {
-    label: 'Financials',
-    roles: ['student'],
-    items: [
-      { name: 'Rent & Bills', href: '/student/rent', icon: Wallet },
-      { name: 'Payment History', href: '/student/history', icon: History },
-    ]
-  },
-  {
-    label: 'Support',
-    roles: ['student'],
-    items: [
-      { name: 'Support Desk', href: '/student/complaints', icon: AlertTriangle },
-      { name: 'Notification Feed', href: '/student/notifications', icon: Bell },
-    ]
-  },
-  // Agent Groups
-  {
-    label: 'Pipeline',
-    roles: ['agent'],
-    items: [
-      { name: 'Matchmaking', href: '/agents/matchmaking', icon: Sparkles },
-      { name: 'Referral Pipeline', href: '/agents/referrals', icon: Target },
-      { name: 'Commission Ledger', href: '/agents/commission', icon: CreditCard },
-    ]
-  },
-  // Unified Config (Bottom)
-  {
-    label: 'Configuration',
-    items: [
-      { name: 'Settings', href: 'SETTINGS', icon: Settings },
-    ]
+    /* Sidebar Specific Tokens */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 154 20% 11.2%;
+    --sidebar-primary: 161 43.4% 25.1%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 150 10% 94%;
+    --sidebar-accent-foreground: 161 43.4% 25.1%;
+    --sidebar-border: 150 10.4% 90%;
+    --sidebar-ring: 161 43.4% 25.1%;
   }
-];
 
-export function Sidebar({ activeRole }: { activeRole: Role }) {
-  const pathname = usePathname();
-  const [unresolvedCount, setUnresolvedCount] = useState(0);
-  const [notifCount, setNotifCount] = useState(0);
-  const [pendingApprovals, setPendingApprovals] = useState(0);
-  const [activeBugs, setActiveBugs] = useState(0);
-  const [newLeads, setNewLeads] = useState(0);
-  const { setOpenMobile, isMobile } = useSidebar();
+  .dark {
+    /* Night theme: Forest Obsidian - High Visibility Adjustments */
+    --background: 160 20% 7.8%; /* #101815 */
+    --foreground: 144 13.8% 95.7%; /* #F1F6F3 - Main Text */
+    --card: 154.3 17.1% 11.8%; /* #19231E */
+    --card-foreground: 144 13.8% 95.7%;
+    --popover: 154.3 17.1% 11.8%;
+    --popover-foreground: 144 13.8% 95.7%;
+    --primary: 151.4 44.9% 69.8%; /* #8ED6B4 */
+    --primary-foreground: 160 20% 7.8%; /* #101815 */
+    --secondary: 154.3 17.1% 18%;
+    --secondary-foreground: 144 13.8% 95.7%;
+    --muted: 154.3 17.1% 18%;
+    --muted-foreground: 150 10% 85%; 
+    --accent: 150 24.7% 28.8%; /* #375B49 - Soft Accent */
+    --accent-foreground: 144 13.8% 95.7%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 144 13.8% 95.7%;
+    --border: 154.3 17.1% 26%; /* #3B4A42 */
+    --input: 154.3 17.1% 26%;
+    --ring: 151.4 44.9% 69.8%;
 
-  const roleRoutes: Record<Role, string> = {
-    superadmin: '/sa',
-    superdev: '/sd',
-    supermarketer: '/sm',
-    owner: '/owner',
-    contractor: '/contractor',
-    student: '/student',
-    agent: '/agents'
-  };
+    /* Sidebar Specific Tokens Dark */
+    --sidebar-background: 160 20% 7.8%;
+    --sidebar-foreground: 144 13.8% 95.7%;
+    --sidebar-primary: 151.4 44.9% 69.8%;
+    --sidebar-primary-foreground: 160 20% 7.8%;
+    --sidebar-accent: 154.3 17.1% 18%;
+    --sidebar-accent-foreground: 151.4 44.9% 69.8%;
+    --sidebar-border: 154.3 17.1% 26%;
+    --sidebar-ring: 151.4 44.9% 69.8%;
+  }
+}
 
-  useEffect(() => {
-    const load = () => {
-      const tickets = getStoredTickets();
-      if (activeRole === 'contractor') {
-        setUnresolvedCount(tickets.filter(t => t.status === 'new' || t.status === 'in-progress').length);
-      } else if (activeRole === 'student') {
-        setUnresolvedCount(tickets.filter(t => t.status === 'resolved').length);
-        const notifs = getStudentNotifications();
-        setNotifCount(notifs.filter(n => !n.isRead).length);
-      } else if (activeRole === 'superadmin') {
-        const users = getSAUsers();
-        setPendingApprovals(users.filter(u => u.status === 'pending').length);
-      } else if (activeRole === 'superdev') {
-        const bugs = getSDBugs();
-        setActiveBugs(bugs.filter(b => b.status !== 'closed').length);
-      } else if (activeRole === 'supermarketer') {
-        const leads = getSMLeads();
-        setNewLeads(leads.filter(l => l.status === 'new').length);
-      }
-    };
-    load();
-    window.addEventListener('storage', load);
-    return () => window.removeEventListener('storage', load);
-  }, [activeRole]);
+@layer base {
+  html {
+    font-size: 18px;
+  }
+  * {
+    @apply border-border transition-colors duration-200;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
 
-  const groups = ALL_GROUPS.filter(g => !g.roles || g.roles.includes(activeRole));
+.data-table-compact td {
+  @apply py-4 px-6 align-middle;
+}
 
-  const handleLinkClick = () => {
-    if (isMobile) {
-      setOpenMobile(false);
-    }
-  };
+.enterprise-card {
+  @apply rounded-xl border bg-card shadow-sm hover:shadow-md transition-all duration-300;
+}
 
-  return (
-    <SidebarUI collapsible="icon" className="border-r bg-background">
-      <SidebarHeader className="h-20 px-6 border-b bg-card flex flex-row items-center gap-3">
-        <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center shadow-lg shrink-0">
-          <ShieldCheck className="h-6 w-6 text-primary-foreground" />
-        </div>
-        <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-          <span className="text-base font-black text-foreground tracking-tight leading-none uppercase">HostelHub</span>
-          <span className="text-[12px] font-black text-primary uppercase tracking-widest mt-1">StaySync</span>
-        </div>
-      </SidebarHeader>
-      
-      <SidebarContent className="py-6 overflow-x-hidden">
-        {groups.map((group) => (
-          <SidebarGroup key={group.label} className="mb-4">
-            <SidebarGroupLabel className="px-5 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/50 mb-2">
-              {group.label}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu className="px-2 space-y-1">
-                {group.items.map((item) => {
-                  const prefix = roleRoutes[activeRole];
-                  const resolvedHref = item.href === 'PROFILE' ? `${prefix}/profile` : 
-                                      item.href === 'SETTINGS' ? `${prefix}/settings` : 
-                                      item.href;
+.sidebar-link-active {
+  @apply bg-primary/10 text-primary border-l-4 border-primary font-black;
+}
 
-                  const isActive = pathname === resolvedHref || (resolvedHref !== '/sa' && resolvedHref !== '/contractor' && resolvedHref !== '/student' && resolvedHref !== '/agents' && resolvedHref !== '/sd' && resolvedHref !== '/sm' && pathname.startsWith(resolvedHref));
-                  
-                  let badge = 0;
-                  if (item.name === 'Support Tickets' || (item.name === 'Support Desk' && activeRole === 'student')) {
-                    badge = unresolvedCount;
-                  } else if (item.name === 'Notification Feed' || item.name === 'Notifications') {
-                    badge = notifCount;
-                  } else if (item.name === 'Approvals Queue') {
-                    badge = pendingApprovals;
-                  } else if (item.name === 'Bug Tracking') {
-                    badge = activeBugs;
-                  } else if (item.name === 'Leads Pipeline') {
-                    badge = newLeads;
-                  }
+/* Subtle Vintage Grain */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.015;
+  background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+}
 
-                  return (
-                    <SidebarMenuItem key={item.name}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={isActive}
-                        tooltip={item.name}
-                        className={cn(
-                          "h-12 px-4 transition-all rounded-xl",
-                          isActive ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                        )}
-                      >
-                        <Link href={resolvedHref} onClick={handleLinkClick}>
-                          <item.icon className={cn(
-                            "h-5 w-5 shrink-0 mr-3 transition-colors",
-                            isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground"
-                          )} />
-                          <span className={cn(
-                            "text-[14px] font-black uppercase tracking-tight group-data-[collapsible=icon]:hidden",
-                            isActive ? "text-primary-foreground" : "text-muted-foreground"
-                          )}>
-                            {item.name}
-                          </span>
-                          {badge > 0 && (
-                            <span className={cn(
-                              "ml-auto text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm group-data-[collapsible=icon]:hidden",
-                              isActive ? "bg-white text-primary" : "bg-primary text-white"
-                            )}>
-                              {badge}
-                            </span>
-                          )}
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
+/* Glassmorphism */
+.glass-header {
+  @apply backdrop-blur-lg bg-background/80 border-b sticky top-0 z-50;
+}
 
-      <SidebarFooter className="p-4 border-t bg-muted/5">
-        <div className="flex items-center gap-4 px-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-black text-[11px] uppercase shrink-0 border-2 border-primary/20 shadow-inner">
-            {activeRole.charAt(0)}
-          </div>
-          <div className="flex flex-col group-data-[collapsible=icon]:hidden overflow-hidden">
-            <span className="text-[12px] font-black text-foreground truncate uppercase leading-none tracking-tight">{activeRole.replace('_', ' ')}</span>
-            <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mt-1 opacity-70">Secured Node</span>
-          </div>
-        </div>
-      </SidebarFooter>
-    </SidebarUI>
-  );
+/* Scrollbar styling for better visibility in both themes */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/30 transition-colors;
 }
