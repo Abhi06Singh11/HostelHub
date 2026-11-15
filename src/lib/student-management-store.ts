@@ -1,7 +1,8 @@
 'use client';
-import { StudentDetail, VerificationAuditLog, VerificationLevel } from './types';
+import { StudentDetail, VerificationAuditLog, VerificationLevel, CompletionStatus, StudentNotification } from './types';
 
 const STORAGE_KEY = 'staysync_contractor_students_v1';
+const STUDENT_NOTIF_KEY = 'staysync_student_notifications';
 
 const MOCK_STUDENTS: StudentDetail[] = [
   {
@@ -14,6 +15,7 @@ const MOCK_STUDENTS: StudentDetail[] = [
     activeRole: 'student',
     status: 'verified',
     joinedAt: '2024-03-01',
+    lastUpdated: '2024-06-01 10:00',
     dob: '2002-08-15',
     gender: 'Male',
     nationality: 'Indian',
@@ -63,6 +65,7 @@ const MOCK_STUDENTS: StudentDetail[] = [
     activeRole: 'student',
     status: 'pending',
     joinedAt: '2024-05-10',
+    lastUpdated: '2024-05-12 14:30',
     dob: '2003-04-22',
     gender: 'Female',
     nationality: 'Indian',
@@ -151,7 +154,8 @@ export const updateStudentVerification = (
           govIdVerified: isVerified,
           govIdVerifiedAt: isVerified ? timestamp : undefined,
           govIdVerifiedBy: isVerified ? verifier : undefined,
-          verificationLogs: [newLog, ...s.verificationLogs]
+          verificationLogs: [newLog, ...s.verificationLogs],
+          lastUpdated: timestamp
         };
       } else {
         return {
@@ -159,7 +163,8 @@ export const updateStudentVerification = (
           policeVerified: isVerified,
           policeVerifiedAt: isVerified ? timestamp : undefined,
           policeVerifiedBy: isVerified ? verifier : undefined,
-          verificationLogs: [newLog, ...s.verificationLogs]
+          verificationLogs: [newLog, ...s.verificationLogs],
+          lastUpdated: timestamp
         };
       }
     }
@@ -170,6 +175,72 @@ export const updateStudentVerification = (
 
 export const updateStudentProfile = (id: string, updates: Partial<StudentDetail>) => {
   const students = getStoredStudents();
-  const updated = students.map(s => s.id === id ? { ...s, ...updates } : s);
+  const updated = students.map(s => s.id === id ? { ...s, ...updates, lastUpdated: new Date().toISOString().replace('T', ' ').substring(0, 16) } : s);
   saveStudents(updated);
+};
+
+// Completion Tracking Helpers
+export const calculateCompletion = (student: StudentDetail): number => {
+  const fields = [
+    student.name, student.email, student.phone, student.dob, student.gender,
+    student.permanentAddress, student.currentAddress, student.city, student.pincode,
+    student.fatherName, student.motherName, student.guardianPhone,
+    student.emergencyName, student.emergencyPhone, student.emergencyRelation,
+    student.govIdType, student.govIdNumber
+  ];
+  const filled = fields.filter(f => !!f && f !== '').length;
+  const docTypes = ['id_proof', 'photo', 'address_proof'];
+  const uploadedDocs = student.documents.filter(d => docTypes.includes(d.type)).length;
+  
+  const totalPoints = fields.length + docTypes.length;
+  const earnedPoints = filled + uploadedDocs;
+  
+  return Math.round((earnedPoints / totalPoints) * 100);
+};
+
+export const getCompletionStatus = (student: StudentDetail): CompletionStatus => {
+  const percentage = calculateCompletion(student);
+  const hasPendingDocs = student.documents.some(d => d.status === 'pending');
+  
+  if (hasPendingDocs) return 'awaiting_review';
+  if (percentage === 100) return 'complete';
+  if (percentage >= 50) return 'partially_complete';
+  return 'incomplete';
+};
+
+export const getMissingFields = (student: StudentDetail): string[] => {
+  const missing = [];
+  if (!student.phone) missing.push('Mobile Number');
+  if (!student.permanentAddress) missing.push('Permanent Address');
+  if (!student.currentAddress) missing.push('Current Address');
+  if (!student.fatherName || !student.motherName || !student.guardianPhone) missing.push('Guardian Details');
+  if (!student.emergencyName || !student.emergencyPhone) missing.push('Emergency Contact');
+  
+  const docTypes = student.documents.map(d => d.type);
+  if (!docTypes.includes('id_proof')) missing.push('Government ID Scan');
+  if (!docTypes.includes('photo')) missing.push('Student Photograph');
+  if (!docTypes.includes('address_proof')) missing.push('Address Proof Scan');
+  
+  return missing;
+};
+
+// Notification Action
+export const sendInformationRequest = (studentId: string, requestedFields: string[], customMessage: string) => {
+  if (typeof window === 'undefined') return;
+  
+  const notifsStr = localStorage.getItem(STUDENT_NOTIF_KEY);
+  const notifications: StudentNotification[] = notifsStr ? JSON.parse(notifsStr) : [];
+  
+  const newNotif: StudentNotification = {
+    id: `notif-ir-${Date.now()}`,
+    title: 'Action Required: Incomplete Profile Information',
+    message: customMessage || 'Please complete your student profile and upload the required identity and address documents for hostel registration and verification.',
+    category: 'information_request',
+    timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16),
+    isRead: false,
+    requestedFields: requestedFields
+  };
+  
+  localStorage.setItem(STUDENT_NOTIF_KEY, JSON.stringify([newNotif, ...notifications]));
+  window.dispatchEvent(new Event('storage'));
 };

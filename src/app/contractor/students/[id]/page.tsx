@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { useParams, useRouter } from 'next/navigation';
-import { getStudentById, updateStudentVerification } from '@/lib/student-management-store';
+import { getStudentById, updateStudentVerification, calculateCompletion, getMissingFields, sendInformationRequest } from '@/lib/student-management-store';
 import { StudentDetail, VerificationLevel } from '@/lib/types';
 import { 
   ArrowLeft, 
@@ -25,7 +25,10 @@ import {
   Zap,
   Info,
   Calendar,
-  Home
+  Home,
+  MessageSquare,
+  Send,
+  Plus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -42,9 +45,12 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Progress } from '@/components/ui/progress';
 
 export default function StudentProfileDetailPage() {
   const { id } = useParams();
@@ -55,12 +61,33 @@ export default function StudentProfileDetailPage() {
   const [confirmState, setConfirmState] = useState(true);
   const [reason, setReason] = useState('');
 
+  // Request Information Dialog State
+  const [isRequestOpen, setIsRequestOpen] = useState(false);
+  const [selectedFields, setSelectedFields] = useState<string[]>([]);
+  const [customMsg, setCustomMsg] = useState('');
+
+  const requestOptions = [
+    { id: 'personal', label: 'Complete Personal Information' },
+    { id: 'phone', label: 'Add Mobile Number' },
+    { id: 'perm_addr', label: 'Add Permanent Address' },
+    { id: 'curr_addr', label: 'Add Current Address' },
+    { id: 'guardian', label: 'Add Guardian Details' },
+    { id: 'emergency', label: 'Add Emergency Contact' },
+    { id: 'gov_id', label: 'Upload Government ID' },
+    { id: 'addr_proof', label: 'Upload Address Proof' },
+    { id: 'photo', label: 'Upload Student Photograph' },
+    { id: 'other', label: 'Submit Other Required Documents' },
+  ];
+
   useEffect(() => {
     const data = getStudentById(id as string);
     if (data) setStudent(data);
   }, [id]);
 
   if (!student) return null;
+
+  const completion = calculateCompletion(student);
+  const missing = getMissingFields(student);
 
   const handleToggle = (type: 'gov' | 'pol', currentState: boolean) => {
     setConfirmType(type);
@@ -80,6 +107,19 @@ export default function StudentProfileDetailPage() {
     });
   };
 
+  const handleSendRequest = () => {
+    if (selectedFields.length === 0) {
+      toast({ variant: "destructive", title: "Empty Selection", description: "Please select at least one item to request." });
+      return;
+    }
+    
+    sendInformationRequest(student.id, selectedFields, customMsg);
+    setIsRequestOpen(false);
+    setSelectedFields([]);
+    setCustomMsg('');
+    toast({ title: "Request Transmitted", description: "The student has been notified via their portal." });
+  };
+
   const overallStatus = student.govIdVerified && student.policeVerified ? 'Fully Verified' : 
                        student.govIdVerified || student.policeVerified ? 'Partially Verified' : 'Unverified';
 
@@ -91,6 +131,51 @@ export default function StudentProfileDetailPage() {
             <ArrowLeft className="h-4 w-4 mr-2" /> All Students
           </Button>
           <div className="flex gap-3">
+             <Dialog open={isRequestOpen} onOpenChange={setIsRequestOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="h-10 font-bold uppercase text-[11px] tracking-widest border-2 text-primary hover:bg-primary/5">
+                    <MessageSquare className="h-4 w-4 mr-2" /> Request Information
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-lg rounded-3xl border-2">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-bold uppercase tracking-tight">Request Missing Data</DialogTitle>
+                    <DialogDescription className="text-xs font-medium uppercase text-muted-foreground">Select required profile elements to notify the resident.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-6 py-6">
+                    <div className="grid grid-cols-2 gap-3">
+                      {requestOptions.map(opt => (
+                        <div key={opt.id} className="flex items-center space-x-2 p-2 rounded-xl bg-muted/20 border border-transparent hover:border-primary/20 transition-all">
+                          <Checkbox 
+                            id={opt.id} 
+                            checked={selectedFields.includes(opt.label)} 
+                            onCheckedChange={(checked) => {
+                              if (checked) setSelectedFields([...selectedFields, opt.label]);
+                              else setSelectedFields(selectedFields.filter(f => f !== opt.label));
+                            }}
+                          />
+                          <Label htmlFor={opt.id} className="text-[11px] font-bold uppercase cursor-pointer">{opt.label}</Label>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold uppercase tracking-widest ml-1">Custom Message (Optional)</Label>
+                      <Textarea 
+                        placeholder="e.g. Please update your guardian mobile number as the previous one is unreachable."
+                        value={customMsg}
+                        onChange={(e) => setCustomMsg(e.target.value)}
+                        className="min-h-[80px] border-2 font-medium"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="ghost" onClick={() => setIsRequestOpen(false)} className="font-bold uppercase text-[11px] tracking-widest">Abort</Button>
+                    <Button onClick={handleSendRequest} className="h-11 px-8 font-bold uppercase text-[11px] tracking-widest bg-primary shadow-lg">
+                      <Send className="h-4 w-4 mr-2" /> Send Request
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+             </Dialog>
              <Button variant="outline" className="h-10 font-semibold uppercase text-[11px] tracking-widest border-2">
                 <Download className="h-4 w-4 mr-2" /> Download Dossier
              </Button>
@@ -142,6 +227,43 @@ export default function StudentProfileDetailPage() {
                  </div>
                  <Activity className="absolute -right-10 -bottom-10 h-64 w-64 text-primary opacity-5 animate-pulse" />
               </div>
+
+              {/* Completion Logic Summary */}
+              {missing.length > 0 && (
+                <Card className="enterprise-card border-amber-500/20 bg-amber-500/5 p-8 animate-in fade-in duration-500">
+                  <div className="flex flex-col md:flex-row justify-between gap-8">
+                    <div className="space-y-4 flex-1">
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="h-5 w-5 text-amber-600" />
+                        <h3 className="text-lg font-bold uppercase tracking-tight text-amber-700">Dossier Incomplete</h3>
+                      </div>
+                      <p className="text-xs font-medium text-amber-700/70 leading-relaxed uppercase">
+                        This resident is missing {missing.length} critical information nodes required for the commercial stay ledger.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {missing.slice(0, 5).map(m => (
+                          <Badge key={m} variant="outline" className="text-[8px] font-bold uppercase border-amber-500/30 text-amber-700 bg-amber-500/10">{m}</Badge>
+                        ))}
+                        {missing.length > 5 && <span className="text-[9px] font-bold text-amber-600">+{missing.length - 5} more</span>}
+                      </div>
+                    </div>
+                    <div className="w-full md:w-48 space-y-3">
+                       <div className="flex justify-between text-[11px] font-bold uppercase text-amber-700">
+                          <span>Profile Health</span>
+                          <span>{completion}%</span>
+                       </div>
+                       <Progress value={completion} className="h-2 bg-amber-200" />
+                       <Button 
+                        size="sm" 
+                        onClick={() => setIsRequestOpen(true)}
+                        className="w-full h-9 bg-amber-600 hover:bg-amber-700 text-white font-bold uppercase text-[9px] tracking-widest mt-2"
+                      >
+                         Notify Resident
+                       </Button>
+                    </div>
+                  </div>
+                </Card>
+              )}
 
               {/* Main Content Tabs */}
               <Tabs defaultValue="identity" className="w-full">
@@ -256,6 +378,30 @@ export default function StudentProfileDetailPage() {
            </div>
 
            <div className="space-y-8">
+              {/* Profile Completion Pulse */}
+              <Card className="enterprise-card p-8 space-y-6">
+                 <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">Compliance Heartbeat</h4>
+                 <div className="space-y-8">
+                    <div className="p-5 rounded-2xl bg-muted/20 border border-border space-y-4">
+                       <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">Dossier Integrity</p>
+                       <div className="flex items-center justify-between">
+                          <p className="text-3xl font-bold text-foreground">{completion}%</p>
+                          <Badge className={cn("font-bold text-[9px]", completion === 100 ? "bg-emerald-600 text-white" : "bg-amber-500 text-white")}>
+                            {completion === 100 ? 'COMPLETE' : 'INCOMPLETE'}
+                          </Badge>
+                       </div>
+                       <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                          <div className={cn("h-full", completion === 100 ? "bg-emerald-500" : "bg-primary")} style={{ width: `${completion}%` }} />
+                       </div>
+                    </div>
+                    <div className="space-y-4">
+                       <DetailRow label="KYC Document" value={student.govIdVerified ? 'Verified' : 'Pending'} icon={FileText} color={student.govIdVerified ? "text-emerald-600" : "text-amber-600"} />
+                       <DetailRow label="Stay Registry" value="ACTIVE" icon={CheckCircle2} color="text-emerald-600" />
+                       <DetailRow label="Audit History" value="STABLE" icon={History} color="text-primary" />
+                    </div>
+                 </div>
+              </Card>
+
               {/* CRITICAL: INDEPENDENT VERIFICATION TOGGLES */}
               <Card className="enterprise-card p-8 space-y-8">
                  <div className="space-y-1">
@@ -317,29 +463,16 @@ export default function StudentProfileDetailPage() {
                  </div>
               </Card>
 
-              {/* Interaction Insight - Theme Optimized Card */}
-              <Card className="enterprise-card p-8 space-y-6">
-                 <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">Compliance Heartbeat</h4>
-                 <div className="space-y-4">
-                    <div className="p-4 bg-muted/20 border border-border rounded-2xl space-y-2">
-                       <p className="text-[9px] font-semibold text-muted-foreground uppercase">Verification Audit Log</p>
-                       {student.verificationLogs.slice(0, 3).map(log => (
-                         <div key={log.id} className="flex justify-between items-center border-b border-border py-1.5 last:border-0">
-                            <span className="text-[10px] font-semibold uppercase text-foreground">{log.type.replace('_', ' ')}</span>
-                            <span className={cn("text-[10px] font-semibold uppercase", log.newStatus === 'verified' ? "text-emerald-600" : "text-amber-600")}>{log.newStatus}</span>
-                         </div>
-                       ))}
-                       {student.verificationLogs.length === 0 && (
-                         <p className="text-[10px] text-muted-foreground italic uppercase">No sync logs found.</p>
-                       )}
-                    </div>
+              {/* Strategic Insights */}
+              <div className="enterprise-card border bg-primary text-primary-foreground p-8 space-y-4 shadow-xl">
+                 <div className="flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5 opacity-80" />
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest">Admin Tip</h4>
                  </div>
-                 <div className="space-y-4">
-                    <DetailRow label="KYC Document" value="Verified" icon={FileText} color="text-emerald-600" />
-                    <DetailRow label="Rent History" value="STABLE" icon={CheckCircle2} color="text-emerald-600" />
-                    <DetailRow label="Rule Adherence" value="A+" icon={ShieldCheck} color="text-primary" />
-                 </div>
-              </Card>
+                 <p className="text-[11px] opacity-90 leading-relaxed font-medium">
+                    "Students with verified Government IDs and 100% complete profiles are 3x more likely to clear police verification without secondary audits."
+                 </p>
+              </div>
            </div>
         </div>
       </div>

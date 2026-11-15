@@ -424,6 +424,7 @@ export interface InvitationLink {
 // Resident/Student Management Types
 export type StayStatus = 'active' | 'left' | 'upcoming';
 export type VerificationLevel = 'none' | 'pending' | 'verified' | 'rejected';
+export type CompletionStatus = 'complete' | 'partially_complete' | 'incomplete' | 'awaiting_review';
 
 export interface StudentDocument {
   id: string;
@@ -483,6 +484,7 @@ export interface StudentDetail extends User {
   checkInDate: string;
   checkOutDate?: string;
   registrationDate: string;
+  lastUpdated?: string;
 
   govIdType: 'Aadhaar' | 'Passport' | 'Voter ID' | 'Driving Licence' | 'Other';
   govIdNumber: string; // Masked in UI
@@ -545,10 +547,11 @@ export interface StudentNotification {
   id: string;
   title: string;
   message: string;
-  category: 'rent' | 'complaint' | 'announcement' | 'system' | 'profile';
+  category: 'rent' | 'complaint' | 'announcement' | 'system' | 'profile' | 'information_request';
   timestamp: string;
   isRead: boolean;
   whatsappStatus?: 'sent' | 'delivered' | 'failed';
+  requestedFields?: string[];
 }
 
 export interface PaymentRecord {
