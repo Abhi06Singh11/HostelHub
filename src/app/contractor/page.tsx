@@ -150,18 +150,18 @@ export default function ContractorDashboard() {
                 <div className="flex justify-between items-end">
                   <div>
                     <p className="text-2xl font-bold">{mockStudentInquiries.length}</p>
-                    <p className="text-[9px] font-bold uppercase text-muted-foreground">Total Pipeline Leads</p>
+                    <p className="text-[9px] font-bold uppercase text-white/60">Total Pipeline Leads</p>
                   </div>
-                  <Button size="sm" variant="outline" onClick={() => router.push('/contractor/inquiries')} className="h-7 text-[9px] font-bold uppercase text-white border-white/20 hover:bg-white/10">Manage Hub</Button>
+                  <Button size="sm" variant="outline" onClick={() => router.push('/contractor/inquiries')} className="h-7 text-[9px] font-bold uppercase text-white border-white/40 hover:bg-white/10 px-4">Manage Hub</Button>
                 </div>
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
                   <div>
                     <p className="text-lg font-bold text-emerald-400">4</p>
-                    <p className="text-[8px] font-bold uppercase text-muted-foreground">Interested</p>
+                    <p className="text-[8px] font-bold uppercase text-white/40">Interested</p>
                   </div>
                   <div>
                     <p className="text-lg font-bold text-primary">2</p>
-                    <p className="text-[8px] font-bold uppercase text-muted-foreground">Converted</p>
+                    <p className="text-[8px] font-bold uppercase text-white/40">Converted</p>
                   </div>
                 </div>
               </div>

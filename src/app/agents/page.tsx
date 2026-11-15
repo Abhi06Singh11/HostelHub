@@ -167,11 +167,11 @@ export default function AgentDashboard() {
                 <div className="flex justify-between items-end">
                   <div>
                     <p className="text-2xl font-bold">₹1.2L</p>
-                    <p className="text-[9px] font-bold uppercase text-muted-foreground tracking-widest">MTD Commission Goal</p>
+                    <p className="text-[9px] font-bold uppercase text-white/60 tracking-widest">MTD Commission Goal</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-primary">₹34,400</p>
-                    <p className="text-[8px] font-bold uppercase text-muted-foreground">Current Progress</p>
+                    <p className="text-[8px] font-bold uppercase text-white/40">Current Progress</p>
                   </div>
                 </div>
                 <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
