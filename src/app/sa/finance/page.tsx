@@ -195,7 +195,7 @@ function FinanceStat({ label, value, icon: Icon, color, bg }: any) {
         <p className={cn("text-2xl font-black tracking-tight tabular-nums", color)}>{value}</p>
       </div>
       <div className="p-3 bg-card rounded-lg shadow-sm border border-border">
-        <Icon className={cn("h-5 w-5", color)} />
+        <Icon className={cn("h-6 w-6", color)} />
       </div>
     </div>
   );

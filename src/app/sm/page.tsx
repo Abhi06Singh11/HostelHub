@@ -17,6 +17,7 @@ import { MarketingLead, MarketingCampaign } from '@/lib/types';
 import { ResponsiveContainer, XAxis, Tooltip, Area, AreaChart } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 export default function SuperMarketerDashboard() {
   const router = useRouter();

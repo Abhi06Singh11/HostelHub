@@ -69,7 +69,7 @@ export default function SASupportDeskPage() {
 
           <div className="divide-y">
             {filtered.map(t => (
-              <div key={t.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-muted/30 transition-all border-l-4 border-l-transparent hover:border-l-primary cursor-pointer group">
+              <div key={t.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-muted/30 transition-all border-l-4 border-l-transparent hover:border-l-primary cursor-pointer group" onClick={() => router.push(`/sa/support/${t.id}`)}>
                  <div className="flex gap-6">
                     <div className={cn(
                       "w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border shadow-sm transition-colors",
