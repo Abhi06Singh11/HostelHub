@@ -96,7 +96,7 @@ export default function SuperAdminDashboard() {
           sub="Monthly Subscription Accrual" 
           icon={TrendingUp} 
           color="text-emerald-600" 
-          bg="bg-emerald-50"
+          bg="bg-emerald-50 dark:bg-emerald-950/20"
           onClick={() => router.push('/sa/finance')}
           trend={{ value: "+12%", isUp: true }}
         />
@@ -106,7 +106,7 @@ export default function SuperAdminDashboard() {
           sub={`${orgs.length} Total Registered Orgs`} 
           icon={Briefcase} 
           color="text-blue-600" 
-          bg="bg-blue-50"
+          bg="bg-blue-50 dark:bg-blue-950/20"
           onClick={() => router.push('/sa/clients')}
         />
         <StatCard 
@@ -115,7 +115,7 @@ export default function SuperAdminDashboard() {
           sub="All Infrastructure Nodes Stable" 
           icon={ShieldCheck} 
           color="text-emerald-500" 
-          bg="bg-emerald-50/50"
+          bg="bg-emerald-50/50 dark:bg-emerald-950/10"
           onClick={() => router.push('/sa/audit')}
         />
       </div>
@@ -131,7 +131,7 @@ export default function SuperAdminDashboard() {
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={roleData}>
-                    <XAxis dataKey="name" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
+                    <XAxis dataKey="name" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} stroke="currentColor" opacity={0.5} />
                     <Tooltip 
                       cursor={{fill: 'transparent'}}
                       content={({active, payload}) => {

@@ -124,15 +124,15 @@ export default function OwnerDashboard() {
                    <div className="space-y-4">
                       <p className="text-xs font-bold text-primary uppercase tracking-[0.2em]">Financial Snapshot</p>
                       <h3 className="text-4xl font-bold tracking-tight">₹1.24Cr</h3>
-                      <p className="text-sm text-slate-400 font-medium">Estimated Annualized Gross Rental Income from current active agreements.</p>
+                      <p className="text-sm text-white/40 font-medium">Estimated Annualized Gross Rental Income from current active agreements.</p>
                    </div>
                    <div className="grid grid-cols-2 gap-4">
                       <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
-                         <p className="text-[9px] font-bold uppercase text-slate-500 mb-1">Tax Accrual</p>
+                         <p className="text-[9px] font-bold uppercase text-white/30 mb-1">Tax Accrual</p>
                          <p className="text-lg font-bold">₹8.4L</p>
                       </div>
                       <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
-                         <p className="text-[9px] font-bold uppercase text-slate-500 mb-1">Maintenance</p>
+                         <p className="text-[9px] font-bold uppercase text-white/30 mb-1">Maintenance</p>
                          <p className="text-lg font-bold text-primary">₹3.2L</p>
                       </div>
                    </div>
@@ -149,7 +149,7 @@ export default function OwnerDashboard() {
                 </div>
                 <div className="p-4 space-y-4">
                    {agreements.map(a => (
-                     <div key={a.id} className="p-3 bg-muted/10 border border-dashed rounded-lg flex items-center justify-between">
+                     <div key={a.id} className="p-3 bg-muted/20 border border-dashed rounded-lg flex items-center justify-between">
                         <div>
                            <p className="text-xs font-bold text-foreground">{a.contractorName}</p>
                            <p className="text-[9px] text-muted-foreground font-bold uppercase mt-0.5">{a.propertyName}</p>
@@ -195,7 +195,7 @@ function StatCard({ title, value, details, icon: Icon, color }: any) {
         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{title}</p>
         <p className={cn("text-3xl font-bold tracking-tight", color)}>{value}</p>
         <div className="h-px w-full bg-border/50 my-2" />
-        <p className="text-[10px] font-medium text-muted-foreground">{details}</p>
+        <p className="text-[10px] font-medium text-muted-foreground uppercase">{details}</p>
       </div>
     </div>
   );

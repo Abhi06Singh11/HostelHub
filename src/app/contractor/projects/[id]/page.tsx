@@ -46,7 +46,7 @@ export default function ProjectDetailPage() {
             <Button variant="ghost" size="sm" onClick={() => router.push('/contractor/projects')}>
               <ArrowLeft className="h-4 w-4 mr-2" /> All Hostels
             </Button>
-            <h2 className="text-2xl font-black tracking-tighter uppercase">{project.title}</h2>
+            <h2 className="text-2xl font-black tracking-tighter uppercase text-foreground">{project.title}</h2>
           </div>
           <div className="flex gap-2">
             <Button 
@@ -64,20 +64,20 @@ export default function ProjectDetailPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <div className="enterprise-card border bg-white p-8">
+            <div className="enterprise-card border bg-card p-8">
               <div className="flex items-center justify-between mb-8 pb-4 border-b">
                 <div className="flex items-center gap-3">
-                  <div className="p-3 bg-slate-50 border rounded">
+                  <div className="p-3 bg-muted rounded border">
                     <Building2 className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <p className="text-[12px] font-black uppercase text-slate-400">Hostel Identity</p>
-                    <p className="text-xl font-bold text-slate-900">{project.propertyName}</p>
-                    <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-1 font-bold uppercase"><MapPin className="h-3 w-3" /> {project.address}</p>
+                    <p className="text-[12px] font-black uppercase text-muted-foreground">Hostel Identity</p>
+                    <p className="text-xl font-bold text-foreground">{project.propertyName}</p>
+                    <p className="text-[11px] text-muted-foreground flex items-center gap-1 mt-1 font-bold uppercase"><MapPin className="h-3 w-3" /> {project.address}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-[12px] font-black uppercase text-slate-400">Ownership Mode</p>
+                  <p className="text-[12px] font-black uppercase text-muted-foreground">Ownership Mode</p>
                   <span className={cn(
                     "inline-block px-3 py-1 rounded text-[14px] font-black uppercase border mt-1",
                     project.ownershipType === 'owned' ? "bg-emerald-100 text-emerald-700 border-emerald-200" : "bg-blue-100 text-blue-700 border-blue-200"
@@ -94,51 +94,51 @@ export default function ProjectDetailPage() {
 
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
-                  <p className="text-[13px] font-black uppercase text-slate-500 tracking-wider">Occupancy Performance</p>
+                  <p className="text-[13px] font-black uppercase text-muted-foreground tracking-wider">Occupancy Performance</p>
                   <p className="text-[13px] font-black text-primary">{occupancyRate.toFixed(1)}% Capacity</p>
                 </div>
-                <Progress value={occupancyRate} className="h-3 bg-slate-100" />
+                <Progress value={occupancyRate} className="h-3 bg-muted" />
               </div>
             </div>
 
             {project.ownershipType === 'rented' && (
-              <div className="enterprise-card border bg-white">
-                <div className="p-4 border-b bg-slate-50 flex items-center justify-between">
+              <div className="enterprise-card border bg-card">
+                <div className="p-4 border-b bg-muted/30 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <UserCircle className="h-4 w-4 text-slate-500" />
-                    <span className="text-[12px] font-black uppercase text-slate-500 tracking-widest">Building Owner Information</span>
+                    <UserCircle className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-[12px] font-black uppercase text-muted-foreground tracking-widest">Building Owner Information</span>
                   </div>
                   <Button variant="link" size="sm" className="text-[11px] font-black uppercase">View Agreement</Button>
                 </div>
                 <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-slate-100 rounded border flex items-center justify-center text-slate-300 font-black text-xl">
+                      <div className="w-16 h-16 bg-muted rounded border flex items-center justify-center text-muted-foreground font-black text-xl">
                         {project.ownerName?.charAt(0)}
                       </div>
                       <div>
-                        <h4 className="text-lg font-bold text-slate-900">{project.ownerName}</h4>
+                        <h4 className="text-lg font-bold text-foreground">{project.ownerName}</h4>
                         <p className="text-[11px] font-black uppercase text-primary tracking-widest">Property Asset Owner</p>
                       </div>
                     </div>
                     <div className="space-y-2 pt-2">
-                      <p className="text-sm font-bold flex items-center gap-2 text-slate-700"><Phone className="h-3.5 w-3.5 text-slate-400" /> {project.ownerPhone}</p>
-                      <p className="text-sm font-bold flex items-center gap-2 text-slate-700"><Mail className="h-3.5 w-3.5 text-slate-400" /> {project.ownerEmail}</p>
+                      <p className="text-sm font-bold flex items-center gap-2 text-foreground/80"><Phone className="h-3.5 w-3.5 text-muted-foreground" /> {project.ownerPhone}</p>
+                      <p className="text-sm font-bold flex items-center gap-2 text-foreground/80"><Mail className="h-3.5 w-3.5 text-muted-foreground" /> {project.ownerEmail}</p>
                     </div>
                   </div>
-                  <div className="bg-slate-50 p-4 border rounded space-y-4">
+                  <div className="bg-muted/20 p-4 border rounded space-y-4 border-dashed">
                     <div className="flex justify-between items-center">
-                      <p className="text-[11px] font-black uppercase text-slate-400 tracking-widest">Monthly Rent</p>
-                      <p className="text-lg font-black text-slate-900">₹{project.monthlyRent?.toLocaleString()}</p>
+                      <p className="text-[11px] font-black uppercase text-muted-foreground tracking-widest">Monthly Rent</p>
+                      <p className="text-lg font-black text-foreground">₹{project.monthlyRent?.toLocaleString()}</p>
                     </div>
-                    <Separator className="bg-slate-200" />
+                    <Separator className="bg-border" />
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-[10px] font-black uppercase text-slate-400 mb-1">Agreement Start</p>
+                        <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Agreement Start</p>
                         <p className="text-xs font-bold">{project.contractStart}</p>
                       </div>
                       <div>
-                        <p className="text-[10px] font-black uppercase text-slate-400 mb-1">Agreement End</p>
+                        <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Agreement End</p>
                         <p className="text-xs font-bold">{project.contractEnd}</p>
                       </div>
                     </div>
@@ -148,11 +148,11 @@ export default function ProjectDetailPage() {
             )}
             
             {project.ownershipType === 'owned' && (
-              <div className="enterprise-card border bg-emerald-50 border-emerald-100 p-6 flex items-center gap-4">
+              <div className="enterprise-card border bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-500/20 p-6 flex items-center gap-4">
                 <ShieldCheck className="h-8 w-8 text-emerald-600" />
                 <div>
-                  <h4 className="text-sm font-black uppercase text-emerald-900">Contractor-Owned Property</h4>
-                  <p className="text-[11px] font-bold text-emerald-700 uppercase">No external rental obligations for this building asset.</p>
+                  <h4 className="text-sm font-black uppercase text-emerald-900 dark:text-emerald-400">Contractor-Owned Property</h4>
+                  <p className="text-[11px] font-bold text-emerald-700 dark:text-emerald-500 uppercase">No external rental obligations for this building asset.</p>
                 </div>
               </div>
             )}
@@ -160,20 +160,20 @@ export default function ProjectDetailPage() {
 
           <div className="space-y-6">
             <div className="enterprise-card border bg-slate-900 text-white p-6">
-              <h4 className="text-[12px] font-black uppercase text-slate-400 tracking-widest mb-6">Hostel Financial Snapshot</h4>
+              <h4 className="text-[12px] font-black uppercase text-white/40 tracking-widest mb-6">Hostel Financial Snapshot</h4>
               <div className="space-y-4">
                 <div className="flex justify-between border-b border-white/10 pb-2">
-                  <span className="text-[12px] text-slate-400 font-bold uppercase">Revenue (MTD)</span>
+                  <span className="text-[12px] text-white/60 font-bold uppercase">Revenue (MTD)</span>
                   <span className="text-[12px] font-black uppercase text-green-400">₹2.8L</span>
                 </div>
                 {project.ownershipType === 'rented' && (
                   <div className="flex justify-between border-b border-white/10 pb-2">
-                    <span className="text-[12px] text-slate-400 font-bold uppercase">Building Rent</span>
+                    <span className="text-[12px] text-white/60 font-bold uppercase">Building Rent</span>
                     <span className="text-[12px] font-black uppercase text-red-400">₹{((project.monthlyRent || 0)/100000).toFixed(2)}L</span>
                   </div>
                 )}
                 <div className="flex justify-between border-b border-white/10 pb-2">
-                  <span className="text-[12px] text-slate-400 font-bold uppercase">Operational Cost</span>
+                  <span className="text-[12px] text-white/60 font-bold uppercase">Operational Cost</span>
                   <span className="text-[12px] font-black uppercase text-amber-400">₹0.6L</span>
                 </div>
                 <div className="flex justify-between pt-2">
@@ -181,18 +181,18 @@ export default function ProjectDetailPage() {
                   <span className="text-[13px] font-black uppercase text-primary">₹1.4L</span>
                 </div>
               </div>
-              <Button className="w-full mt-6 bg-primary hover:bg-primary/90 text-[12px] font-black uppercase tracking-widest">
+              <Button className="w-full mt-6 bg-primary hover:bg-primary/90 text-white text-[12px] font-black uppercase tracking-widest border-none">
                 Download P&L Report
               </Button>
             </div>
             
-            <div className="enterprise-card border bg-white">
-              <div className="p-4 border-b bg-slate-50 flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-slate-500" />
-                <span className="text-[12px] font-black uppercase text-slate-500 tracking-widest">Active Site Issues</span>
+            <div className="enterprise-card border bg-card">
+              <div className="p-4 border-b bg-muted/30 flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-muted-foreground" />
+                <span className="text-[12px] font-black uppercase text-muted-foreground tracking-widest">Active Site Issues</span>
               </div>
               <div className="p-4 text-center">
-                <p className="text-[11px] font-black text-slate-400 uppercase py-8">No critical maintenance alerts for this hostel.</p>
+                <p className="text-[11px] font-black text-muted-foreground uppercase py-8">No critical maintenance alerts for this hostel.</p>
                 <Button variant="outline" size="sm" className="w-full text-[11px] font-black uppercase" onClick={() => router.push('/contractor/tickets')}>View Support Desk</Button>
               </div>
             </div>
@@ -210,11 +210,11 @@ function SummaryStat({ icon: Icon, label, value, highlight = false }: any) {
         <Icon className="h-3.5 w-3.5" />
         <p className="text-[11px] font-black uppercase tracking-widest">{label}</p>
       </div>
-      <p className={cn("text-base font-bold", highlight ? "text-primary uppercase" : "text-slate-900")}>{value}</p>
+      <p className={cn("text-base font-bold", highlight ? "text-primary uppercase" : "text-foreground")}>{value}</p>
     </div>
   );
 }
 
 function Separator({ className }: { className?: string }) {
-  return <div className={cn("h-px w-full bg-slate-100", className)} />;
+  return <div className={cn("h-px w-full bg-border", className)} />;
 }

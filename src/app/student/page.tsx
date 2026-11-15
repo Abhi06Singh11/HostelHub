@@ -143,14 +143,14 @@ export default function StudentDashboard() {
                    </div>
                    <div className="space-y-1">
                       <p className="text-3xl font-bold tracking-tight">₹{currentInvoice?.total.toLocaleString() || '0'}</p>
-                      <p className="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Amount Due for {currentInvoice?.month}</p>
+                      <p className="text-[10px] text-white/40 font-medium uppercase tracking-widest">Amount Due for {currentInvoice?.month}</p>
                    </div>
                    <div className="space-y-3 pt-4 border-t border-white/10">
                       <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest">
-                         <span className="text-slate-500">Due Date</span>
+                         <span className="text-white/30">Due Date</span>
                          <span>{currentInvoice?.dueDate || 'N/A'}</span>
                       </div>
-                      <Button onClick={() => router.push('/student/pay')} className="w-full h-11 bg-primary hover:bg-primary/90 text-white font-bold uppercase text-[11px] tracking-widest">
+                      <Button onClick={() => router.push('/student/pay')} className="w-full h-11 bg-primary hover:bg-primary/90 text-white font-bold uppercase text-[11px] tracking-widest border-none">
                          Make Payment Now
                       </Button>
                    </div>
