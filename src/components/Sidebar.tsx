@@ -43,7 +43,8 @@ import {
   Zap as ZapIcon,
   CreditCard,
   Search,
-  Wrench
+  Wrench,
+  UserCheck
 } from 'lucide-react';
 import {
   Sidebar as SidebarBase,
@@ -120,6 +121,7 @@ const ALL_GROUPS = [
     items: [
       { name: 'Work Dashboard', href: '/contractor', icon: ClipboardList },
       { name: 'Hostel Portfolio', href: '/contractor/projects', icon: Building2 },
+      { name: 'Students Node', href: '/contractor/students', icon: UserCheck },
       { name: 'Agents Hub', href: '/contractor/agents', icon: Users },
       { name: 'Admissions Hub', href: '/contractor/inquiries', icon: Search },
       { name: 'Support Tickets', href: '/contractor/tickets', icon: MessageSquare },
@@ -202,6 +204,14 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
                       <div className="ml-9 mt-2 space-y-1">
                         <Link href="/contractor/agents/directory" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/agents/directory' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>Agent Directory</Link>
                         <Link href="/contractor/agents/referrals" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/agents/referrals' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>Referrals & Commissions</Link>
+                      </div>
+                    )}
+
+                    {isActive && item.name === 'Students Node' && (
+                      <div className="ml-9 mt-2 space-y-1">
+                        <Link href="/contractor/students" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/students' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>All Students</Link>
+                        <Link href="/contractor/students/active" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/students/active' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>Active Residents</Link>
+                        <Link href="/contractor/students/left" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/students/left' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>Previously Left</Link>
                       </div>
                     )}
                   </SidebarMenuItem>

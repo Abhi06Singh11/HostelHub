@@ -29,16 +29,14 @@ export interface User {
   status: AccountStatus;
   joinedAt: string;
   lastLogin?: string;
-  // Developer/Marketer Specific Fields
   bio?: string;
   skills?: string[];
   assignedModules?: string[];
-  workload?: number; // 0-100 percentage
-  progress?: number; // 0-100 percentage
+  workload?: number;
+  progress?: number;
   upcomingTasks?: DeveloperTask[];
 }
 
-// Marketing Specific Types
 export interface MarketingLead {
   id: string;
   name: string;
@@ -46,7 +44,7 @@ export interface MarketingLead {
   phone: string;
   source: 'Meta' | 'Google' | 'Instagram' | 'Referral' | 'Direct';
   status: 'new' | 'contacted' | 'interested' | 'converted' | 'lost';
-  score: number; // 0-100
+  score: number;
   followUpDate: string;
   assignedTo?: string;
   createdAt: string;
@@ -70,7 +68,7 @@ export interface MarketingAcquisition {
   month: string;
   source: string;
   count: number;
-  cpa: number; // Cost Per Acquisition
+  cpa: number;
 }
 
 export interface MarketingTask {
@@ -222,7 +220,7 @@ export interface RentalAgreement {
   securityDeposit: number;
   startDate: string;
   endDate: string;
-  rentDueDate: number; // 1-31
+  rentDueDate: number;
   paymentFrequency: 'Monthly' | 'Quarterly' | 'Yearly';
   status: 'draft' | 'active' | 'expiring_soon' | 'expired' | 'terminated';
   documents: string[];
@@ -423,35 +421,84 @@ export interface InvitationLink {
   startDate?: string;
 }
 
-export interface Lead {
-  id: string;
-  studentName: string;
-  source: string;
-  status: 'new' | 'contacted' | 'interested' | 'converted' | 'lost';
-  followUpDate: string;
-  assignedTo?: string;
-}
+// Resident/Student Management Types
+export type StayStatus = 'active' | 'left' | 'upcoming';
+export type VerificationLevel = 'none' | 'pending' | 'verified' | 'rejected';
 
-export interface Campaign {
+export interface StudentDocument {
   id: string;
   name: string;
-  channel: 'Google' | 'Meta' | 'Email' | 'Referral';
-  startDate: string;
-  endDate: string;
-  status: 'active' | 'scheduled' | 'ended';
-  leadsGenerated: number;
+  type: 'id_proof' | 'address_proof' | 'photo' | 'police_ack' | 'guardian_id' | 'other';
+  url: string;
+  uploadDate: string;
+  status: VerificationLevel;
 }
 
-export interface AuditLog {
+export interface StayRecord {
   id: string;
-  actor: string;
-  actorId: string;
-  action: string;
-  target: string;
+  propertyId: string;
+  propertyName: string;
+  roomNumber: string;
+  bedNumber: string;
+  checkInDate: string;
+  checkOutDate?: string;
+  status: 'completed' | 'ongoing' | 'cancelled';
+}
+
+export interface VerificationAuditLog {
+  id: string;
+  type: 'government_id' | 'police';
+  oldStatus: VerificationLevel;
+  newStatus: VerificationLevel;
+  changedBy: string;
   timestamp: string;
-  details?: string;
-  ip?: string;
-  category: 'security' | 'user_management' | 'finance' | 'settings' | 'content';
+  reason?: string;
+}
+
+export interface StudentDetail extends User {
+  studentId: string;
+  dob: string;
+  gender: 'Male' | 'Female' | 'Other';
+  nationality: string;
+  alternatePhone?: string;
+  permanentAddress: string;
+  currentAddress: string;
+  state: string;
+  district: string;
+  city: string;
+  pincode: string;
+  
+  fatherName: string;
+  motherName: string;
+  guardianPhone: string;
+  emergencyName: string;
+  emergencyPhone: string;
+  emergencyRelation: string;
+
+  assignedHostelId: string;
+  assignedHostelName: string;
+  roomNumber: string;
+  bedNumber: string;
+  stayStatus: StayStatus;
+  checkInDate: string;
+  checkOutDate?: string;
+  registrationDate: string;
+
+  govIdType: 'Aadhaar' | 'Passport' | 'Voter ID' | 'Driving Licence' | 'Other';
+  govIdNumber: string; // Masked in UI
+  govIdVerified: boolean;
+  govIdVerifiedAt?: string;
+  govIdVerifiedBy?: string;
+  
+  policeVerified: boolean;
+  policeVerifiedAt?: string;
+  policeVerifiedBy?: string;
+  policeRefNumber?: string;
+  policeStation?: string;
+
+  documents: StudentDocument[];
+  stayHistory: StayRecord[];
+  verificationLogs: VerificationAuditLog[];
 }
 
 export interface StudentProfile {
