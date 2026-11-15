@@ -25,6 +25,7 @@ import { StudentProfile, MonthlyInvoice, Ticket, StudentNotification } from '@/l
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export default function StudentDashboard() {
   const router = useRouter();
