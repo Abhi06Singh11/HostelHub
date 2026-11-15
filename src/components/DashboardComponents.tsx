@@ -35,31 +35,31 @@ export function StatCard({
   return (
     <Card 
       className={cn(
-        "enterprise-card border hover:border-primary/40 transition-all cursor-default group",
-        onClick && "cursor-pointer active:scale-[0.98]"
+        "enterprise-card border transition-all duration-300",
+        onClick ? "cursor-pointer active:scale-[0.98] hover:border-primary/40 hover:shadow-md" : "cursor-default"
       )}
       onClick={onClick}
     >
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-6">
-          <div className={cn("p-3 rounded-xl border transition-colors", bg)}>
+          <div className={cn("p-3 rounded-xl border transition-all duration-300", bg, "border-transparent group-hover:border-primary/20")}>
             <Icon className={cn("h-6 w-6", color)} />
           </div>
           {trend ? (
             <div className={cn(
-              "flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full border",
-              trend.isUp ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-red-50 text-red-600 border-red-100"
+              "flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full border shadow-sm",
+              trend.isUp ? "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-950/30 dark:border-emerald-500/20" : "bg-red-50 text-red-600 border-red-100 dark:bg-red-950/30 dark:border-red-500/20"
             )}>
               {trend.value}
             </div>
           ) : (
-            <ArrowUpRight className="h-4 w-4 text-muted-foreground/30 group-hover:text-primary transition-all" />
+            <ArrowUpRight className="h-4 w-4 text-muted-foreground/30 group-hover:text-primary transition-all duration-300" />
           )}
         </div>
         <div className="space-y-1">
           <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{title}</p>
           <p className={cn("text-3xl font-black tracking-tighter tabular-nums", color)}>{value}</p>
-          {sub && <p className="text-[11px] font-medium text-muted-foreground mt-2">{sub}</p>}
+          {sub && <p className="text-[11px] font-bold text-muted-foreground/80 mt-2 uppercase tracking-tight">{sub}</p>}
         </div>
       </CardContent>
     </Card>
@@ -81,14 +81,14 @@ export function SectionHeader({ title, subtitle, action }: SectionHeaderProps) {
   return (
     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
       <div className="space-y-1">
-        {subtitle && <p className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{subtitle}</p>}
+        {subtitle && <p className="text-xs font-black text-primary uppercase tracking-[0.3em]">{subtitle}</p>}
         <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tighter uppercase leading-none">{title}</h2>
       </div>
       {action && (
         <Button 
           onClick={action.onClick} 
           variant={action.variant || "default"}
-          className="h-11 px-8 font-black text-[11px] uppercase tracking-[0.2em] shadow-xl rounded-xl"
+          className="h-12 px-8 font-black text-[11px] uppercase tracking-[0.2em] shadow-xl rounded-xl"
         >
           {action.icon && <action.icon className="h-4 w-4 mr-2" />}
           {action.label}

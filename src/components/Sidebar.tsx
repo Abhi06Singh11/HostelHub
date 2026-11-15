@@ -323,11 +323,11 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
       <SidebarContent className="py-6 overflow-x-hidden">
         {groups.map((group) => (
           <SidebarGroup key={group.label} className="mb-4">
-            <SidebarGroupLabel className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-2">
+            <SidebarGroupLabel className="px-5 text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground/50 mb-2">
               {group.label}
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu className="px-2">
+              <SidebarMenu className="px-2 space-y-1">
                 {group.items.map((item) => {
                   const prefix = roleRoutes[activeRole];
                   const resolvedHref = item.href === 'PROFILE' ? `${prefix}/profile` : 
@@ -356,20 +356,26 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
                         isActive={isActive}
                         tooltip={item.name}
                         className={cn(
-                          "h-11 px-4 transition-all rounded-xl",
-                          isActive ? "bg-primary/10 text-foreground" : "text-muted-foreground hover:bg-muted"
+                          "h-12 px-4 transition-all rounded-xl",
+                          isActive ? "bg-primary text-primary-foreground shadow-md" : "text-muted-foreground hover:bg-muted hover:text-foreground"
                         )}
                       >
                         <Link href={resolvedHref} onClick={handleLinkClick}>
                           <item.icon className={cn(
-                            "h-5 w-5 shrink-0 mr-3",
-                            isActive ? "text-primary" : "text-muted-foreground"
+                            "h-5 w-5 shrink-0 mr-3 transition-colors",
+                            isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground"
                           )} />
-                          <span className="text-[14px] font-bold group-data-[collapsible=icon]:hidden">
+                          <span className={cn(
+                            "text-[14px] font-black uppercase tracking-tight group-data-[collapsible=icon]:hidden",
+                            isActive ? "text-primary-foreground" : "text-muted-foreground"
+                          )}>
                             {item.name}
                           </span>
                           {badge > 0 && (
-                            <span className="ml-auto bg-primary text-primary-foreground text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm group-data-[collapsible=icon]:hidden">
+                            <span className={cn(
+                              "ml-auto text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm group-data-[collapsible=icon]:hidden",
+                              isActive ? "bg-white text-primary" : "bg-primary text-white"
+                            )}>
                               {badge}
                             </span>
                           )}
@@ -385,13 +391,13 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t bg-muted/5">
-        <div className="flex items-center gap-3 px-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
-          <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary font-black text-[10px] uppercase shrink-0 border border-primary/20">
+        <div className="flex items-center gap-4 px-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-black text-[11px] uppercase shrink-0 border-2 border-primary/20 shadow-inner">
             {activeRole.charAt(0)}
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden overflow-hidden">
-            <span className="text-[11px] font-black text-foreground truncate uppercase leading-none tracking-wider">{activeRole.replace('_', ' ')}</span>
-            <span className="text-[9px] font-bold text-primary uppercase tracking-[0.2em] mt-1 opacity-60">Admin Node</span>
+            <span className="text-[12px] font-black text-foreground truncate uppercase leading-none tracking-tight">{activeRole.replace('_', ' ')}</span>
+            <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em] mt-1 opacity-70">Secured Node</span>
           </div>
         </div>
       </SidebarFooter>
