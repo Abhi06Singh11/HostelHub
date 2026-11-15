@@ -67,6 +67,8 @@ const ALL_GROUPS = [
       { name: 'Client Network', href: '/sa/clients', icon: Building2 },
       { name: 'Platform Finance', href: '/sa/finance', icon: TrendingUp },
       { name: 'Verification Gateway', href: '/sa/approvals', icon: ShieldCheck },
+      { name: 'Agents Hub', href: '/sa/agents', icon: Target },
+      { name: 'Manage Agents', href: '/sa/agents/manage', icon: ShieldCheck },
       { name: 'Access Control', href: '/sa/roles', icon: Lock },
       { name: 'Global Signals', href: '/sa/notifications', icon: Megaphone },
       { name: 'Support Desk', href: '/sa/support', icon: HelpCircle },
@@ -122,7 +124,8 @@ const ALL_GROUPS = [
       { name: 'Work Dashboard', href: '/contractor', icon: ClipboardList },
       { name: 'Hostel Portfolio', href: '/contractor/projects', icon: Building2 },
       { name: 'Students Node', href: '/contractor/students', icon: UserCheck },
-      { name: 'Agents Hub', href: '/contractor/agents', icon: Users },
+      { name: 'Agents Hub', href: '/contractor/agents', icon: Target },
+      { name: 'Manage Agents', href: '/contractor/agents/manage', icon: ShieldCheck },
       { name: 'Admissions Hub', href: '/contractor/inquiries', icon: Search },
       { name: 'Support Tickets', href: '/contractor/tickets', icon: MessageSquare },
       { name: 'Expense Ledger', href: '/contractor/expenses', icon: Wallet },
@@ -180,10 +183,7 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
             </SidebarGroupLabel>
             <SidebarMenu>
               {group.items.map((item) => {
-                // Ensure base dashboard routes don't overlap with their child pages in active state detection
-                const baseRoutes = ['/sa', '/sd', '/sm', '/owner', '/contractor', '/student', '/agents'];
-                const isBaseRoute = baseRoutes.includes(item.href);
-                const isActive = pathname === item.href || (!isBaseRoute && pathname.startsWith(item.href + '/'));
+                const isActive = pathname === item.href;
 
                 return (
                   <SidebarMenuItem key={item.name}>
@@ -203,21 +203,6 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
                         {isActive && <ChevronRight className="ml-auto h-3.5 w-3.5 opacity-50" />}
                       </Link>
                     </SidebarMenuButton>
-                    
-                    {isActive && item.name === 'Agents Hub' && (
-                      <div className="ml-9 mt-2 space-y-1">
-                        <Link href="/contractor/agents/directory" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/agents/directory' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>Agent Directory</Link>
-                        <Link href="/contractor/agents/referrals" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/agents/referrals' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>Referrals & Commissions</Link>
-                      </div>
-                    )}
-
-                    {isActive && item.name === 'Students Node' && (
-                      <div className="ml-9 mt-2 space-y-1">
-                        <Link href="/contractor/students" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/students' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>All Students</Link>
-                        <Link href="/contractor/students/active" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/students/active' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>Active Residents</Link>
-                        <Link href="/contractor/students/left" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/students/left' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>Previously Left</Link>
-                      </div>
-                    )}
                   </SidebarMenuItem>
                 );
               })}

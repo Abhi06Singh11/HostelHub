@@ -51,27 +51,55 @@ const MOCK_AGENTS: Agent[] = [
   }
 ];
 
-export const getContractorAgents = (contractorId: string): Agent[] => {
-  if (typeof window === 'undefined') return MOCK_AGENTS.filter(a => a.contractorId === contractorId);
+export const getAllAgents = (): Agent[] => {
+  if (typeof window === 'undefined') return MOCK_AGENTS;
   const stored = localStorage.getItem(AGENTS_KEY);
   if (!stored) {
     localStorage.setItem(AGENTS_KEY, JSON.stringify(MOCK_AGENTS));
-    return MOCK_AGENTS.filter(a => a.contractorId === contractorId);
+    return MOCK_AGENTS;
   }
   try {
-    const allAgents: Agent[] = JSON.parse(stored);
-    return allAgents.filter(a => a.contractorId === contractorId);
+    return JSON.parse(stored);
   } catch (e) {
-    return MOCK_AGENTS.filter(a => a.contractorId === contractorId);
+    return MOCK_AGENTS;
   }
 };
 
-export const updateAgentStatus = (agentId: string, status: 'active' | 'inactive') => {
-  if (typeof window === 'undefined') return;
-  const stored = localStorage.getItem(AGENTS_KEY);
-  if (!stored) return;
-  const agents: Agent[] = JSON.parse(stored);
-  const updated = agents.map(a => a.id === agentId ? { ...a, status } : a);
+export const getContractorAgents = (contractorId: string): Agent[] => {
+  return getAllAgents().filter(a => a.contractorId === contractorId);
+};
+
+export const addAgent = (agent: Omit<Agent, 'id' | 'totalReferrals' | 'successfulAdmissions' | 'pendingReferrals' | 'totalEarnings' | 'pendingCommission'>) => {
+  const all = getAllAgents();
+  const newAgent: Agent = {
+    ...agent,
+    id: `AGT-${Math.floor(1000 + Math.random() * 9000)}`,
+    totalReferrals: 0,
+    successfulAdmissions: 0,
+    pendingReferrals: 0,
+    totalEarnings: 0,
+    pendingCommission: 0
+  };
+  const updated = [newAgent, ...all];
   localStorage.setItem(AGENTS_KEY, JSON.stringify(updated));
   window.dispatchEvent(new Event('storage'));
+  return newAgent;
+};
+
+export const updateAgent = (id: string, updates: Partial<Agent>) => {
+  const all = getAllAgents();
+  const updated = all.map(a => a.id === id ? { ...a, ...updates } : a);
+  localStorage.setItem(AGENTS_KEY, JSON.stringify(updated));
+  window.dispatchEvent(new Event('storage'));
+};
+
+export const deleteAgent = (id: string) => {
+  const all = getAllAgents();
+  const updated = all.filter(a => a.id !== id);
+  localStorage.setItem(AGENTS_KEY, JSON.stringify(updated));
+  window.dispatchEvent(new Event('storage'));
+};
+
+export const updateAgentStatus = (agentId: string, status: 'active' | 'inactive') => {
+  updateAgent(agentId, { status });
 };
