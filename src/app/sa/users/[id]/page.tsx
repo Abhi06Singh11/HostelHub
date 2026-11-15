@@ -7,34 +7,22 @@ import { User } from '@/lib/types';
 import { 
   ArrowLeft, 
   ShieldCheck, 
-  Activity, 
   Layers, 
-  CheckCircle2, 
-  Clock, 
   Lock, 
   Mail, 
   Briefcase,
-  AlertTriangle,
-  User as UserIcon,
-  Calendar,
   Smartphone,
   ShieldAlert,
-  MoreVertical,
-  History,
   Target,
   GraduationCap,
-  FileText,
   Zap,
-  Info,
-  Send
+  Info
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
-import { Separator } from '@/components/ui/separator';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import {
@@ -165,7 +153,7 @@ export default function SAUserDetailPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                <Card className="enterprise-card p-8 space-y-6">
                   <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                     <History className="h-4 w-4 text-primary" /> Session Intelligence
+                     <Lock className="h-4 w-4 text-primary" /> Session Intelligence
                   </h3>
                   <div className="space-y-4">
                      <DetailRow label="Joining Date" value={user.joinedAt} />
@@ -257,6 +245,9 @@ export default function SAUserDetailPage() {
               <DialogTitle className="text-xl font-bold uppercase tracking-tight">
                  {confirmState ? 'Authorize Verification' : 'Rollback Verification'}
               </DialogTitle>
+              <DialogDescription className="text-sm font-medium text-muted-foreground">
+                Commit verification action to the global security audit trail.
+              </DialogDescription>
            </DialogHeader>
            <div className="space-y-6 py-6 text-center">
               <p className="text-sm font-semibold text-foreground leading-relaxed uppercase">
@@ -281,7 +272,7 @@ export default function SAUserDetailPage() {
   );
 }
 
-function DetailRow({ label, value, icon?: any, color }: any) {
+function DetailRow({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
     <div className="flex justify-between items-center">
        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
@@ -292,7 +283,7 @@ function DetailRow({ label, value, icon?: any, color }: any) {
   );
 }
 
-function AuditMeta({ label, value }: any) {
+function AuditMeta({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
        <span className="text-muted-foreground">{label}</span>
