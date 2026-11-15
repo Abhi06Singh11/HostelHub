@@ -37,7 +37,7 @@ function RoleSelector() {
       desc: 'Platform Intelligence & Global Governance', 
       icon: Shield, 
       color: 'text-primary',
-      bg: 'bg-primary/5 dark:bg-primary/10',
+      bg: 'bg-primary/5',
       href: '/sa'
     },
     { 

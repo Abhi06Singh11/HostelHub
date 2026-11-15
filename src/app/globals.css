@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Light Mode: Midnight Navy + Emerald Green */
+    /* Light Mode Palette: Midnight Navy + Emerald Green */
     --background: 214 38% 97%; /* #F4F7FB - Soft Grey-White */
     --foreground: 217 33% 17%; /* #1E293B - Dark Slate */
     
@@ -46,7 +46,7 @@
   }
 
   .dark {
-    /* Dark Mode: Deep Navy + Electric Blue */
+    /* Dark Mode Palette: Deep Navy + Electric Blue */
     --background: 219 52% 11%; /* #0D1729 - Deep Navy */
     --foreground: 210 40% 96%; /* #F1F5F9 - Off-White */
     
