@@ -42,7 +42,8 @@ import {
   ChevronRight,
   Zap as ZapIcon,
   CreditCard,
-  Search
+  Search,
+  Wrench
 } from 'lucide-react';
 import {
   Sidebar as SidebarBase,
