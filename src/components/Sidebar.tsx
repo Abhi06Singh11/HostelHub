@@ -120,6 +120,7 @@ const ALL_GROUPS = [
     items: [
       { name: 'Work Dashboard', href: '/contractor', icon: ClipboardList },
       { name: 'Hostel Portfolio', href: '/contractor/projects', icon: Building2 },
+      { name: 'Agents Hub', href: '/contractor/agents', icon: Users },
       { name: 'Admissions Hub', href: '/contractor/inquiries', icon: Search },
       { name: 'Support Tickets', href: '/contractor/tickets', icon: MessageSquare },
       { name: 'Expense Ledger', href: '/contractor/expenses', icon: Wallet },
@@ -177,7 +178,7 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
             </SidebarGroupLabel>
             <SidebarMenu>
               {group.items.map((item) => {
-                const isActive = pathname === item.href;
+                const isActive = pathname === item.href || (item.href !== '/contractor' && pathname.startsWith(item.href));
                 return (
                   <SidebarMenuItem key={item.name}>
                     <SidebarMenuButton 
@@ -196,6 +197,13 @@ export function Sidebar({ activeRole }: { activeRole: Role }) {
                         {isActive && <ChevronRight className="ml-auto h-3.5 w-3.5 opacity-50" />}
                       </Link>
                     </SidebarMenuButton>
+                    
+                    {isActive && item.name === 'Agents Hub' && (
+                      <div className="ml-9 mt-2 space-y-1">
+                        <Link href="/contractor/agents/directory" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/agents/directory' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>Agent Directory</Link>
+                        <Link href="/contractor/agents/referrals" className={cn("block text-[12px] py-1.5 px-3 rounded-lg font-medium", pathname === '/contractor/agents/referrals' ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-primary hover:bg-primary/5")}>Referrals & Commissions</Link>
+                      </div>
+                    )}
                   </SidebarMenuItem>
                 );
               })}

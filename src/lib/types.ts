@@ -354,6 +354,39 @@ export interface StudentInquiry {
   createdAt: string;
 }
 
+export interface Agent {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  status: 'active' | 'inactive';
+  joiningDate: string;
+  totalReferrals: number;
+  successfulAdmissions: number;
+  pendingReferrals: number;
+  totalEarnings: number;
+  pendingCommission: number;
+  commissionRate: string;
+  contractorId: string;
+}
+
+export type ReferralStatus = 
+  | 'new' 
+  | 'contacted' 
+  | 'interested' 
+  | 'pg_allocated' 
+  | 'admission_confirmed' 
+  | 'checked_in' 
+  | 'cancelled';
+
+export type CommissionStatus = 
+  | 'pending' 
+  | 'eligible' 
+  | 'approved' 
+  | 'paid' 
+  | 'rejected' 
+  | 'on_hold';
+
 export interface Referral {
   id: string;
   agentId: string;
@@ -365,13 +398,16 @@ export interface Referral {
   hostelId: string;
   hostelName: string;
   accommodationType: string;
-  budget?: number;
-  status: 'referred' | 'contacted' | 'interested' | 'admission_pending' | 'admitted' | 'rejected';
+  status: ReferralStatus;
   commissionAmount: number;
+  commissionStatus: CommissionStatus;
   paymentStatus: 'pending' | 'eligible' | 'paid';
   createdAt: string;
   admissionDate?: string;
+  paymentDate?: string;
+  transactionRef?: string;
   followUpNotes?: string;
+  contractorId?: string;
 }
 
 export interface InvitationLink {
