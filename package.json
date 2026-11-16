@@ -1,7 +1,8 @@
 {
-  "name": "nextn",
-  "version": "0.1.0",
+  "name": "staysync-hms",
+  "version": "1.0.0",
   "private": true,
+  "description": "StaySync - Advanced Hostel Management & Student Housing Ecosystem",
   "scripts": {
     "dev": "next dev --turbopack -p 9002",
     "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
