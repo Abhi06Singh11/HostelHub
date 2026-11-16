@@ -96,20 +96,20 @@ export default function SAUserDetailPage() {
   return (
     <DashboardLayout role="superadmin">
       <div className="space-y-8">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <Button variant="ghost" onClick={() => router.push('/sa/users')} className="font-semibold uppercase text-[11px] tracking-widest h-10 px-4">
-            <ArrowLeft className="h-4 w-4 mr-2" /> All Users
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back to All Users
           </Button>
-          <div className="flex gap-3">
-             <Button variant="outline" className="h-10 font-bold uppercase text-[11px] tracking-widest border-2">
-                <Lock className="h-4 w-4 mr-2" /> Reset Access
+          <div className="flex gap-2 md:gap-3 w-full sm:w-auto">
+             <Button variant="outline" className="flex-1 sm:flex-none h-10 font-bold uppercase text-[10px] md:text-[11px] tracking-widest border-2">
+                <Lock className="h-3.5 w-3.5 mr-1.5 md:mr-2" /> Reset Access
              </Button>
              <Button 
                variant="destructive" 
                onClick={() => handleStatusChange('suspended')}
-               className="h-10 font-bold uppercase text-[11px] tracking-widest shadow-md"
+               className="flex-1 sm:flex-none h-10 font-bold uppercase text-[10px] md:text-[11px] tracking-widest shadow-md"
              >
-                <ShieldAlert className="h-4 w-4 mr-2" /> Suspend Account
+                <ShieldAlert className="h-3.5 w-3.5 mr-1.5 md:mr-2" /> Suspend Account
              </Button>
           </div>
         </div>
@@ -117,42 +117,42 @@ export default function SAUserDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
             {/* Identity Card */}
-            <div className="enterprise-card border bg-card p-10 relative overflow-hidden">
-               <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start">
-                  <div className="w-28 h-28 rounded-[2rem] bg-primary/10 border-4 border-primary/5 flex items-center justify-center text-primary font-bold text-5xl shadow-xl shrink-0 uppercase">
+            <div className="enterprise-card border bg-card p-6 md:p-10 relative overflow-hidden">
+               <div className="relative z-10 flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+                  <div className="w-20 h-20 md:w-28 md:h-28 rounded-[1.5rem] md:rounded-[2rem] bg-primary/10 border-4 border-primary/5 flex items-center justify-center text-primary font-bold text-3xl md:text-5xl shadow-xl shrink-0 uppercase">
                      {user.avatar || user.name.charAt(0)}
                   </div>
-                  <div className="space-y-4 flex-1">
-                     <div className="flex justify-between items-start">
+                  <div className="space-y-4 flex-1 w-full">
+                     <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                         <div>
-                           <h1 className="text-3xl font-bold tracking-tighter uppercase text-foreground">{user.name}</h1>
-                           <div className="flex items-center gap-3 mt-1.5">
-                              <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 font-bold uppercase text-[10px] tracking-widest py-1 px-3">
+                           <h1 className="text-2xl md:text-3xl font-bold tracking-tighter uppercase text-foreground">{user.name}</h1>
+                           <div className="flex flex-wrap items-center gap-3 mt-1.5">
+                              <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 font-bold uppercase text-[9px] md:text-[10px] tracking-widest py-0.5 md:py-1 px-2 md:px-3">
                                  <RoleIcon className="h-3 w-3 mr-1.5" /> {user.roles[0]}
                               </Badge>
-                              <span className="text-[11px] text-muted-foreground font-bold uppercase tracking-widest">ID: {user.id}</span>
+                              <span className="text-[10px] md:text-[11px] text-muted-foreground font-bold uppercase tracking-widest">ID: {user.id}</span>
                            </div>
                         </div>
                         <Badge className={cn(
-                          "font-bold uppercase text-[10px] py-1.5 px-4 rounded-xl",
+                          "font-bold uppercase text-[10px] py-1.5 px-4 rounded-xl shadow-sm",
                           overallVerified ? "bg-emerald-600 text-white" : "bg-amber-500 text-white"
                         )}>{overallVerified ? 'Fully Verified' : 'Partially Verified'}</Badge>
                      </div>
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-dashed">
-                        <div className="flex items-center gap-3 text-[11px] font-bold text-foreground uppercase tracking-widest">
-                           <Mail className="h-4 w-4 text-primary" /> {user.email}
+                        <div className="flex items-center gap-3 text-[10px] md:text-[11px] font-bold text-foreground uppercase tracking-widest">
+                           <Mail className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary shrink-0" /> <span className="truncate">{user.email}</span>
                         </div>
-                        <div className="flex items-center gap-3 text-[11px] font-bold text-foreground uppercase tracking-widest">
-                           <Smartphone className="h-4 w-4 text-primary" /> {user.phone || 'NO CONTACT'}
+                        <div className="flex items-center gap-3 text-[10px] md:text-[11px] font-bold text-foreground uppercase tracking-widest">
+                           <Smartphone className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary shrink-0" /> {user.phone || 'NO CONTACT'}
                         </div>
                      </div>
                   </div>
                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <Card className="enterprise-card p-8 space-y-6">
-                  <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+               <Card className="enterprise-card p-6 md:p-8 space-y-6">
+                  <h3 className="text-[12px] md:text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                      <Lock className="h-4 w-4 text-primary" /> Session Intelligence
                   </h3>
                   <div className="space-y-4">
@@ -162,8 +162,8 @@ export default function SAUserDetailPage() {
                   </div>
                </Card>
 
-               <Card className="enterprise-card p-8 space-y-6">
-                  <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+               <Card className="enterprise-card p-6 md:p-8 space-y-6">
+                  <h3 className="text-[12px] md:text-sm font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                      <ShieldCheck className="h-4 w-4 text-primary" /> Security Matrix
                   </h3>
                   <div className="space-y-4">
@@ -177,20 +177,20 @@ export default function SAUserDetailPage() {
 
           <div className="space-y-8">
              {/* Verification Gateway */}
-             <Card className="enterprise-card p-8 space-y-8">
+             <Card className="enterprise-card p-6 md:p-8 space-y-8">
                 <div className="space-y-1">
                    <h3 className="text-sm font-semibold uppercase tracking-widest text-foreground">Verification Gateway</h3>
-                   <p className="text-[11px] text-muted-foreground font-medium">Independent compliance synchronization.</p>
+                   <p className="text-[10px] md:text-[11px] text-muted-foreground font-medium">Independent compliance synchronization.</p>
                 </div>
 
-                <div className="space-y-8">
-                   <div className="flex items-center justify-between gap-6 p-4 bg-muted/20 border-2 border-dashed rounded-2xl">
+                <div className="space-y-6 md:space-y-8">
+                   <div className="flex items-center justify-between gap-4 md:gap-6 p-3 md:p-4 bg-muted/20 border-2 border-dashed rounded-2xl">
                       <div className="space-y-1 flex-1">
-                         <Label className="text-xs font-semibold uppercase tracking-tight flex items-center gap-2 text-foreground">
+                         <Label className="text-[11px] md:text-xs font-semibold uppercase tracking-tight flex items-center gap-2 text-foreground leading-tight">
                             <ShieldCheck className={cn("h-4 w-4", user.identityVerified ? "text-emerald-600" : "text-muted-foreground")} />
                             Identity Verified
                          </Label>
-                         <p className="text-[9px] text-muted-foreground font-medium uppercase">Personal documents checked.</p>
+                         <p className="text-[9px] text-muted-foreground font-medium uppercase leading-tight">Docs Checked.</p>
                       </div>
                       <Switch 
                         checked={user.identityVerified} 
@@ -199,13 +199,13 @@ export default function SAUserDetailPage() {
                       />
                    </div>
 
-                   <div className="flex items-center justify-between gap-6 p-4 bg-muted/20 border-2 border-dashed rounded-2xl">
+                   <div className="flex items-center justify-between gap-4 md:gap-6 p-3 md:p-4 bg-muted/20 border-2 border-dashed rounded-2xl">
                       <div className="space-y-1 flex-1">
-                         <Label className="text-xs font-semibold uppercase tracking-tight flex items-center gap-2 text-foreground">
+                         <Label className="text-[11px] md:text-xs font-semibold uppercase tracking-tight flex items-center gap-2 text-foreground leading-tight">
                             <Zap className={cn("h-4 w-4", user.complianceVerified ? "text-emerald-600" : "text-muted-foreground")} />
-                            {complianceLabel}
+                            Compliance
                          </Label>
-                         <p className="text-[9px] text-muted-foreground font-medium uppercase">Industry compliance logged.</p>
+                         <p className="text-[9px] text-muted-foreground font-medium uppercase leading-tight">{complianceLabel}</p>
                       </div>
                       <Switch 
                         checked={user.complianceVerified} 
@@ -218,20 +218,20 @@ export default function SAUserDetailPage() {
                 <div className="space-y-4 pt-6 border-t border-dashed">
                    <h4 className="text-[10px] font-semibold uppercase text-muted-foreground tracking-widest">Metadata Ledger</h4>
                    <div className="space-y-3">
-                      <AuditMeta label="Identity Status" value={user.identityVerified ? 'Verified' : 'Pending'} />
-                      <AuditMeta label="Compliance Status" value={user.complianceVerified ? 'Verified' : 'Pending'} />
+                      <AuditMeta label="ID Status" value={user.identityVerified ? 'Verified' : 'Pending'} />
+                      <AuditMeta label="Comp. Status" value={user.complianceVerified ? 'Verified' : 'Pending'} />
                       <AuditMeta label="Audit Cycle" value="Weekly" />
                    </div>
                 </div>
              </Card>
 
-             <div className="enterprise-card border bg-primary text-primary-foreground p-8 space-y-4 shadow-xl">
+             <div className="enterprise-card border bg-primary text-primary-foreground p-6 md:p-8 space-y-4 shadow-xl">
                 <div className="flex items-center gap-2">
                    <Info className="h-5 w-5 opacity-80" />
                    <h4 className="text-[10px] font-bold uppercase tracking-widest">Governance Tip</h4>
                 </div>
                 <p className="text-[11px] opacity-90 leading-relaxed font-medium uppercase tracking-tight">
-                   Ensure all legal documents are manually inspected before committing verified status to the root node.
+                   Ensure all legal documents are manually inspected before committing verified status.
                 </p>
              </div>
           </div>
@@ -240,29 +240,29 @@ export default function SAUserDetailPage() {
 
       {/* Verification Confirmation Dialog */}
       <Dialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-        <DialogContent className="max-w-md rounded-3xl border-2">
+        <DialogContent className="max-w-md rounded-3xl border-2 p-6 md:p-10">
            <DialogHeader>
               <DialogTitle className="text-xl font-bold uppercase tracking-tight">
-                 {confirmState ? 'Authorize Verification' : 'Rollback Verification'}
+                 {confirmState ? 'Authorize Status' : 'Rollback Status'}
               </DialogTitle>
-              <DialogDescription className="text-sm font-medium text-muted-foreground">
-                Commit verification action to the global security audit trail.
+              <DialogDescription className="text-xs md:text-sm font-medium text-muted-foreground uppercase tracking-widest">
+                Action will be logged in security audit.
               </DialogDescription>
            </DialogHeader>
-           <div className="space-y-6 py-6 text-center">
-              <p className="text-sm font-semibold text-foreground leading-relaxed uppercase">
+           <div className="space-y-6 py-4 text-center">
+              <p className="text-[12px] md:text-sm font-semibold text-foreground leading-relaxed uppercase">
                  {confirmState 
-                   ? `Confirm ${confirmType} status for ${user.name}. This will be logged in the governance audit trail.`
-                   : `Confirm reversal of ${confirmType} status. A justification will be required for the audit.`
+                   ? `Confirm ${confirmType} status for ${user.name}.`
+                   : `Confirm reversal of ${confirmType} status for this node.`
                  }
               </p>
               {!confirmState && (
                 <Textarea placeholder="Reason for reversal..." className="min-h-[100px] border-2 font-medium" />
               )}
            </div>
-           <DialogFooter>
-              <Button variant="ghost" onClick={() => setIsConfirmOpen(false)} className="font-semibold uppercase text-[11px] tracking-widest">Cancel</Button>
-              <Button onClick={commitVerification} className={cn("h-11 px-8 font-semibold uppercase text-[11px] tracking-widest", confirmState ? "bg-emerald-600 hover:bg-emerald-700" : "bg-red-600 hover:bg-red-700")}>
+           <DialogFooter className="gap-2">
+              <Button variant="ghost" onClick={() => setIsConfirmOpen(false)} className="font-semibold uppercase text-[11px] tracking-widest flex-1">Cancel</Button>
+              <Button onClick={commitVerification} className={cn("h-11 px-6 md:px-8 font-semibold uppercase text-[11px] tracking-widest flex-1", confirmState ? "bg-emerald-600 hover:bg-emerald-700" : "bg-red-600 hover:bg-red-700")}>
                  {confirmState ? 'Commit' : 'Decommission'}
               </Button>
            </DialogFooter>
@@ -274,11 +274,11 @@ export default function SAUserDetailPage() {
 
 function DetailRow({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
-    <div className="flex justify-between items-center">
-       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+    <div className="flex justify-between items-center text-[10px] md:text-[11px]">
+       <span className="text-muted-foreground uppercase tracking-widest font-bold">
           {label}
        </span>
-       <span className={cn("text-[10px] font-bold uppercase", color || "text-foreground")}>{value}</span>
+       <span className={cn("font-bold uppercase", color || "text-foreground")}>{value}</span>
     </div>
   );
 }

@@ -54,10 +54,10 @@ export default function SuperAdminDashboard() {
   };
 
   const roleData = [
-    { name: 'Students', value: stats.students, color: 'hsl(var(--primary))' },
-    { name: 'Contractors', value: stats.contractors, color: 'hsl(var(--secondary))' },
+    { name: 'Students', value: stats.students, color: 'var(--primary)' },
+    { name: 'Contractors', value: stats.contractors, color: 'var(--secondary)' },
     { name: 'Owners', value: stats.owners, color: '#3b82f6' },
-    { name: 'Agents', value: stats.agents, color: 'hsl(var(--warning))' },
+    { name: 'Agents', value: stats.agents, color: 'var(--warning)' },
   ];
 
   const revenueData = [
@@ -81,7 +81,7 @@ export default function SuperAdminDashboard() {
         }}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <StatCard 
           label="Global Users" 
           value={stats.totalUsers} 
@@ -127,7 +127,7 @@ export default function SuperAdminDashboard() {
               <CardTitle className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">User Distribution by Role</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground opacity-40" />
             </CardHeader>
-            <CardContent className="p-10">
+            <CardContent className="p-6 md:p-10">
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={roleData}>
@@ -157,23 +157,23 @@ export default function SuperAdminDashboard() {
             </CardContent>
           </Card>
 
-          <div className="enterprise-card border bg-card p-10 relative overflow-hidden">
+          <div className="enterprise-card border bg-card p-6 md:p-10 relative overflow-hidden">
             <div className="relative z-10">
-              <div className="flex justify-between items-start mb-10">
+              <div className="flex justify-between items-start mb-8 md:mb-10">
                 <div className="space-y-2">
                   <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Operational Readiness</p>
-                  <h3 className="text-3xl font-black tracking-tighter uppercase">Administrative Hubs</h3>
+                  <h3 className="text-xl md:text-3xl font-black tracking-tighter uppercase">Administrative Hubs</h3>
                 </div>
-                <Zap className="h-10 w-10 text-primary animate-pulse" />
+                <Zap className="h-8 w-8 md:h-10 md:h-10 text-primary animate-pulse" />
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8">
                 <HubStat icon={Code2} label="Devs" value={stats.devs} />
                 <HubStat icon={Megaphone} label="Marketers" value={stats.marketers} />
                 <HubStat icon={Building2} label="Owners" value={stats.owners} />
                 <HubStat icon={ShieldCheck} label="Contractors" value={stats.contractors} />
               </div>
             </div>
-            <Activity className="absolute -right-10 -bottom-10 h-64 w-64 text-primary opacity-5" />
+            <Activity className="absolute -right-10 -bottom-10 h-48 md:h-64 w-48 md:w-64 text-primary opacity-5" />
           </div>
         </div>
 
@@ -186,7 +186,7 @@ export default function SuperAdminDashboard() {
               <div className="h-[200px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={revenueData}>
-                    <Line type="monotone" dataKey="amount" stroke="hsl(var(--primary))" strokeWidth={3} dot={false} />
+                    <Line type="monotone" dataKey="amount" stroke="var(--primary)" strokeWidth={3} dot={false} />
                     <Tooltip content={() => null} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -201,12 +201,12 @@ export default function SuperAdminDashboard() {
             </CardContent>
           </Card>
 
-          <div className="enterprise-card border bg-primary text-primary-foreground p-8 space-y-6">
+          <div className="enterprise-card border bg-primary text-primary-foreground p-6 md:p-8 space-y-6">
             <div className="flex items-center gap-3">
               <Activity className="h-5 w-5 opacity-80" />
               <span className="text-[11px] font-black uppercase tracking-widest">Compliance Pulse</span>
             </div>
-            <p className="text-sm font-medium leading-relaxed opacity-90 uppercase">
+            <p className="text-[12px] md:text-sm font-medium leading-relaxed opacity-90 uppercase">
               2 pending client audits required to maintain enterprise verification.
             </p>
             <Button className="w-full bg-primary-foreground/10 hover:bg-primary-foreground/20 border-primary-foreground/20 text-primary-foreground font-black uppercase text-[10px] tracking-widest h-12" onClick={() => router.push('/sa/approvals')}>
@@ -226,7 +226,7 @@ function HubStat({ icon: Icon, label, value }: any) {
         <Icon className="h-3 w-3" />
         <span className="text-[9px] font-black uppercase tracking-[0.2em]">{label}</span>
       </div>
-      <p className="text-xl font-black text-primary">{value}</p>
+      <p className="text-lg md:text-xl font-black text-primary">{value}</p>
     </div>
   );
 }

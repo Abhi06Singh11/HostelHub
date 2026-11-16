@@ -61,7 +61,7 @@ export function StatCard({
         <div className="space-y-1">
           <p className="text-[12px] font-semibold text-muted-foreground uppercase tracking-widest">{label || title}</p>
           <p className={cn("text-2xl font-bold tracking-tight tabular-nums", color)}>{value}</p>
-          {sub && <p className="text-[13px] font-medium text-muted-foreground/80 mt-1.5">{sub}</p>}
+          {sub && <p className="text-[11px] md:text-[13px] font-medium text-muted-foreground/80 mt-1.5 leading-tight">{sub}</p>}
         </div>
       </CardContent>
     </Card>
@@ -81,16 +81,16 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ title, subtitle, action }: SectionHeaderProps) {
   return (
-    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6 mb-8 md:mb-10">
       <div className="space-y-1.5">
-        {subtitle && <p className="text-[13px] font-semibold text-primary uppercase tracking-[0.2em]">{subtitle}</p>}
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-tight">{title}</h2>
+        {subtitle && <p className="text-[12px] md:text-[13px] font-semibold text-primary uppercase tracking-[0.2em]">{subtitle}</p>}
+        <h2 className="text-xl md:text-3xl font-bold text-foreground tracking-tight leading-tight uppercase">{title}</h2>
       </div>
       {action && (
         <Button 
           onClick={action.onClick} 
           variant={action.variant || "default"}
-          className="h-11 px-6 font-semibold text-[13px] uppercase tracking-wider shadow-lg rounded-xl"
+          className="h-10 md:h-11 px-4 md:px-6 font-semibold text-[11px] md:text-[13px] uppercase tracking-wider shadow-lg rounded-xl w-full md:w-auto"
         >
           {action.icon && <action.icon className="h-4 w-4 mr-2" />}
           {action.label}
@@ -103,7 +103,7 @@ export function SectionHeader({ title, subtitle, action }: SectionHeaderProps) {
 export function DataTable({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <div className={cn("enterprise-card border bg-card overflow-hidden", className)}>
-      <div className="overflow-x-auto w-full">
+      <div className="overflow-x-auto w-full scrollbar-thin">
         <table className="w-full text-left border-collapse min-w-[800px]">
           {children}
         </table>

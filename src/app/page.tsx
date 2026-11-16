@@ -97,22 +97,22 @@ function RoleSelector() {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-8 flex flex-col items-center justify-center relative">
-      <div className="max-w-6xl w-full space-y-12 relative z-10">
+    <div className="min-h-screen bg-background p-4 md:p-8 flex flex-col items-center justify-center relative">
+      <div className="max-w-6xl w-full space-y-8 md:space-y-12 relative z-10 py-12">
         <div className="text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-full border border-primary/20">
             <Zap className="h-4 w-4 fill-current" />
-            <span className="text-[12px] font-black uppercase tracking-[0.2em]">Operational Node: Production</span>
+            <span className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.2em]">Operational Node: Production</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-black text-foreground tracking-tighter uppercase leading-none">StaySync Hub</h1>
-          <p className="text-muted-foreground max-w-lg mx-auto font-medium uppercase text-[12px] tracking-[0.3em]">Initialize administrative session via identity cluster.</p>
+          <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tighter uppercase leading-none">StaySync Hub</h1>
+          <p className="text-muted-foreground max-w-lg mx-auto font-medium uppercase text-[10px] md:text-[12px] tracking-[0.3em]">Initialize administrative session via identity cluster.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {devRoles.map((role) => (
-            <Link key={role.id} href={role.href}>
-              <Card className="group hover:border-primary/50 transition-all hover:shadow-xl cursor-pointer bg-card h-full border-2 border-border/40">
-                <CardHeader className="space-y-4">
+            <Link key={role.id} href={role.href} className="flex">
+              <Card className="group hover:border-primary/50 transition-all hover:shadow-xl cursor-pointer bg-card w-full border-2 border-border/40 flex flex-col">
+                <CardHeader className="space-y-4 flex-1">
                   <div className={cn("p-3 w-fit rounded-xl border-2 transition-transform group-hover:scale-110", role.bg, role.color, "border-transparent group-hover:border-primary/20")}>
                     <role.icon className="h-6 w-6" />
                   </div>
@@ -121,7 +121,7 @@ function RoleSelector() {
                     <CardDescription className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider leading-relaxed">{role.desc}</CardDescription>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-0">
                   <Button variant="ghost" className="w-full group-hover:bg-primary group-hover:text-primary-foreground justify-between text-[11px] font-black uppercase tracking-widest transition-all rounded-xl border-2 border-transparent group-hover:border-primary/20">
                     Access Cluster
                     <ArrowRight className="h-4 w-4" />
@@ -133,14 +133,14 @@ function RoleSelector() {
         </div>
 
         <div className="text-center opacity-40 pt-10">
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">© 2026 STAYSYNC CORE. GLOBAL GOVERNANCE.</p>
-          <p className="text-[10px] font-bold text-muted-foreground mt-2 uppercase tracking-widest">Managed Cluster: v2.4.1 Production Node</p>
+          <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">© 2026 STAYSYNC CORE. GLOBAL GOVERNANCE.</p>
+          <p className="text-[9px] md:text-[10px] font-bold text-muted-foreground mt-2 uppercase tracking-widest">Managed Cluster: v2.4.1 Production Node</p>
         </div>
       </div>
       
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none opacity-50" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none opacity-50" />
+      <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none opacity-50" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none opacity-50" />
     </div>
   );
 }

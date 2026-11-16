@@ -41,8 +41,8 @@ export function DashboardLayout({
             onExitToSelector={() => router.push('/')}
           />
           
-          <div className="flex-1 overflow-y-auto p-8 lg:p-12">
-            <div className="max-w-[1600px] mx-auto space-y-12">
+          <div className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12">
+            <div className="max-w-[1600px] mx-auto space-y-8 md:space-y-12">
               {children}
             </div>
           </div>
