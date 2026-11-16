@@ -174,22 +174,23 @@ export default function StudentDashboard() {
           </div>
 
           <div className="space-y-8">
-             <div className="enterprise-card border bg-primary text-primary-foreground p-6 relative overflow-hidden shadow-none">
+             {/* Rent Status Highlight Card - Corrected theme mapping */}
+             <div className="rounded-2xl border bg-primary text-primary-foreground p-8 relative overflow-hidden shadow-xl">
                 <div className="relative z-10 space-y-6">
                    <div className="flex justify-between items-center">
-                      <h4 className="text-[11px] font-bold uppercase text-primary-foreground tracking-widest opacity-60">Rent Status</h4>
-                      {currentInvoice?.status === 'pending' && <span className="text-[9px] font-bold text-amber-400 animate-pulse">ACTION REQUIRED</span>}
+                      <h4 className="text-[11px] font-bold uppercase text-primary-foreground/60 tracking-widest">Rent Status</h4>
+                      {currentInvoice?.status === 'pending' && <span className="text-[9px] font-black text-warning animate-pulse tracking-widest">ACTION REQUIRED</span>}
                    </div>
                    <div className="space-y-1">
-                      <p className="text-3xl font-bold tracking-tight text-primary-foreground">₹{currentInvoice?.total.toLocaleString() || '0'}</p>
-                      <p className="text-[10px] text-primary-foreground/40 font-medium uppercase tracking-widest">Amount Due for {currentInvoice?.month}</p>
+                      <p className="text-4xl font-black tracking-tighter text-primary-foreground">₹{currentInvoice?.total.toLocaleString() || '0'}</p>
+                      <p className="text-[10px] text-primary-foreground/40 font-bold uppercase tracking-widest">Amount Due for {currentInvoice?.month}</p>
                    </div>
-                   <div className="space-y-3 pt-4 border-t border-primary-foreground/10">
+                   <div className="space-y-4 pt-6 border-t border-primary-foreground/10">
                       <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest">
                          <span className="text-primary-foreground/30">Due Date</span>
                          <span className="text-primary-foreground">{currentInvoice?.dueDate || 'N/A'}</span>
                       </div>
-                      <Button onClick={() => router.push('/student/pay')} className="w-full h-11 bg-background text-primary hover:bg-background/90 font-bold uppercase text-[11px] tracking-widest border-none">
+                      <Button onClick={() => router.push('/student/pay')} className="w-full h-12 bg-background text-primary hover:bg-background/90 font-black uppercase text-[11px] tracking-[0.2em] border-none shadow-lg">
                          Make Payment Now
                       </Button>
                    </div>

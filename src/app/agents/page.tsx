@@ -158,26 +158,30 @@ export default function AgentDashboard() {
         </div>
 
         <div className="space-y-6">
-          <div className="enterprise-card border bg-primary text-primary-foreground p-6 relative overflow-hidden shadow-none">
+          {/* Earnings Goal Highlight Card - Corrected theme mapping */}
+          <div className="rounded-2xl border bg-primary text-primary-foreground p-8 relative overflow-hidden shadow-xl">
             <div className="relative z-10">
-              <h4 className="text-[11px] font-bold uppercase text-primary-foreground/60 tracking-[0.2em] mb-4">Earnings Goal</h4>
-              <div className="space-y-4">
+              <h4 className="text-[11px] font-bold uppercase text-primary-foreground/60 tracking-[0.2em] mb-6">Earnings Goal</h4>
+              <div className="space-y-6">
                 <div className="flex justify-between items-end">
                   <div>
-                    <p className="text-2xl font-bold text-primary-foreground">₹1.2L</p>
-                    <p className="text-[9px] font-bold uppercase text-primary-foreground/50 tracking-widest">MTD Commission Goal</p>
+                    <p className="text-4xl font-black text-primary-foreground tracking-tighter">₹1.2L</p>
+                    <p className="text-[9px] font-bold uppercase text-primary-foreground/50 tracking-widest mt-1">MTD Commission Goal</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-secondary">₹34,400</p>
+                    <p className="text-sm font-black text-secondary">₹34,400</p>
                     <p className="text-[8px] font-bold uppercase text-primary-foreground/40">Current Progress</p>
                   </div>
                 </div>
-                <div className="w-full h-1.5 bg-primary-foreground/10 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-primary-foreground/10 rounded-full overflow-hidden">
                   <div className="h-full bg-secondary" style={{ width: '28%' }} />
                 </div>
+                <p className="text-[9px] font-bold text-primary-foreground/40 text-center uppercase tracking-widest">
+                  8 More admissions needed to unlock premium tiers
+                </p>
               </div>
             </div>
-            <Clock className="absolute -right-4 -bottom-4 h-24 w-24 text-primary-foreground/5" />
+            <Clock className="absolute -right-6 -bottom-6 h-32 w-32 text-primary-foreground/5" />
           </div>
 
           <div className="enterprise-card border bg-card p-6 shadow-none">

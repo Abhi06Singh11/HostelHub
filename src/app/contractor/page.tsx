@@ -51,7 +51,7 @@ export default function ContractorDashboard() {
       <div className="flex items-end justify-between mb-8">
         <div>
           <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-1">Operations Control Hub</p>
-          <h2 className="text-3xl font-bold text-foreground tracking-tighter uppercase text-foreground">Master Facility Management</h2>
+          <h2 className="text-3xl font-bold text-foreground tracking-tighter uppercase">Master Facility Management</h2>
         </div>
         <Button onClick={() => router.push('/contractor/projects/new')} className="h-10 px-6 shadow-md font-bold text-[11px] uppercase tracking-widest">
           <Plus className="h-3.5 w-3.5 mr-2" /> Add New Property
@@ -155,35 +155,43 @@ export default function ContractorDashboard() {
         </div>
 
         <div className="space-y-8">
-          <div className="enterprise-card border bg-primary text-primary-foreground p-6 relative overflow-hidden">
+          {/* Admissions Summary Card - Corrected theme mapping */}
+          <div className="rounded-2xl border bg-primary text-primary-foreground p-6 relative overflow-hidden shadow-lg">
             <div className="relative z-10">
-              <h4 className="text-[11px] font-bold uppercase text-primary-foreground tracking-[0.2em] mb-4">Admissions summary</h4>
+              <h4 className="text-[11px] font-bold uppercase text-primary-foreground/60 tracking-[0.2em] mb-4">Admissions summary</h4>
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
                   <div>
-                    <p className="text-2xl font-bold text-primary-foreground">{mockStudentInquiries.length}</p>
-                    <p className="text-[9px] font-bold uppercase text-primary-foreground/60">Pipeline Lead Nodes</p>
+                    <p className="text-3xl font-black text-primary-foreground tracking-tighter">{mockStudentInquiries.length}</p>
+                    <p className="text-[9px] font-bold uppercase text-primary-foreground/50 tracking-widest">Pipeline Lead Nodes</p>
                   </div>
-                  <Button size="sm" variant="outline" onClick={() => router.push('/contractor/inquiries')} className="h-7 text-[9px] font-bold uppercase text-primary-foreground border-primary-foreground/40 hover:bg-primary-foreground/10 px-4">Manage Hub</Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => router.push('/contractor/inquiries')} 
+                    className="h-8 text-[10px] font-black uppercase text-primary-foreground border-primary-foreground/20 hover:bg-primary-foreground/10 px-4 rounded-lg"
+                  >
+                    Manage Hub
+                  </Button>
                 </div>
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-primary-foreground/10">
                   <div>
-                     <p className="text-lg font-bold text-emerald-400">4</p>
-                     <p className="text-[8px] font-bold uppercase text-primary-foreground/40">Highly Interested</p>
+                     <p className="text-xl font-black text-secondary">4</p>
+                     <p className="text-[8px] font-bold uppercase text-primary-foreground/40 tracking-wider">Highly Interested</p>
                   </div>
                   <div>
-                     <p className="text-lg font-bold text-primary-foreground">2</p>
-                     <p className="text-[8px] font-bold uppercase text-primary-foreground/40">Ready to Check-in</p>
+                     <p className="text-xl font-black text-primary-foreground">2</p>
+                     <p className="text-[8px] font-bold uppercase text-primary-foreground/40 tracking-wider">Ready to Check-in</p>
                   </div>
                 </div>
               </div>
             </div>
-            <Zap className="absolute -right-4 -bottom-4 h-24 w-24 text-primary-foreground/5" />
+            <Zap className="absolute -right-4 -bottom-4 h-28 w-28 text-primary-foreground/5" />
           </div>
 
           <div className="enterprise-card border bg-card p-6 space-y-4 shadow-none border-dashed">
              <h4 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Manager Insight</h4>
-             <p className="text-xs font-medium leading-relaxed italic border-l-2 border-primary pl-4 text-foreground">
+             <p className="text-xs font-medium leading-relaxed italic border-l-2 border-primary pl-4 text-foreground uppercase">
                "{stats.policeVerified < stats.activeStudents ? `${stats.activeStudents - stats.policeVerified} residents are awaiting police verification documentation. Please follow up today.` : 'All residents are currently compliant with police verification protocols.'}"
              </p>
           </div>
