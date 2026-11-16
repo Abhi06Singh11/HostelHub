@@ -48,11 +48,15 @@ export default function ContractorDashboard() {
 
   return (
     <DashboardLayout role="contractor">
-      <SectionHeader 
-        title="Operations Control Hub" 
-        subtitle="Master Facility Management" 
-        action={{ label: "Add New Property", icon: Plus, onClick: () => router.push('/contractor/projects/new') }} 
-      />
+      <div className="flex items-end justify-between mb-8">
+        <div>
+          <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-1">Operations Control Hub</p>
+          <h2 className="text-3xl font-bold text-foreground tracking-tighter uppercase text-foreground">Master Facility Management</h2>
+        </div>
+        <Button onClick={() => router.push('/contractor/projects/new')} className="h-10 px-6 shadow-md font-bold text-[11px] uppercase tracking-widest">
+          <Plus className="h-3.5 w-3.5 mr-2" /> Add New Property
+        </Button>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
@@ -151,35 +155,35 @@ export default function ContractorDashboard() {
         </div>
 
         <div className="space-y-8">
-          <div className="enterprise-card border bg-slate-900 text-white p-6 relative overflow-hidden">
+          <div className="enterprise-card border bg-primary text-primary-foreground p-6 relative overflow-hidden">
             <div className="relative z-10">
-              <h4 className="text-[11px] font-bold uppercase text-primary tracking-[0.2em] mb-4">Admissions summary</h4>
+              <h4 className="text-[11px] font-bold uppercase text-primary-foreground tracking-[0.2em] mb-4">Admissions summary</h4>
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
                   <div>
-                    <p className="text-2xl font-bold text-white">{mockStudentInquiries.length}</p>
-                    <p className="text-[9px] font-bold uppercase text-white/60">Pipeline Lead Nodes</p>
+                    <p className="text-2xl font-bold text-primary-foreground">{mockStudentInquiries.length}</p>
+                    <p className="text-[9px] font-bold uppercase text-primary-foreground/60">Pipeline Lead Nodes</p>
                   </div>
-                  <Button size="sm" variant="outline" onClick={() => router.push('/contractor/inquiries')} className="h-7 text-[9px] font-bold uppercase text-white border-white/40 hover:bg-white/10 px-4">Manage Hub</Button>
+                  <Button size="sm" variant="outline" onClick={() => router.push('/contractor/inquiries')} className="h-7 text-[9px] font-bold uppercase text-primary-foreground border-primary-foreground/40 hover:bg-primary-foreground/10 px-4">Manage Hub</Button>
                 </div>
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-primary-foreground/10">
                   <div>
                      <p className="text-lg font-bold text-emerald-400">4</p>
-                     <p className="text-[8px] font-bold uppercase text-white/40">Highly Interested</p>
+                     <p className="text-[8px] font-bold uppercase text-primary-foreground/40">Highly Interested</p>
                   </div>
                   <div>
-                     <p className="text-lg font-bold text-primary">2</p>
-                     <p className="text-[8px] font-bold uppercase text-white/40">Ready to Check-in</p>
+                     <p className="text-lg font-bold text-primary-foreground">2</p>
+                     <p className="text-[8px] font-bold uppercase text-primary-foreground/40">Ready to Check-in</p>
                   </div>
                 </div>
               </div>
             </div>
-            <Zap className="absolute -right-4 -bottom-4 h-24 w-24 text-white/5" />
+            <Zap className="absolute -right-4 -bottom-4 h-24 w-24 text-primary-foreground/5" />
           </div>
 
-          <div className="enterprise-card border bg-card p-6 space-y-4">
+          <div className="enterprise-card border bg-card p-6 space-y-4 shadow-none border-dashed">
              <h4 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Manager Insight</h4>
-             <p className="text-xs font-medium leading-relaxed italic border-l-2 border-primary pl-4">
+             <p className="text-xs font-medium leading-relaxed italic border-l-2 border-primary pl-4 text-foreground">
                "{stats.policeVerified < stats.activeStudents ? `${stats.activeStudents - stats.policeVerified} residents are awaiting police verification documentation. Please follow up today.` : 'All residents are currently compliant with police verification protocols.'}"
              </p>
           </div>
@@ -189,26 +193,9 @@ export default function ContractorDashboard() {
   );
 }
 
-function SectionHeader({ title, subtitle, action }: any) {
-  return (
-    <div className="flex items-end justify-between mb-8">
-      <div>
-        <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-1">{subtitle}</p>
-        <h2 className="text-3xl font-bold text-foreground tracking-tighter uppercase">{title}</h2>
-      </div>
-      {action && (
-        <Button onClick={action.onClick} className="h-10 px-6 shadow-md font-bold text-[11px] uppercase tracking-widest">
-          {action.icon && <action.icon className="h-3.5 w-3.5 mr-2" />}
-          {action.label}
-        </Button>
-      )}
-    </div>
-  );
-}
-
 function StatCard({ title, value, icon: Icon, details, onClick, progress, trend }: any) {
   return (
-    <Card className="enterprise-card border bg-card hover:border-primary transition-all cursor-pointer group" onClick={onClick}>
+    <Card className="enterprise-card border bg-card hover:border-primary transition-all cursor-pointer group shadow-none" onClick={onClick}>
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
           <div className="p-2 bg-muted rounded border border-border group-hover:bg-primary/5 group-hover:border-primary/20 transition-colors">

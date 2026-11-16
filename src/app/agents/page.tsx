@@ -52,15 +52,15 @@ export default function AgentDashboard() {
 
   return (
     <DashboardLayout role="agent">
-      <SectionHeader 
-        title="Hostel Matchmaking Hub" 
-        subtitle="Authorized Admission Agent" 
-        action={{ 
-          label: "Refer New Student", 
-          icon: UserPlus, 
-          onClick: () => router.push('/agents/leads') 
-        }} 
-      />
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div>
+          <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-1">Authorized Admission Agent</p>
+          <h2 className="text-3xl font-bold text-foreground tracking-tighter uppercase">Hostel Matchmaking Hub</h2>
+        </div>
+        <Button onClick={() => router.push('/agents/leads')} className="h-11 px-8 shadow-md font-bold text-[11px] uppercase tracking-widest">
+          <UserPlus className="h-4 w-4 mr-2" /> Refer New Student
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard title="Active Referrals" value={stats.active} icon={Target} color="text-primary" />
@@ -70,9 +70,8 @@ export default function AgentDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
-        {/* Referral Pipeline */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="enterprise-card border bg-card">
+          <div className="enterprise-card border bg-card shadow-none">
             <div className="p-4 border-b bg-muted/30 flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase text-muted-foreground tracking-widest">Admission Pipeline</span>
               <Button variant="link" size="sm" onClick={() => router.push('/agents/leads')} className="h-auto p-0 text-[10px] font-bold uppercase">View All</Button>
@@ -124,8 +123,7 @@ export default function AgentDashboard() {
             </div>
           </div>
 
-          {/* Available Opportunities */}
-          <div className="enterprise-card border bg-card">
+          <div className="enterprise-card border bg-card shadow-none">
             <div className="p-4 border-b bg-muted/30 flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase text-muted-foreground tracking-widest">Hostel Opportunities (Live Beds)</span>
             </div>
@@ -159,15 +157,14 @@ export default function AgentDashboard() {
           </div>
         </div>
 
-        {/* Action Sidebar */}
         <div className="space-y-6">
-          <div className="enterprise-card border bg-primary text-primary-foreground p-6 relative overflow-hidden">
+          <div className="enterprise-card border bg-primary text-primary-foreground p-6 relative overflow-hidden shadow-none">
             <div className="relative z-10">
               <h4 className="text-[11px] font-bold uppercase text-primary-foreground/60 tracking-[0.2em] mb-4">Earnings Goal</h4>
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
                   <div>
-                    <p className="text-2xl font-bold">₹1.2L</p>
+                    <p className="text-2xl font-bold text-primary-foreground">₹1.2L</p>
                     <p className="text-[9px] font-bold uppercase text-primary-foreground/50 tracking-widest">MTD Commission Goal</p>
                   </div>
                   <div className="text-right">
@@ -183,7 +180,7 @@ export default function AgentDashboard() {
             <Clock className="absolute -right-4 -bottom-4 h-24 w-24 text-primary-foreground/5" />
           </div>
 
-          <div className="enterprise-card border bg-card p-6">
+          <div className="enterprise-card border bg-card p-6 shadow-none">
             <h4 className="text-[11px] font-bold uppercase text-muted-foreground tracking-widest mb-6">Recent Contractor Feedback</h4>
             <div className="space-y-4">
               <FeedbackItem 
@@ -199,7 +196,7 @@ export default function AgentDashboard() {
             </div>
           </div>
 
-          <div className="enterprise-card border bg-secondary text-secondary-foreground p-6">
+          <div className="enterprise-card border bg-secondary text-secondary-foreground p-6 shadow-none">
             <h4 className="text-[11px] font-bold uppercase opacity-80 tracking-widest mb-3">Admission Guide</h4>
             <p className="text-xs opacity-90 leading-relaxed font-medium">
               Always verify bed availability before promising a room. Admitted students stay for a minimum of 11 months to qualify for full commission.
@@ -214,26 +211,9 @@ export default function AgentDashboard() {
   );
 }
 
-function SectionHeader({ title, subtitle, action }: any) {
-  return (
-    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-      <div>
-        <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-1">{subtitle}</p>
-        <h2 className="text-3xl font-bold text-foreground tracking-tighter uppercase">{title}</h2>
-      </div>
-      {action && (
-        <Button onClick={action.onClick} className="h-11 px-8 shadow-md font-bold text-[11px] uppercase tracking-widest">
-          {action.icon && <action.icon className="h-4 w-4 mr-2" />}
-          {action.label}
-        </Button>
-      )}
-    </div>
-  );
-}
-
 function StatCard({ title, value, icon: Icon, color }: any) {
   return (
-    <div className="enterprise-card border p-6 flex flex-col justify-between hover:border-primary/30 transition-all bg-card">
+    <div className="enterprise-card border p-6 flex flex-col justify-between hover:border-primary/30 transition-all bg-card shadow-none">
       <div className="flex justify-between items-start mb-4">
         <div className="p-2 bg-muted rounded border border-border">
           <Icon className={cn("h-5 w-5", color)} />

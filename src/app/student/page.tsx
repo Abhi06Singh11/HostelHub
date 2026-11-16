@@ -15,7 +15,8 @@ import {
   UserCircle,
   FileText,
   ShieldCheck,
-  Info
+  Info,
+  Zap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -76,9 +77,8 @@ export default function StudentDashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
           <div className="lg:col-span-2 space-y-8">
-             {/* Profile Completion Widget */}
              <Card className={cn(
-               "enterprise-card border overflow-hidden",
+               "enterprise-card border overflow-hidden shadow-none",
                profile.completionPercentage < 100 ? "border-amber-200 bg-amber-50/30" : "bg-card"
              )}>
                 <div className="p-8 space-y-8">
@@ -114,7 +114,6 @@ export default function StudentDashboard() {
                 </div>
              </Card>
 
-             {/* Information Requests */}
              {infoRequests.length > 0 && (
                <div className="space-y-4">
                   <h4 className="text-[11px] font-bold uppercase text-muted-foreground tracking-widest flex items-center gap-2">
@@ -139,8 +138,7 @@ export default function StudentDashboard() {
                </div>
              )}
 
-             {/* Recent Activity */}
-             <div className="enterprise-card border bg-card overflow-hidden">
+             <div className="enterprise-card border bg-card overflow-hidden shadow-none">
                 <div className="p-4 border-b bg-muted/30 flex items-center justify-between">
                   <span className="text-[11px] font-bold uppercase text-muted-foreground tracking-widest">Recent Complaints</span>
                   <Button variant="link" size="sm" onClick={() => router.push('/student/complaints')} className="h-auto p-0 text-[10px] font-bold uppercase">View Desk</Button>
@@ -176,32 +174,30 @@ export default function StudentDashboard() {
           </div>
 
           <div className="space-y-8">
-             {/* Rent Summary */}
-             <div className="enterprise-card border bg-slate-900 text-white p-6 relative overflow-hidden">
+             <div className="enterprise-card border bg-primary text-primary-foreground p-6 relative overflow-hidden shadow-none">
                 <div className="relative z-10 space-y-6">
                    <div className="flex justify-between items-center">
-                      <h4 className="text-[11px] font-bold uppercase text-primary tracking-widest">Rent Status</h4>
+                      <h4 className="text-[11px] font-bold uppercase text-primary-foreground tracking-widest opacity-60">Rent Status</h4>
                       {currentInvoice?.status === 'pending' && <span className="text-[9px] font-bold text-amber-400 animate-pulse">ACTION REQUIRED</span>}
                    </div>
                    <div className="space-y-1">
-                      <p className="text-3xl font-bold tracking-tight">₹{currentInvoice?.total.toLocaleString() || '0'}</p>
-                      <p className="text-[10px] text-white/40 font-medium uppercase tracking-widest">Amount Due for {currentInvoice?.month}</p>
+                      <p className="text-3xl font-bold tracking-tight text-primary-foreground">₹{currentInvoice?.total.toLocaleString() || '0'}</p>
+                      <p className="text-[10px] text-primary-foreground/40 font-medium uppercase tracking-widest">Amount Due for {currentInvoice?.month}</p>
                    </div>
-                   <div className="space-y-3 pt-4 border-t border-white/10">
+                   <div className="space-y-3 pt-4 border-t border-primary-foreground/10">
                       <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest">
-                         <span className="text-white/30">Due Date</span>
-                         <span>{currentInvoice?.dueDate || 'N/A'}</span>
+                         <span className="text-primary-foreground/30">Due Date</span>
+                         <span className="text-primary-foreground">{currentInvoice?.dueDate || 'N/A'}</span>
                       </div>
-                      <Button onClick={() => router.push('/student/pay')} className="w-full h-11 bg-primary hover:bg-primary/90 text-white font-bold uppercase text-[11px] tracking-widest border-none">
+                      <Button onClick={() => router.push('/student/pay')} className="w-full h-11 bg-background text-primary hover:bg-background/90 font-bold uppercase text-[11px] tracking-widest border-none">
                          Make Payment Now
                       </Button>
                    </div>
                 </div>
-                <Wallet className="absolute -right-6 -bottom-6 h-32 w-32 text-white/5" />
+                <Wallet className="absolute -right-6 -bottom-6 h-32 w-32 text-primary-foreground/5" />
              </div>
 
-             {/* Profile Pulse */}
-             <Card className="enterprise-card border bg-card p-8 space-y-6">
+             <Card className="enterprise-card border bg-card p-8 space-y-6 shadow-none">
                  <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">Compliance Pulse</h4>
                  <div className="space-y-8">
                     <div className="p-5 rounded-2xl bg-muted/20 border border-border space-y-4">
@@ -232,7 +228,7 @@ export default function StudentDashboard() {
 
 function StatCard({ title, value, details, icon: Icon, color }: any) {
   return (
-    <div className="enterprise-card border p-6 flex flex-col justify-between hover:border-primary/30 transition-all bg-card">
+    <div className="enterprise-card border p-6 flex flex-col justify-between hover:border-primary/30 transition-all bg-card shadow-none">
       <div className="flex justify-between items-start mb-4">
         <div className="p-2 bg-muted rounded border border-border">
           <Icon className={cn("h-5 w-5", color)} />
