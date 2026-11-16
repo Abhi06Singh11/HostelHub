@@ -55,9 +55,9 @@ export default function SuperAdminDashboard() {
 
   const roleData = [
     { name: 'Students', value: stats.students, color: 'hsl(var(--primary))' },
-    { name: 'Contractors', value: stats.contractors, color: '#3b82f6' },
-    { name: 'Owners', value: stats.owners, color: '#8b5cf6' },
-    { name: 'Agents', value: stats.agents, color: '#f59e0b' },
+    { name: 'Contractors', value: stats.contractors, color: 'hsl(var(--secondary))' },
+    { name: 'Owners', value: stats.owners, color: '#3b82f6' },
+    { name: 'Agents', value: stats.agents, color: 'hsl(var(--warning))' },
   ];
 
   const revenueData = [
@@ -95,8 +95,8 @@ export default function SuperAdminDashboard() {
           value={`₹${(stats.revenue/1000).toFixed(0)}k`} 
           sub="Monthly Subscription Accrual" 
           icon={TrendingUp} 
-          color="text-emerald-600" 
-          bg="bg-emerald-50 dark:bg-emerald-950/20"
+          color="text-secondary" 
+          bg="bg-secondary/5"
           onClick={() => router.push('/sa/finance')}
           trend={{ value: "+12%", isUp: true }}
         />
@@ -137,7 +137,7 @@ export default function SuperAdminDashboard() {
                       content={({active, payload}) => {
                         if (active && payload && payload.length) {
                           return (
-                            <div className="bg-slate-900 text-white p-3 rounded-xl border border-white/10 shadow-2xl">
+                            <div className="bg-primary text-primary-foreground p-3 rounded-xl border border-white/10 shadow-2xl">
                               <p className="text-[10px] font-black uppercase tracking-widest">{payload[0].name}</p>
                               <p className="text-xl font-black">{payload[0].value}</p>
                             </div>
@@ -209,7 +209,7 @@ export default function SuperAdminDashboard() {
             <p className="text-sm font-medium leading-relaxed opacity-90 uppercase">
               2 pending client audits required to maintain enterprise verification.
             </p>
-            <Button className="w-full bg-white/10 hover:bg-white/20 border-white/20 text-white font-black uppercase text-[10px] tracking-widest h-12" onClick={() => router.push('/sa/approvals')}>
+            <Button className="w-full bg-primary-foreground/10 hover:bg-primary-foreground/20 border-primary-foreground/20 text-primary-foreground font-black uppercase text-[10px] tracking-widest h-12" onClick={() => router.push('/sa/approvals')}>
               Start Audit
             </Button>
           </div>

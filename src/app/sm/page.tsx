@@ -78,8 +78,8 @@ export default function SuperMarketerDashboard() {
           value={stats.conversions} 
           sub="14.2% Success Rate" 
           icon={Zap} 
-          color="text-emerald-600" 
-          bg="bg-emerald-50"
+          color="text-secondary" 
+          bg="bg-secondary/5"
           onClick={() => router.push('/sm/conversions')}
         />
         <StatCard 
@@ -96,8 +96,8 @@ export default function SuperMarketerDashboard() {
           value={stats.activeCamps} 
           sub="Across 3 Channels" 
           icon={Megaphone} 
-          color="text-orange-600" 
-          bg="bg-orange-50"
+          color="text-warning" 
+          bg="bg-warning/5"
           onClick={() => router.push('/sm/campaigns')}
         />
       </div>
@@ -120,9 +120,20 @@ export default function SuperMarketerDashboard() {
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="day" fontSize={10} fontWeight="bold" axisLine={false} tickLine={false} />
-                    <Tooltip content={() => null} />
+                    <Tooltip content={({active, payload}) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-primary text-primary-foreground p-3 rounded-xl border border-white/10 shadow-2xl">
+                            <p className="text-[10px] font-black uppercase tracking-widest mb-1">{payload[0].payload.day}</p>
+                            <p className="text-sm font-bold">Leads: {payload[0].value}</p>
+                            <p className="text-sm font-bold text-secondary">Conv: {payload[1].value}</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }} />
                     <Area type="monotone" dataKey="leads" stroke="hsl(var(--primary))" strokeWidth={3} fillOpacity={1} fill="url(#colorLeads)" />
-                    <Area type="monotone" dataKey="conversions" stroke="#10b981" strokeWidth={3} fill="none" />
+                    <Area type="monotone" dataKey="conversions" stroke="hsl(var(--secondary))" strokeWidth={3} fill="none" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -147,7 +158,7 @@ export default function SuperMarketerDashboard() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-black text-emerald-600">{c.leads} Leads</p>
+                    <p className="text-sm font-black text-secondary">{c.leads} Leads</p>
                     <p className="text-[10px] font-bold text-muted-foreground uppercase">{(c.conversions/c.leads*100).toFixed(1)}% Conv.</p>
                   </div>
                 </div>
@@ -157,18 +168,18 @@ export default function SuperMarketerDashboard() {
         </div>
 
         <div className="space-y-8">
-          <div className="enterprise-card border bg-slate-900 text-white p-8 relative overflow-hidden">
+          <div className="enterprise-card border bg-primary text-primary-foreground p-8 relative overflow-hidden">
             <div className="relative z-10 space-y-6">
               <div className="flex justify-between items-center">
-                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary">Channel Efficiency</h4>
-                <TrendingUp className="h-5 w-5 text-primary opacity-50" />
+                <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary-foreground/60">Channel Efficiency</h4>
+                <TrendingUp className="h-5 w-5 text-primary-foreground/40 opacity-50" />
               </div>
               <div className="space-y-6">
-                <ChannelEfficiency label="Meta Ads" value={82} color="bg-primary" />
-                <ChannelEfficiency label="Google Search" value={65} color="bg-blue-500" />
-                <ChannelEfficiency label="Instagram" value={94} color="bg-emerald-500" />
+                <ChannelEfficiency label="Meta Ads" value={82} color="bg-primary-foreground/20" barColor="bg-secondary" />
+                <ChannelEfficiency label="Google Search" value={65} color="bg-primary-foreground/20" barColor="bg-blue-400" />
+                <ChannelEfficiency label="Instagram" value={94} color="bg-primary-foreground/20" barColor="bg-emerald-400" />
               </div>
-              <Button className="w-full h-11 bg-primary hover:bg-primary/90 text-white font-black uppercase text-[10px] tracking-widest shadow-xl" onClick={() => router.push('/sm/analytics')}>
+              <Button className="w-full h-11 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground font-black uppercase text-[10px] tracking-widest shadow-xl" onClick={() => router.push('/sm/analytics')}>
                 Optimization Center
               </Button>
             </div>
@@ -188,15 +199,15 @@ export default function SuperMarketerDashboard() {
   );
 }
 
-function ChannelEfficiency({ label, value, color }: any) {
+function ChannelEfficiency({ label, value, color, barColor }: any) {
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
-        <span className="text-slate-400">{label}</span>
-        <span className="text-white">{value}%</span>
+        <span className="text-primary-foreground/50">{label}</span>
+        <span className="text-primary-foreground">{value}%</span>
       </div>
-      <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-        <div className={cn("h-full", color)} style={{ width: `${value}%` }} />
+      <div className={cn("h-1 w-full rounded-full overflow-hidden", color)}>
+        <div className={cn("h-full", barColor)} style={{ width: `${value}%` }} />
       </div>
     </div>
   );
@@ -205,7 +216,7 @@ function ChannelEfficiency({ label, value, color }: any) {
 function FeedbackItem({ text, trend }: { text: string, trend: 'up' | 'down' }) {
   return (
     <div className="flex items-start gap-3 p-4 bg-muted/20 border border-dashed rounded-xl">
-      {trend === 'up' ? <TrendingUp className="h-4 w-4 text-emerald-600 mt-0.5" /> : <TrendingUp className="h-4 w-4 text-red-600 mt-0.5 rotate-180" />}
+      {trend === 'up' ? <TrendingUp className="h-4 w-4 text-secondary mt-0.5" /> : <TrendingUp className="h-4 w-4 text-destructive mt-0.5 rotate-180" />}
       <p className="text-[11px] font-bold text-foreground leading-tight italic">"{text}"</p>
     </div>
   );

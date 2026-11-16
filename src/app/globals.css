@@ -25,7 +25,9 @@
     
     --accent: 161 94% 30%;
     --accent-foreground: 210 40% 98%;
-    
+
+    --success: 161 94% 30%; /* #059669 */
+    --warning: 38 92% 50%; /* #F59E0B */
     --destructive: 0 84% 60%; /* #EF4444 */
     --destructive-foreground: 210 40% 98%;
     
@@ -67,7 +69,9 @@
     
     --accent: 158 64% 52%;
     --accent-foreground: 219 52% 11%;
-    
+
+    --success: 158 64% 52%; /* #34D399 */
+    --warning: 41 96% 57%; /* #FBBF24 */
     --destructive: 0 91% 71%; /* #F87171 */
     --destructive-foreground: 219 52% 11%;
     
@@ -120,4 +124,12 @@
 
 ::-webkit-scrollbar-thumb {
   @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/40 transition-colors;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 12s linear infinite;
 }

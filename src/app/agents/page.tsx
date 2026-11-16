@@ -12,7 +12,8 @@ import {
   TrendingUp,
   UserPlus,
   CheckCircle2,
-  Clock
+  Clock,
+  Activity
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getStoredReferrals } from '@/lib/referral-store';
@@ -63,8 +64,8 @@ export default function AgentDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard title="Active Referrals" value={stats.active} icon={Target} color="text-primary" />
-        <StatCard title="Confirmed Admissions" value={stats.admitted} icon={CheckCircle2} color="text-emerald-600" />
-        <StatCard title="Pending Commission" value={`₹${stats.commission}`} icon={CreditCard} color="text-amber-600" />
+        <StatCard title="Confirmed Admissions" value={stats.admitted} icon={CheckCircle2} color="text-secondary" />
+        <StatCard title="Pending Commission" value={`₹${stats.commission}`} icon={CreditCard} color="text-warning" />
         <StatCard title="Total Payouts" value={`₹${stats.totalEarned}`} icon={TrendingUp} color="text-blue-600" />
       </div>
 
@@ -100,7 +101,7 @@ export default function AgentDashboard() {
                       <td className="py-3 px-4">
                         <span className={cn(
                           "px-2 py-0.5 rounded text-[9px] font-bold uppercase border",
-                          ref.status === 'admitted' ? "bg-emerald-100 text-emerald-700 border-emerald-200" :
+                          ref.status === 'admitted' ? "bg-secondary/10 text-secondary border-secondary/20" :
                           ref.status === 'referred' ? "bg-primary/10 text-primary border-primary/20" :
                           "bg-muted text-muted-foreground border-border"
                         )}>
@@ -135,7 +136,7 @@ export default function AgentDashboard() {
                     <div className="p-2 bg-primary/5 rounded-lg border border-primary/10">
                       <Building2 className="h-4 w-4 text-primary" />
                     </div>
-                    <span className="text-[10px] font-bold uppercase text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                    <span className="text-[10px] font-bold uppercase text-secondary bg-secondary/5 px-2 py-0.5 rounded border border-secondary/10">
                       {p.totalBeds - p.occupiedBeds} Vacant
                     </span>
                   </div>
@@ -148,7 +149,7 @@ export default function AgentDashboard() {
                       <p className="text-[9px] font-bold text-muted-foreground uppercase">Rent Starts</p>
                       <p className="text-xs font-bold text-foreground">₹{p.monthlyRent ? (p.monthlyRent/p.totalRooms).toFixed(0) : '12,000'}+</p>
                     </div>
-                    <Button variant="ghost" size="sm" onClick={() => router.push('/agents/leads')} className="h-7 text-[9px] font-bold uppercase tracking-widest group-hover:bg-primary group-hover:text-white">
+                    <Button variant="ghost" size="sm" onClick={() => router.push('/agents/leads')} className="h-7 text-[9px] font-bold uppercase tracking-widest group-hover:bg-primary group-hover:text-primary-foreground">
                       Refer Student <ArrowRight className="h-3 w-3 ml-1" />
                     </Button>
                   </div>
@@ -160,26 +161,26 @@ export default function AgentDashboard() {
 
         {/* Action Sidebar */}
         <div className="space-y-6">
-          <div className="enterprise-card border bg-slate-900 text-white p-6 relative overflow-hidden">
+          <div className="enterprise-card border bg-primary text-primary-foreground p-6 relative overflow-hidden">
             <div className="relative z-10">
-              <h4 className="text-[11px] font-bold uppercase text-primary tracking-[0.2em] mb-4">Earnings Goal</h4>
+              <h4 className="text-[11px] font-bold uppercase text-primary-foreground/60 tracking-[0.2em] mb-4">Earnings Goal</h4>
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
                   <div>
                     <p className="text-2xl font-bold">₹1.2L</p>
-                    <p className="text-[9px] font-bold uppercase text-white/60 tracking-widest">MTD Commission Goal</p>
+                    <p className="text-[9px] font-bold uppercase text-primary-foreground/50 tracking-widest">MTD Commission Goal</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-primary">₹34,400</p>
-                    <p className="text-[8px] font-bold uppercase text-white/40">Current Progress</p>
+                    <p className="text-sm font-bold text-secondary">₹34,400</p>
+                    <p className="text-[8px] font-bold uppercase text-primary-foreground/40">Current Progress</p>
                   </div>
                 </div>
-                <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                  <div className="h-full bg-primary" style={{ width: '28%' }} />
+                <div className="w-full h-1.5 bg-primary-foreground/10 rounded-full overflow-hidden">
+                  <div className="h-full bg-secondary" style={{ width: '28%' }} />
                 </div>
               </div>
             </div>
-            <Clock className="absolute -right-4 -bottom-4 h-24 w-24 text-white/5" />
+            <Clock className="absolute -right-4 -bottom-4 h-24 w-24 text-primary-foreground/5" />
           </div>
 
           <div className="enterprise-card border bg-card p-6">
@@ -198,12 +199,12 @@ export default function AgentDashboard() {
             </div>
           </div>
 
-          <div className="enterprise-card border bg-primary text-primary-foreground p-6">
+          <div className="enterprise-card border bg-secondary text-secondary-foreground p-6">
             <h4 className="text-[11px] font-bold uppercase opacity-80 tracking-widest mb-3">Admission Guide</h4>
             <p className="text-xs opacity-90 leading-relaxed font-medium">
               Always verify bed availability before promising a room. Admitted students stay for a minimum of 11 months to qualify for full commission.
             </p>
-            <Button variant="outline" className="w-full mt-6 bg-white/10 border-white/20 text-white hover:bg-white/20 text-[10px] font-bold uppercase tracking-widest">
+            <Button variant="outline" className="w-full mt-6 bg-secondary-foreground/10 border-secondary-foreground/20 text-secondary-foreground hover:bg-secondary-foreground/20 text-[10px] font-bold uppercase tracking-widest">
               View Agent T&C
             </Button>
           </div>
@@ -253,7 +254,7 @@ function FeedbackItem({ student, msg, type }: any) {
         <p className="text-xs font-bold text-foreground">{student}</p>
         <div className={cn(
           "w-1.5 h-1.5 rounded-full",
-          type === 'success' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"
+          type === 'success' ? "bg-secondary shadow-[0_0_8px_rgba(5,150,105,0.5)]" : "bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"
         )} />
       </div>
       <p className="text-[11px] text-muted-foreground leading-tight italic font-medium">"{msg}"</p>
