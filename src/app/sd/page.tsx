@@ -72,7 +72,7 @@ export default function SuperDevDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
-          title="Global Uptime" 
+          label="Global Uptime" 
           value={stats.uptime} 
           sub="24h Platform Cycle" 
           icon={Globe} 
@@ -81,7 +81,7 @@ export default function SuperDevDashboard() {
           onClick={() => router.push('/sd/infra')}
         />
         <StatCard 
-          title="Service Latency" 
+          label="Service Latency" 
           value={stats.avgLatency} 
           sub="Avg Node Response" 
           icon={Zap} 
@@ -90,9 +90,9 @@ export default function SuperDevDashboard() {
           onClick={() => router.push('/sd/api')}
         />
         <StatCard 
-          title="Active Incidents" 
+          label="Active Incidents" 
           value={stats.activeBugs} 
-          sub="Unresolved Technical Bugs" 
+          sub="Unresolved Bugs" 
           icon={Bug} 
           color="text-red-500" 
           bg="bg-red-50"
@@ -100,9 +100,9 @@ export default function SuperDevDashboard() {
           trend={{ value: "Urgent", isUp: false }}
         />
         <StatCard 
-          title="Release Cycle" 
+          label="Release Cycle" 
           value={stats.lastDeploy} 
-          sub="Current Production Version" 
+          sub="Current Prod Version" 
           icon={Rocket} 
           color="text-blue-500" 
           bg="bg-blue-50"

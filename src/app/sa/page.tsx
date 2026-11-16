@@ -8,7 +8,6 @@ import {
   Briefcase, 
   ShieldCheck, 
   Zap, 
-  PieChart, 
   Building2, 
   Code2, 
   Megaphone, 
@@ -67,7 +66,7 @@ export default function SuperAdminDashboard() {
     { month: 'Mar', amount: 140000 },
     { month: 'Apr', amount: 210000 },
     { month: 'May', amount: 185000 },
-    { month: 'Jun', amount: stats.revenue }
+    { month: 'Jun', amount: stats.revenue || 195000 }
   ];
 
   return (
@@ -84,7 +83,7 @@ export default function SuperAdminDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
-          title="Global Users" 
+          label="Global Users" 
           value={stats.totalUsers} 
           sub={`${stats.activeUsers} Active • ${stats.pendingUsers} Pending`} 
           icon={Users} 
@@ -92,7 +91,7 @@ export default function SuperAdminDashboard() {
           onClick={() => router.push('/sa/users')}
         />
         <StatCard 
-          title="Platform Revenue" 
+          label="Platform Revenue" 
           value={`₹${(stats.revenue/1000).toFixed(0)}k`} 
           sub="Monthly Subscription Accrual" 
           icon={TrendingUp} 
@@ -102,7 +101,7 @@ export default function SuperAdminDashboard() {
           trend={{ value: "+12%", isUp: true }}
         />
         <StatCard 
-          title="Active Clients" 
+          label="Active Clients" 
           value={stats.activeSubs} 
           sub={`${orgs.length} Total Registered Orgs`} 
           icon={Briefcase} 
@@ -111,9 +110,9 @@ export default function SuperAdminDashboard() {
           onClick={() => router.push('/sa/clients')}
         />
         <StatCard 
-          title="Security Alerts" 
+          label="Security Alerts" 
           value="0" 
-          sub="All Infrastructure Nodes Stable" 
+          sub="Infrastructure Stable" 
           icon={ShieldCheck} 
           color="text-emerald-500" 
           bg="bg-emerald-50/50 dark:bg-emerald-950/10"
@@ -158,7 +157,7 @@ export default function SuperAdminDashboard() {
             </CardContent>
           </Card>
 
-          <div className="enterprise-card border bg-slate-900 text-white p-10 relative overflow-hidden">
+          <div className="enterprise-card border bg-card p-10 relative overflow-hidden">
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-10">
                 <div className="space-y-2">
@@ -174,7 +173,7 @@ export default function SuperAdminDashboard() {
                 <HubStat icon={ShieldCheck} label="Contractors" value={stats.contractors} />
               </div>
             </div>
-            <Activity className="absolute -right-10 -bottom-10 h-64 w-64 text-white/5" />
+            <Activity className="absolute -right-10 -bottom-10 h-64 w-64 text-primary opacity-5" />
           </div>
         </div>
 
@@ -207,8 +206,8 @@ export default function SuperAdminDashboard() {
               <Activity className="h-5 w-5 opacity-80" />
               <span className="text-[11px] font-black uppercase tracking-widest">Compliance Pulse</span>
             </div>
-            <p className="text-sm font-medium leading-relaxed opacity-90">
-              2 pending client audits required for "Elite Living PGs" to maintain enterprise verification.
+            <p className="text-sm font-medium leading-relaxed opacity-90 uppercase">
+              2 pending client audits required to maintain enterprise verification.
             </p>
             <Button className="w-full bg-white/10 hover:bg-white/20 border-white/20 text-white font-black uppercase text-[10px] tracking-widest h-12" onClick={() => router.push('/sa/approvals')}>
               Start Audit

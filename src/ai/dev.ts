@@ -1,4 +1,9 @@
 import { config } from 'dotenv';
 config();
 
-// HMS-specific flows should be imported here when added
+/**
+ * @fileOverview Developer AI gateway for StaySync HMS.
+ * Standard flows should be imported here for local testing and generation tracking.
+ */
+
+// StaySync HMS-specific flows should be imported here
